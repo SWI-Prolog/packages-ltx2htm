@@ -20,6 +20,7 @@
 \glossitem{-}=item
 \menuitem{+}{+}=item		1 0
 \predref{+}{-}
+\funcref{+}{-}
 \qpredref{-}{+}{-}
 \prologflag{-}
 \dcgref{+}{-}

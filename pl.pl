@@ -126,6 +126,10 @@ cmd(predref({RawName}, {Arity}), #lref(pred, RefName, Text)) :-
 	clean_name(RawName, Name),
 	predicate_refname(Name, Arity, RefName),
 	sformat(Text, '~w/~w', [Name, Arity]).
+cmd(funcref({RawName}, {Arity}), #lref(pred, RefName, Text)) :-
+	clean_name(RawName, Name),
+	predicate_refname(Name, Arity, RefName),
+	sformat(Text, '~w/~w', [Name, Arity]).
 cmd(dcgref({RawName}, {DCGArity}), #lref(pred, RefName, Text)) :-
 	clean_name(RawName, Name),
 	atom_number(DCGArity, ArityInt),
