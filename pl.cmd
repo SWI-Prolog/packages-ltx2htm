@@ -4,11 +4,14 @@
 
 \definition{+}=item		1 0
 \predicate[+]{+}{-}{+}=item	1 0
+\function[+]{+}{-}{+}=item	1 0
 \qpredicate[+]{+}{+}{-}{+}=item	1 0
 \dcg[+]{+}{-}{+}=item		1 0
 \directive[+]{+}{-}{-}=item	1 0
 \infixop[+]{+}{+}{+}=item	1 0
 \prefixop[+]{+}{-}=item		1 0
+\infixfunction[+]{+}{+}{+}=item	1 0
+\prefixfunction[+]{+}{-}=item	1 0
 \cfunction{-}{+}{+}=item	1 0
 \cmacro{-}{-}{+}=item		1 0
 \resitem{-}=item		1 0

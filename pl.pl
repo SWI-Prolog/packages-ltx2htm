@@ -179,6 +179,21 @@ cmd(predicate(A, {RawName}, {Arity}, {Args}),
 	clean_name(RawName, Name),
 	sformat(RefName, '~w/~w', [Name, Arity]),
 	add_to_index(RefName, +RefName).
+cmd(function(A, {RawName}, {'0'}, {_}),
+    #defitem(Class, Content)) :-
+	pred_class(A, Class),
+	pred_tag(A, Content, [#label(RefName, #strong(Name))]),
+	clean_name(RawName, Name),
+	sformat(RefName, '~w/0', [Name]),
+	add_to_index(RefName, +RefName).
+cmd(function(A, {RawName}, {Arity}, {Args}),
+    #defitem(Class, Content)) :-
+	pred_class(A, Class),
+	pred_tag(A, Content,
+		 [#label(RefName, [#strong(Name), #embrace(#var(+Args))])]),
+	clean_name(RawName, Name),
+	sformat(RefName, '~w/~w', [Name, Arity]),
+	add_to_index(RefName, +RefName).
 cmd(qpredicate(A, {RawM}, {RawName}, {'0'}, {_}),
     #defitem(Class, Content)) :-
 	pred_class(A, Class),
@@ -260,7 +275,23 @@ cmd(prefixop(A, {RawName}, {Arg}),
 	clean_name(RawName, Name),
 	predicate_refname(Name, 1, RefName),
 	add_to_index(RefName, +RefName).
+cmd(prefixfunction(A, {RawName}, {Arg}),
+    #defitem(pubdef, Content)) :-
+	pred_tag(A, Content,
+		 #label(RefName, [#strong(Name), ' ', #var(Arg)])),
+	clean_name(RawName, Name),
+	predicate_refname(Name, 1, RefName),
+	add_to_index(RefName, +RefName).
 cmd(infixop(A, {RawName}, {Arg1}, {Arg2}),
+    #defitem(pubdef, Content)) :-
+	pred_tag(A, Content,
+		 #label(RefName,
+			[ #var(Arg1), ' ', #strong(Name), ' ', #var(Arg2)
+			])),
+	clean_name(RawName, Name),
+	predicate_refname(Name, 2, RefName),
+	add_to_index(RefName, +RefName).
+cmd(infixfunction(A, {RawName}, {Arg1}, {Arg2}),
     #defitem(pubdef, Content)) :-
 	pred_tag(A, Content,
 		 #label(RefName,
