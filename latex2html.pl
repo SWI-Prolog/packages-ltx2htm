@@ -50,7 +50,8 @@
 	    tex_load_commands/1,	% +BaseName
 	    add_to_index/1,		% +Term
 	    add_to_index/2,		% +Term, +Tag
-	    clean_tt/2			% +Raw, -Clean
+	    clean_tt/2,			% +Raw, -Clean
+	    op(100, fx, #)
 	  ]).
 :- use_module(library(quintus)).
 
@@ -93,7 +94,6 @@ user:file_search_path(img, library(icons)).
 
 :- load_foreign_library(user:foreign(tex)).
 
-:- op(100, fx, user:(#)).
 
 		 /*******************************
 		 *         TEX INPUTS		*
@@ -333,7 +333,7 @@ translate_2($$(Expr), Mode, Mode, #quote(#var(HTML))) :-% $$...$$
 translate_2($(Expr), Mode, Mode, #var(HTML)) :-		% $...$
 	tex_atom_to_tokens(Expr, Tokens),
 	translate(Tokens, math, _, HTML).
-translate_2(verbatim(_Cmd, Text), Mode, Mode, 		% \begin{verbatim} ...
+translate_2(verbatim(_Cmd, Text), Mode, Mode,		% \begin{verbatim} ...
 	    #pre(code, pre(Text))).
 translate_2(verb(_, Text), pcecode, pcecode, pre(Text)).
 translate_2(Layout, pcecode, pcecode, []) :-
@@ -348,7 +348,7 @@ translate_2(Group, Mode, Mode, HTML) :-			% {...}
 	Group = [_|_],
 	translate_group(Group, HTML).
 translate_2(~, Mode, Mode, html('&nbsp;')).		% ~
-translate_2('\\[]', Mode, Mode, html('[]')). 		% []
+translate_2('\\[]', Mode, Mode, html('[]')).		% []
 translate_2(Atom0, Mode, Mode, Atom) :-			% Normal word
 	atomic(Atom0),
 	(   Mode = group(Atts),
@@ -538,11 +538,11 @@ language_map(table,	'Table').
 #(footer(Tag),		HTML) :-
 	node_footer(Tag, HTML).
 #(next_and_prev_references,
-        [ #iflref(prevfile,  	    '[Previous]'), ' ',
-	  #iflref(nextfile,  	    '[Next]')
+        [ #iflref(prevfile,	    '[Previous]'), ' ',
+	  #iflref(nextfile,	    '[Next]')
 	]).
 #(home_reference,
- 	[ #iflref(home,  	    '[Home]')
+	[ #iflref(home,		    '[Home]')
 	]).
 #(Macro, []) :-
 	format(user_error,
@@ -686,7 +686,7 @@ label_tag(Label, Tag) :-
 
 
 		 /*******************************
-		 * 	    ENVIRONMENTS	*
+		 *	    ENVIRONMENTS	*
 		 *******************************/
 
 %	env(+Env, -HTML)
@@ -1351,17 +1351,17 @@ cmd(Font, group(Old), group([font(Font)|Old1]), HTML) :-
 	    HTML = Open
 	).
 
-html_font(em, 		html('<EM>'), 		html('</EM>')).
-html_font(bf, 		html('<B>'),  		html('</B>')).
-html_font(it, 		html('<I>'),  		html('</I>')).
-html_font(mathit,	html('<I>'),  		html('</I>')).
-html_font(cal, 		html('<I>'),  		html('</I>')).
-html_font(tt, 		html('<TT>'), 		html('</TT>')).
-html_font(sf, 		html('<B>'),  		html('</B>')).
-html_font(sc, 		html('<font size=-1>'), html('</font>')).
-html_font(rm, 		[],           		[]).
-html_font(sl, 		html('<B>'),  		html('</B>')).
-html_font(scriptsize,   [], 			[]).
+html_font(em,		html('<EM>'),		html('</EM>')).
+html_font(bf,		html('<B>'),		html('</B>')).
+html_font(it,		html('<I>'),		html('</I>')).
+html_font(mathit,	html('<I>'),		html('</I>')).
+html_font(cal,		html('<I>'),		html('</I>')).
+html_font(tt,		html('<TT>'),		html('</TT>')).
+html_font(sf,		html('<B>'),		html('</B>')).
+html_font(sc,		html('<font size=-1>'), html('</font>')).
+html_font(rm,		[],			[]).
+html_font(sl,		html('<B>'),		html('</B>')).
+html_font(scriptsize,   [],			[]).
 html_font(footnotesize, html('<font size=-1>'), html('</font>')).
 html_font(small,        html('<font size=-1>'), html('</font>')).
 html_font(normalsize,   [],			[]).
@@ -2749,15 +2749,15 @@ cmd_layout('<HR>',   1, 1).
 cmd_layout('<BR>',   0, 1).
 cmd_layout(DIV,      1, 0) :- is_begin('DIV', DIV).
 cmd_layout('</DIV>', 0, 1).
-cmd_layout('<LI>', 	 1, 0).
-cmd_layout('<DT>', 	 1, 0).
-cmd_layout('</DT>', 	 0, 1).
-cmd_layout(DD, 		 1, 0) :- is_begin('DD', DD).
-cmd_layout('</DD>', 	 0, 1).
-cmd_layout(UL, 		 1, 1) :- is_begin('UL', UL).
-cmd_layout('</UL>', 	 1, 1).
-cmd_layout(OL, 		 1, 1) :- is_begin('OL', OL).
-cmd_layout('</OL>', 	 1, 1).
+cmd_layout('<LI>',	 1, 0).
+cmd_layout('<DT>',	 1, 0).
+cmd_layout('</DT>',	 0, 1).
+cmd_layout(DD,		 1, 0) :- is_begin('DD', DD).
+cmd_layout('</DD>',	 0, 1).
+cmd_layout(UL,		 1, 1) :- is_begin('UL', UL).
+cmd_layout('</UL>',	 1, 1).
+cmd_layout(OL,		 1, 1) :- is_begin('OL', OL).
+cmd_layout('</OL>',	 1, 1).
 cmd_layout('<TR>',       1, 0).
 cmd_layout('</TR>',      0, 1).
 cmd_layout('<TBODY>',    1, 1).
@@ -2766,9 +2766,9 @@ cmd_layout('</TABLE>',   0, 2).
 cmd_layout('<LISTING>',	 2, 0).
 cmd_layout('</LISTING>', 0, 2).
 cmd_layout(PRE,	 2, 0) :- is_begin('PRE', PRE).
-cmd_layout('</PRE>', 	 0, 2).
+cmd_layout('</PRE>',	 0, 2).
 cmd_layout('<XMP>',	 2, 0).
-cmd_layout('</XMP>', 	 0, 2).
+cmd_layout('</XMP>',	 0, 2).
 cmd_layout('<HEAD>',	 1, 1).
 cmd_layout('</HEAD>',	 1, 1).
 cmd_layout('<CENTER>',	 1, 1).
@@ -2780,7 +2780,7 @@ cmd_layout('<HTML>',	 0, 1).
 cmd_layout('</HTML>',	 1, 1).
 cmd_layout('<BLOCKQUOTE>',	1, 0).
 cmd_layout('</BLOCKQUOTE>',	0, 1).
-cmd_layout(Cmd,		 	1, 1) :-
+cmd_layout(Cmd,			1, 1) :-
 	concat('<TABLE', _, Cmd).
 
 :- initialization

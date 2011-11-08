@@ -30,7 +30,7 @@
 */
 
 :- module(latex2html4pl, []).
-:- use_module(library(latex2html)).
+:- use_module(latex2html).
 
 :- latex2html_module.
 :- tex_load_commands(pl).
