@@ -126,9 +126,9 @@ cmd(predref({RawName}, {Arity}), #lref(pred, RefName, Text)) :-
 	clean_name(RawName, Name),
 	predicate_refname(Name, Arity, RefName),
 	sformat(Text, '~w/~w', [Name, Arity]).
-cmd(funcref({RawName}, {Arity}), #lref(pred, RefName, Text)) :-
+cmd(funcref({RawName}, {Arity}), #lref(function, RefName, Text)) :-
 	clean_name(RawName, Name),
-	predicate_refname(Name, Arity, RefName),
+	function_refname(Name, Arity, RefName),
 	sformat(Text, '~w/~w', [Name, Arity]).
 cmd(dcgref({RawName}, {DCGArity}), #lref(pred, RefName, Text)) :-
 	clean_name(RawName, Name),
@@ -188,7 +188,7 @@ cmd(function(A, {RawName}, {'0'}, {_}),
 	pred_class(A, Class),
 	pred_tag(A, Content, [#label(RefName, #strong(Name))]),
 	clean_name(RawName, Name),
-	sformat(RefName, '~w/0', [Name]),
+	sformat(RefName, 'f-~w/0', [Name]),
 	add_to_index(RefName, +RefName).
 cmd(function(A, {RawName}, {Arity}, {Args}),
     #defitem(Class, Content)) :-
@@ -196,7 +196,7 @@ cmd(function(A, {RawName}, {Arity}, {Args}),
 	pred_tag(A, Content,
 		 [#label(RefName, [#strong(Name), #embrace(#var(+Args))])]),
 	clean_name(RawName, Name),
-	sformat(RefName, '~w/~w', [Name, Arity]),
+	sformat(RefName, 'f-~w/~w', [Name, Arity]),
 	add_to_index(RefName, +RefName).
 cmd(qpredicate(A, {RawM}, {RawName}, {'0'}, {_}),
     #defitem(Class, Content)) :-
@@ -284,7 +284,7 @@ cmd(prefixfunction(A, {RawName}, {Arg}),
 	pred_tag(A, Content,
 		 #label(RefName, [#strong(Name), ' ', #var(Arg)])),
 	clean_name(RawName, Name),
-	predicate_refname(Name, 1, RefName),
+	function_refname(Name, 1, RefName),
 	add_to_index(RefName, +RefName).
 cmd(infixop(A, {RawName}, {Arg1}, {Arg2}),
     #defitem(pubdef, Content)) :-
@@ -302,7 +302,7 @@ cmd(infixfunction(A, {RawName}, {Arg1}, {Arg2}),
 			[ #var(Arg1), ' ', #strong(Name), ' ', #var(Arg2)
 			])),
 	clean_name(RawName, Name),
-	predicate_refname(Name, 2, RefName),
+	function_refname(Name, 2, RefName),
 	add_to_index(RefName, +RefName).
 cmd(constitem({Name}), #defitem(#label(RefName, #strong(+Name)))) :-
 	clean_name(Name, RefName),
@@ -365,10 +365,10 @@ cmd(oppredsummary({RawName}, {Arity}, {_Assoc}, {_Pri}, {Summary}),
     #row([#predref(Name, Arity), +Summary])) :-
 	clean_name(RawName, Name).
 cmd(functionsummary({RawName}, {Arity}, {Summary}),
-    #row([#predref(Name, Arity), +Summary])) :-
+    #row([#funcref(Name, Arity), +Summary])) :-
 	clean_name(RawName, Name).
 cmd(opfuncsummary({RawName}, {Arity}, {_Assoc}, {_Pri}, {Summary}),
-    #row([#predref(Name, Arity), +Summary])) :-
+    #row([#funcref(Name, Arity), +Summary])) :-
 	clean_name(RawName, Name).
 cmd(opsummary({Pri}, {Assoc}, {RawName}, {Summary}),
     #row([Pri, Assoc, Name, +Summary])) :-
@@ -598,6 +598,10 @@ predicate_refname(Module:Name, Arity, Ref) :- !,
 	atomic_list_concat([Module, :, Name, /, Arity], Ref).
 predicate_refname(Name, Arity, Ref) :-
 	atomic_list_concat([Name, /, Arity], Ref).
+
+function_refname(Name, Arity, Ref) :-
+	sformat(Ref, 'f-~w/~w', [Name, Arity]).
+
 
 symbol_name('->',	send_arrow).
 symbol_name('<-',	get_arrow).

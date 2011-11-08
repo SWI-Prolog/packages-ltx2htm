@@ -488,6 +488,10 @@ language_map(table,	'Table').
 #(predref(RN, Arity),   #lref(pred, Text, Text)) :-
 	clean_tt(RN, Name),
 	format(string(Text), '~w/~w', [Name, Arity]).
+#(funcref(RN, Arity),   #lref(function, Label, Text)) :-
+	clean_tt(RN, Name),
+	format(string(Text), '~w/~w', [Name, Arity]),
+	format(string(Label), 'f-~w/~w', [Name, Arity]).
 #(row(Columns),		[html('<TR>'), HtmlCols, html('</TR>')]) :-
 	add_td(Columns, HtmlCols).
 #(label(Lbl, Text, Tag),label(ALabel, Expanded, Tag)) :-
