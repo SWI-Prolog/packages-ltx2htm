@@ -156,7 +156,7 @@ cmd(infixterm({RawName},{A1},{A2}), #code([+A1, Name, +A2])) :-
 cmd(manref({RawName}, {Section}),
     [#strong(Name), #embrace(Section)]) :-
 	clean_tt(RawName, Name).
-cmd(funcref({RawName}, {Args}),
+cmd(cfuncref({RawName}, {Args}),
     #lref(func, RefName, [Name, #embrace(+Args)])) :-
 	clean_name(RawName, Name),
 	sformat(RefName, '~w()', [Name]).

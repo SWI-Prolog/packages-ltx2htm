@@ -27,7 +27,7 @@
 \nopredref{+}{-}
 \functor{+}{+}
 \compound{+}{+}
-\funcref{+}{+}
+\cfuncref{+}{+}
 \manref{-}{-}
 \op{+}
 
