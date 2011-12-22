@@ -10,41 +10,28 @@
 # reserved
 # ###############################################################
 
-MAKE=@MAKE@
-
-PL=@PL@
-PLARCH=@PLARCH@
-PLHOME=@PLHOME@
-prefix=@prefix@
-exec_prefix=@exec_prefix@
-bindir=@bindir@
-
-CC=@CC@
-COFLAGS=@COFLAGS@
-CWFLAGS=@CWFLAGS@
-CMFLAGS=@CMFLAGS@
-
-LD=@LD@
-LDFLAGS=@LDSOFLAGS@
-
-CDFLAGS=-D__SWI_PROLOG__
-CFLAGS=$(COFLAGS) $(CWFLAGS) $(CMFLAGS) $(CIFLAGS) @DEFS@ $(CDFLAGS)
-INSTALL=@INSTALL@
-INSTALL_PROGRAM=@INSTALL_PROGRAM@
-INSTALL_DATA=@INSTALL_DATA@
-RUNTEX=../../man/runtex
+PACKAGE=ltx2htm
 DOC=ltx2htm
+include ../Makefile.defs
 
-# Don't change, this is also in latex2html.in!
-LIBDIR=@libdir@/latex2html
-
-OBJ=	tex.o psfile.o
+TARGETS=tex.@SO@
 LIB=	latex2html.pl latex.cmd pl.pl pl.cmd xpce.pl xpce.cmd \
 	latex2html.css
+LIBDIR=@libdir@/latex2html
+bindir=@bindir@
 
-all:	tex.@SO@
+TEXOBJ=	tex.o psfile.o
 
-install:	tex.@SO@
+all:	$(TARGETS)
+
+tex.@SO@:	$(TEXOBJ)
+		$(LD) $(LDSOFLAGS) -o $@ $(TEXOBJ) @LIBS@
+
+################################################################
+# Installation
+################################################################
+
+install:	$(TARGETS)
 	mkdir -p $(DESTDIR)$(LIBDIR)/lib/$(PLARCH)
 	$(INSTALL_DATA) tex.@SO@ $(DESTDIR)$(LIBDIR)/lib/$(PLARCH)
 	$(INSTALL_PROGRAM) latex2html $(DESTDIR)$(bindir)
@@ -55,12 +42,11 @@ install:	tex.@SO@
 	for f in icons/*.gif; do $(INSTALL_DATA) $$f $(DESTDIR)$(LIBDIR)/icons; done
 
 ln-install::
-		@$(MAKE) INSTALL_DATA='../ln-install' \
-			 INSTALL_PROGRAM='../ln-install' \
-			 install
+	@$(MAKE) INSTALL_DATA='../ln-install' \
+		 INSTALL_PROGRAM='../ln-install' \
+		 install
 
-tex.@SO@:		$(OBJ)
-	$(LD) $(LDFLAGS) -o $@ $(OBJ)
+html-install::
 
 ################################################################
 # CHECK
@@ -69,28 +55,11 @@ tex.@SO@:		$(OBJ)
 check::
 
 ################################################################
-# Documentation
-################################################################
-doc:	html pdf
-
-html:	$(DOC).tex
-	$(PL) -f run.pl -g main -- $(DOC)
-
-pdf:	$(DOC).tex
-	$(RUNTEX) --pdf $(DOC)
-
-$(DOC).tex:	$(DOC).doc
-	./doc2tex $< > $@
-
-html-install::
-
-################################################################
 # Cleanup
 ################################################################
 
 clean::
-	rm -f *% *~ $(OBJ) tex.@SO@
-	$(RUNTEX) --clean $(DOC)
+	rm -f *% *~ $(OBJ) $(TARGETS)
 
 distclean: clean
 	rm -f Makefile latex2html
