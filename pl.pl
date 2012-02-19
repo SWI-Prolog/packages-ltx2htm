@@ -57,7 +57,7 @@
 		 *	   ENVIRONMENTS		*
 		 *******************************/
 
-list_command(tags,       _, html('<DL>'), html('</DL>')).
+list_command(tags,       _, html('<DL class="tags">'), html('</DL>')).
 
 
 		 /*******************************
@@ -489,12 +489,13 @@ remove_trailing_spaces([H|T0], [H|T]) :-
 		 *******************************/
 
 cmd(tag({Tag}),
-    [ html('<DT><B>'), +Tag, html('</B><DD>') ]).
+    [ html('<DT class="tag">'), +Tag, html('<DD>') ]).
 cmd(mtag({Tag}),
-    [ html('<DT><B>'), +Tag, html('</B><DD>') ]).
+    [ html('<DT class="mtag">'), +Tag, html('<DD>') ]).
 
 cmd(param({Param}, {Description}),
-    [ html('<TR><TD><VAR>'), +Param, html('</VAR></TD>'),
+    [ html('<TR>'),
+      html('<TD class="param">'), +Param, html('</TD>'),
       html('<TD class="argdescr"> -'), +Description, html('<TD></TR>')
     ]).
 

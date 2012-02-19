@@ -122,3 +122,16 @@ sup:hover span
   padding: 5px; margin: 10px; z-index: 100;
   font-size: smaller;
 }
+
+/* PlDoc Tags */
+
+dl.tags dt
+{ font-weight: bold;
+  font-size: 90%;
+  margin-left: 5%;
+}
+
+td.param
+{ font-style: italic;
+  font-weight: bold;
+}
