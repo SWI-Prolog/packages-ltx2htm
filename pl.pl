@@ -64,8 +64,8 @@ list_command(tags,       _, html('<DL>'), html('</DL>')).
 		 *	    INDEX HACK		*
 		 *******************************/
 
-cmd(+, index, nospace('\+')).
-cmd(=, index, nospace('\=')).
+cmd(+, index, nospace('\\+')).
+cmd(=, index, nospace('\\=')).
 
 		 /*******************************
 		 *	     COMMANDS		*
