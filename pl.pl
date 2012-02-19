@@ -5,7 +5,8 @@
     Author:        Jan Wielemaker
     E-mail:        J.Wielemak@cs.vu.nl
     WWW:           http://www.swi-prolog.org
-    Copyright (C): 1985-2009, University of Amsterdam
+    Copyright (C): 1985-2012, University of Amsterdam
+			      VU University Amsterdam
 
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License
@@ -39,12 +40,12 @@
 		 *	       MACROS		*
 		 *******************************/
 
-#(defitem(Class,Label),	[ html(Begin), Label, html('</DT>'),
-			  html('<DD class="defbody">')
+#(defitem(Class,Label),	[ html(Begin), Label, html('</dt>'),
+			  html('<dd class="defbody">')
 			]) :-
-	format(atom(Begin), '<DT class="~w">', [Class]).
-#(defitem(Label),	[ html('<DT>'), Label,
-			  html('<DD class="defbody">')
+	format(atom(Begin), '<dt class="~w">', [Class]).
+#(defitem(Label),	[ html('<dt>'), Label,
+			  html('<dd class="defbody">')
 			]).
 #(predtag(Value),	[ html('<span class="pred-tag">'), Value,
 			  html('</span>')
@@ -57,7 +58,7 @@
 		 *	   ENVIRONMENTS		*
 		 *******************************/
 
-list_command(tags,       _, html('<DL class="tags">'), html('</DL>')).
+list_command(tags,       _, html('<dl class="tags">'), html('</dl>')).
 
 
 		 /*******************************
@@ -75,7 +76,7 @@ cmd(spaces({X}), html(Spaces)) :-
 	atom_number(X, N),
 	n_list(N, '&nbsp;', L),
 	atomic_list_concat(L, Spaces).
-cmd(hrule, html('<HR>')).
+cmd(hrule, html('<hr>')).
 cmd(bug({TeX}), #footnote(bug, +TeX)).
 cmd(fileext({Ext}), #code(Text)) :-
 	sformat(Text, '.~w', [Ext]).
@@ -319,7 +320,7 @@ cmd(prologflagitem({Name}, {Type}, {Access}),
 	->  Change = []
 	;   Change = nospace(', changeable')
 	).
-cmd(fmtchar({Name}), [html('<LI>'), #code(+Name), html('<BR>')]).
+cmd(fmtchar({Name}), [html('<li>'), #code(+Name), html('<br>')]).
 cmd(optionval({Value}), #defitem(#strong(+Value))).
 cmd(cmdlineoptionitem(M, {Option}, {Arg}),
     #defitem([#strong(+Option), Sep, #var(+Arg)])) :-
@@ -489,14 +490,15 @@ remove_trailing_spaces([H|T0], [H|T]) :-
 		 *******************************/
 
 cmd(tag({Tag}),
-    [ html('<DT class="tag">'), +Tag, html('<DD>') ]).
+    [ html('<dt class="tag">'), +Tag, html('<dd>') ]).
 cmd(mtag({Tag}),
-    [ html('<DT class="mtag">'), +Tag, html('<DD>') ]).
+    [ html('<dt class="mtag">'), +Tag, html('<dd>') ]).
 
 cmd(param({Param}, {Description}),
-    [ html('<TR>'),
-      html('<TD class="param">'), +Param, html('</TD>'),
-      html('<TD class="argdescr"> -'), +Description, html('<TD></TR>')
+    [ html('<tr>'),
+      html('<td class="param">'), +Param, html('</td>'),
+      html('<td class="argdescr"> -'), +Description, html('<td>'),
+      html('</tr>')
     ]).
 
 

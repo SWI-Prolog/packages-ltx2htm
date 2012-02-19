@@ -123,15 +123,44 @@ sup:hover span
   font-size: smaller;
 }
 
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+  margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
 /* PlDoc Tags */
 
+dl.tags
+{ font-size: 90%;
+  margin-left: 5ex;
+  margin-top: 1ex;
+  margin-bottom: 0.5ex;
+}
+
 dl.tags dt
-{ font-weight: bold;
-  font-size: 90%;
-  margin-left: 5%;
+{ margin-left: 0pt;
+  font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
 }
 
 td.param
 { font-style: italic;
   font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+  font-size: +1;
+  margin-top: 1ex;
 }

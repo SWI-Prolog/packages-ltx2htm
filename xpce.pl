@@ -3,9 +3,10 @@
     Part of SWI-Prolog
 
     Author:        Jan Wielemaker
-    E-mail:        jan@swi.psy.uva.nl
+    E-mail:        J.Wielemaker@vu.nl
     WWW:           http://www.swi-prolog.org
-    Copyright (C): 1985-2002, University of Amsterdam
+    Copyright (C): 1985-2012, University of Amsterdam
+			      VU University Amsterdam
 
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License
@@ -99,7 +100,7 @@ cmd(bothmethod(_M, {Class}, {Selector}, {Args}),
 cmd(manualtool({Descr}, {Menu}),
     #defitem([ #strong(+Descr), ' ', #i(#embrace(+Menu))])).
 cmd(secoverview({Label}, {Title}),
-    [ html('<LI>'), #lref(RefName, +Title) ]) :-
+    [ html('<li>'), #lref(RefName, +Title) ]) :-
 	sformat(RefName, 'sec:~w', Label).
 cmd(classsummary(_M, {RawClass}, {Args}, {_FigRef}),
     #defitem(#label(Label, [#strong(Class), #embrace(#var(+Args))]))) :-
@@ -124,7 +125,7 @@ cmd(tab, #code(verb('	'))).
 cmd(opt({Arg}), #embrace("[]", +Arg)).
 cmd(zom({Arg}), #embrace("{}", +Arg)).
 cmd(fnm({Mark}), +Mark).
-cmd(hr, html('<HR>')).
+cmd(hr, html('<hr>')).
 cmd(nameof({Names}), #embrace("{}", #code(Names))).
 
 cmd(setupfancyplain, []).
