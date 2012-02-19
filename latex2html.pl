@@ -2540,6 +2540,7 @@ create_env(dl).
 close_by(dd, is_begin(dt)).
 close_by(dd, is_end(dl)).
 close_by(dt, is_begin(dd)).
+close_by(dt, is_begin(dt)).
 close_by(dt, is_end(dl)).
 
 %%	write_html(+Tokens) is det.
