@@ -1415,11 +1415,12 @@ clean_tt(Raw, Clean) :-
 	;   S3 = S2
 	),
         clean_specials(S3, S4),
-	replace_all(S4, "\\bsl{}", "\\", S5),
-	delete_all(S5, "\\string", S6),
-	delete_all(S6, " ", S7),
-	replace_all(S7, "~", " ", S8),
-	atom_codes(Clean, S8).
+	replace_all(S4, "\\ldots", "...", S5),
+	replace_all(S5, "\\bsl{}", "\\", S6),
+	delete_all(S6, "\\string", S7),
+	delete_all(S7, " ", S8),
+	replace_all(S8, "~", " ", S9),
+	atom_codes(Clean, S9).
 
 clean_specials([], []).
 clean_specials([0'\\, Special|T0], [Special|T]) :-
