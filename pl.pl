@@ -247,7 +247,7 @@ cmd(directive(A, {RawName}, {Arity}, {Args}),
     #defitem(pubdef, Content)) :-
 	pred_tag(A, Content,
 		 [ #label(RefName,
-			  [ ':- ', #strong(Name), #embrace(#var(Args))
+			  [ ':- ', #strong(Name), #embrace(#var(+Args))
 			  ])
 		 ]),
 	clean_name(RawName, Name),
@@ -276,7 +276,7 @@ cmd(resitem({Resource}),
 cmd(prefixop(A, {RawName}, {Arg}),
     #defitem(pubdef, Content)) :-
 	pred_tag(A, Content,
-		 #label(RefName, [#strong(Name), ' ', #var(Arg)])),
+		 #label(RefName, [#strong(Name), ' ', #var(+Arg)])),
 	clean_name(RawName, Name),
 	predicate_refname(Name, 1, RefName),
 	add_to_index(RefName, +RefName).
