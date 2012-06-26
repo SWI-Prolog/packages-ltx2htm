@@ -1719,7 +1719,7 @@ sort_chars(Chars, Chars).
 
 get_lower_letters([], []).
 get_lower_letters([H0|T0], [H|T]) :-
-	is_alpha(H0), !,
+	is_upper(H0), !,
 	to_lower(H0, H),
 	get_lower_letters(T0, T).
 get_lower_letters([_|T0], T) :-
