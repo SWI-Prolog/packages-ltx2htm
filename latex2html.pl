@@ -1777,8 +1777,10 @@ add_separator(Term, _, CL, [ html('<dt class="index-sep">'),
 			     Char,
 			     html('<dd>')
 			   ]) :-
-	atom_chars(Term, [CL|_]),
-	upcase_atom(CL, Char).
+	(   atom_chars(Term, [CL|_])
+	->  upcase_atom(CL, Char)
+	;   Char = '?'
+	).
 
 
 		 /*******************************
