@@ -212,6 +212,9 @@
 \sin{+}
 \cos{+}
 \tan{+}
+\sinh{+}
+\cosh{+}
+\tanh{+}
 \arcsin{+}
 \arccos{+}
 \arctan{+}

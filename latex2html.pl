@@ -1322,6 +1322,9 @@ cmd(rangle, math, '>').
 cmd(sin({Arg}), math, ['sin(', math+Arg, ')']).
 cmd(cos({Arg}), math, ['cos(', math+Arg, ')']).
 cmd(tan({Arg}), math, ['tan(', math+Arg, ')']).
+cmd(sinh({Arg}), math, ['sinh(', math+Arg, ')']).
+cmd(cosh({Arg}), math, ['cosh(', math+Arg, ')']).
+cmd(tanh({Arg}), math, ['tanh(', math+Arg, ')']).
 cmd(arcsin({Arg}), math, ['arcsin(', math+Arg, ')']).
 cmd(arccos({Arg}), math, ['arccos(', math+Arg, ')']).
 cmd(arctan({Arg}), math, ['arctan(', math+Arg, ')']).
