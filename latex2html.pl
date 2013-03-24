@@ -1,11 +1,9 @@
-/*  $Id$
-
-    Part of SWI-Prolog
+/*  Part of SWI-Prolog
 
     Author:        Jan Wielemaker
     E-mail:        J.Wielemaker@vu.nl
     WWW:           http://www.swi-prolog.org
-    Copyright (C): 1985-2012, University of Amsterdam
+    Copyright (C): 1985-2013, University of Amsterdam
 			      VU University Amsterdam
 
     This program is free software; you can redistribute it and/or
@@ -140,11 +138,11 @@ latex2html_module :-
 tex_load_commands(File) :-
 	(   member(Term, [tex(File), library(File)]),
 	    absolute_file_name(Term,
+			       CmdFile,
 			       [ extensions([cmd]),
 				 access(read),
 				 file_errors(fail)
-			       ],
-			       CmdFile)
+			       ])
 	->  tex_read_commands(CmdFile),
 	    format(user_error, 'Loaded LaTeX commands from "~w"~n', [CmdFile])
 	;   format(user_error, 'Can not find command file "~w"~n', [File]),
@@ -846,12 +844,11 @@ translate_items([H0|T0], List, [H1|T1]) :-
 
 prolog_function(\(usepackage, [_,{File},_])) :-
 	(   member(Term, [tex(File), library(File)]),
-	    absolute_file_name(Term,
+	    absolute_file_name(Term, PlFile,
 			       [ extensions([pl, qlf]),
 				 access(read),
 				 file_errors(fail)
-			       ],
-			       PlFile)
+			       ])
 	->  ensure_loaded(user:PlFile)
 	;   true
 	).
@@ -879,12 +876,11 @@ cmd(onefile, preamble, []) :-
 	retractall(onefile(_)),
 	assert(onefile(true)).
 cmd(htmlpackage({File}), preamble, []) :-
-	(   absolute_file_name(tex(File),
+	(   absolute_file_name(tex(File), PlFile,
 			       [ extensions([pl, qlf]),
 				 access(read),
 				 file_errors(fail)
-			       ],
-			       PlFile)
+			       ])
 	->  ensure_loaded(user:PlFile)
 	;   format(user_error, 'Cannot find Prolog extension "~w"~n', [File])
 	).
@@ -1055,11 +1051,11 @@ cmd(yearcite({Key}),	#yearcite(Key)).	% \yearcite
 cmd(opencite({Key}),	#opencite(Key)).	% \opencite
 cmd(bibliography({_}), HTML) :-			% \bibliography
 	tex_file_base(File),
-	(   absolute_file_name(tex(File), [ extensions([bbl]),
-					    access(read),
-					    file_errors(fail)
-					  ],
-			       BiBFile)
+	(   absolute_file_name(tex(File), BiBFile,
+			       [ extensions([bbl]),
+				 access(read),
+				 file_errors(fail)
+			       ])
 	->  tex_tokens(BiBFile, TeXTokens),
 	    translate(TeXTokens, file, HTML)
 	;   format(user_error, 'No bibliography file~n', []),
@@ -1156,21 +1152,21 @@ cmd(tm, #embrace(tm)).			% \tm
 cmd(sum,  html('&Sigma;')).		% \sum
 
 cmd(include({File}), HTML) :-
-	absolute_file_name(tex(File), [ extensions([tex]),
-					access(read),
-					file_errors(true)
-				      ],
-			   TeXFile),
+	absolute_file_name(tex(File), TeXFile,
+			   [ extensions([tex]),
+			     access(read),
+			     file_errors(error)
+			   ]),
 	tex_tokens(TeXFile, TeXTokens),
 	translate(TeXTokens, file, HTML).
 cmd(input({File}), []) :-
 	file_name_extension(_, sty, File), !.
 cmd(input({File}), HTML) :-
-	absolute_file_name(tex(File), [ extensions([tex, '']),
-					access(read),
-					file_errors(true)
-				      ],
-			   TeXFile),
+	absolute_file_name(tex(File), TeXFile,
+			   [ extensions([tex, '']),
+			     access(read),
+			     file_errors(error)
+			   ]),
 	tex_tokens(TeXFile, TeXTokens),
 	translate(TeXTokens, file, HTML).
 cmd(appendix, []) :-
@@ -1213,11 +1209,11 @@ cmd(psfig({Spec}), html(Img)) :-
 	).
 cmd(includegraphics(_Options, {File}), html(Img)) :-
 	ps_extension(Ext),
-	absolute_file_name(includegraphics(File),
+	absolute_file_name(includegraphics(File), PsFile,
 			   [ extensions([Ext]),
 			     access(read),
 			     file_errors(fail)
-			   ], PsFile),
+			   ]),
 	file_name_extension(Base, Ext, PsFile),
 	file_base_name(Base, GifBase),
 	file_name_extension(GifBase, gif, GifFile),
@@ -2355,21 +2351,21 @@ ps2gif(In, Out) :-
 	ps2gif(In, Out, []).
 
 ps2gif(In, Out, _Options) :-
-	absolute_file_name(In, [ access(read),
-				 extensions([gif]),
-				 file_errors(fail)
-			       ],
-			   InFile), !,
+	absolute_file_name(In, InFile,
+			   [ access(read),
+			     extensions([gif]),
+			     file_errors(fail)
+			   ]), !,
 	atomic_list_concat(['cp ', InFile, ' ', Out], Cmd),
 	shell(Cmd).
 ps2gif(In, Out, Options) :-
 	get_option(Options, tmp(Tmp)),
 	get_option(Options, res(Res0)),
-	(   absolute_file_name(In, [ access(read),
-				     extensions([ps, eps]),
-				     file_errors(fail)
-				   ],
-			       InFile)
+	(   absolute_file_name(In, InFile,
+			       [ access(read),
+				 extensions([ps, eps]),
+				 file_errors(fail)
+			       ])
 	->  true
 	;   format(user_error, 'Could not find figure "~w"~n', In),
 	    fail
