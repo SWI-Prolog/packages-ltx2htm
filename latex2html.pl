@@ -2603,7 +2603,7 @@ write_html(body_link(Link)) :- !,
 		Label = html(Img)
 	    ;	Label = Text
 	    ),
-	    write_html([html(Anchor), Label, html('</A>')]),
+	    write_html([html(Anchor), Label, html('</a>')]),
 	    nl_html
 	;   true
 	).
