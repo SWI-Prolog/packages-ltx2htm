@@ -703,12 +703,18 @@ env(summarylist(_, Summary),
       +Summary,
       html('</table>')
     ]).
-env(parameters(_, Paramlist),
+env(parameters(_, Paramlist),		% Deprecated
     [ html('<table class="paramlist">'),
       Body,
       html('</table>')
     ]) :-
 	table_body(Paramlist, [[], []], Body).
+env(arguments(_, Arglist),
+    [ html('<table class="arglist">'),
+      Body,
+      html('</table>')
+    ]) :-
+	table_body(Arglist, [[], []], Body).
 env(comment(_, _), []).
 env(htmlonly(_, Tokens), HTML) :-
 	translate(Tokens, normal, HTML).

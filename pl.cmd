@@ -118,6 +118,7 @@
 % PlDoc parameter lists
 
 {parameters}
+{arguments}
 \param{+}{+}
 
 % C++

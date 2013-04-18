@@ -1,11 +1,9 @@
-/*  $Id$
-
-    Part of SWI-Prolog
+/*  Part of SWI-Prolog
 
     Author:        Jan Wielemaker
     E-mail:        J.Wielemak@cs.vu.nl
     WWW:           http://www.swi-prolog.org
-    Copyright (C): 1985-2012, University of Amsterdam
+    Copyright (C): 1985-2013, University of Amsterdam
 			      VU University Amsterdam
 
     This program is free software; you can redistribute it and/or
@@ -495,6 +493,12 @@ cmd(mtag({Tag}),
     [ html('<dt class="mtag">'), +Tag, html('<dd>') ]).
 
 cmd(param({Param}, {Description}),
+    [ html('<tr>'),
+      html('<td class="param">'), +Param, html('</td>'),
+      html('<td class="argdescr"> -'), +Description, html('<td>'),
+      html('</tr>')
+    ]).
+cmd(arg({Param}, {Description}),
     [ html('<tr>'),
       html('<td class="param">'), +Param, html('</td>'),
       html('<td class="argdescr"> -'), +Description, html('<td>'),
