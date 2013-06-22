@@ -484,6 +484,8 @@ language_map(table,	'Table').
 #(embrace(Text),	#embrace("()", Text)).
 #(h(Level, Title),	[html(OpenH), Title, html(CloseH)]) :-
 	h(Level, OpenH, CloseH).
+#(h(Level, NumRef, Title), [h(Level, NumRef), Title, html(CloseH)]) :-
+	h(Level, _OpenH, CloseH).
 #(predref(RN, Arity),   #lref(pred, Text, Text)) :-
 	clean_tt(RN, Name),
 	format(string(Text), '~w/~w', [Name, Arity]).
@@ -1540,10 +1542,11 @@ translate_section(Level, -, TeXTitle,
 	[ Footer,
 	  Tell,
 	  Header,
-	  #h(Level, #label(RefName,
-			   [ #span('sec-nr', Tag), ' ',
-			     #span('sec-title', Title)
-			   ]))
+	  #h(Level, RefName,
+	     #label(RefName,
+		    [ #span('sec-nr', Tag), ' ',
+		      #span('sec-title', Title)
+		    ]))
 	], NodeFile) :- !,
 	translate(TeXTitle, normal, Title),
 	section_tag(OldTag),
@@ -2600,6 +2603,14 @@ write_html(label(Label, Text, _)) :- !,
 	    write_html([html(Anchor), Text, html('</a>')]),
 	    retractall(in_anchor)
 	).
+write_html(h(Level, NumRefS)) :- !,
+	h(Level, OpenH0, _CloseH),
+	(   string_to_atom(NumRefS, NumRef),
+	    section_label(Human, NumRef)
+	->  format(string(OpenH), '<h~d id="~w">', [Level, Human])
+	;   OpenH = OpenH0
+	),
+	write_html([html(OpenH)]).
 write_html(body_link(Link)) :- !,
 	(   translate_ref(Link, Ref, Type)
 	->  format(string(Anchor), '<a class="nav" href="~w">', [Ref]),
