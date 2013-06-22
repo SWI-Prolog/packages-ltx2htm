@@ -484,7 +484,7 @@ language_map(table,	'Table').
 #(embrace(Text),	#embrace("()", Text)).
 #(h(Level, Title),	[html(OpenH), Title, html(CloseH)]) :-
 	h(Level, OpenH, CloseH).
-#(h(Level, NumRef, Title), [h(Level, NumRef), Title, html(CloseH)]) :-
+#(h(Level, NumRef, Title), [h(Level, NumRef, Title), Title, html(CloseH)]) :-
 	h(Level, _OpenH, CloseH).
 #(predref(RN, Arity),   #lref(pred, Text, Text)) :-
 	clean_tt(RN, Name),
@@ -2603,12 +2603,18 @@ write_html(label(Label, Text, _)) :- !,
 	    write_html([html(Anchor), Text, html('</a>')]),
 	    retractall(in_anchor)
 	).
-write_html(h(Level, NumRefS)) :- !,
+write_html(h(Level, NumRefS, TitleTerm)) :- !,
 	h(Level, OpenH0, _CloseH),
 	(   string_to_atom(NumRefS, NumRef),
 	    section_label(Human, NumRef)
 	->  format(string(OpenH), '<h~d id="~w">', [Level, Human])
-	;   OpenH = OpenH0
+	;   OpenH = OpenH0,
+	    (	sub_term(span('sec-title', Title), TitleTerm)
+	    ->	format(user_error,
+		       'No label for section ~w ~w~n', [NumRefS, Title])
+	    ;	format(user_error,
+		       'No label for section ~w~n', [NumRefS])
+	    )
 	),
 	write_html([html(OpenH)]).
 write_html(body_link(Link)) :- !,
