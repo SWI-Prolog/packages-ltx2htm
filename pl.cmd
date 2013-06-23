@@ -74,6 +74,7 @@
 \metafile{+}
 \pllib{+}
 \libdoc{-}{+}
+\libsummary{-}
 \clib{+}
 \env{+}
 \program{-}

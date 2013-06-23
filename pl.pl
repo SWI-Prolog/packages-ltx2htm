@@ -412,14 +412,21 @@ cmd(g({Term}),	#lref(gloss, RefName, Term)) :-
 
 % library stuff
 cmd(libdoc({Name}, {Summary}),
-    [HTML, #label(Name, [], Tag)]) :-
+    [HTML, #label(SecLabel, [], Tag)]) :-
+	atom_concat('sec:', Name, SecLabel),
 	filebase(Name, File),
 	format(atom(Label), '~w:', [library(Name)]),
 	translate_section(2, -,
 			  [Label, Summary],
 			  HTML,
 			  File),
-	tex:label_tag(Name, Tag).
+	tex:label_tag(SecLabel, Tag).
+cmd(libsummary({Name}),
+    [HTML, #label(SecLabel, [], Tag)]) :-
+	atom_concat('sec:summary-lib-', Name, SecLabel),
+	format(atom(Label), '~w', [library(Name)]),
+	translate_section(3, -, [Label], HTML),
+	tex:label_tag(SecLabel, Tag).
 
 filebase(Name, File) :-
 	atom_codes(Name, Codes),
