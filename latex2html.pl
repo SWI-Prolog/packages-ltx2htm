@@ -434,7 +434,7 @@ language_map(table,	'Table').
 	atom_codes(Style, Codes).
 #(beginbody,		html(Body)) :-
 	bodycolor(Colour), !,
-	sformat(Body, '<body bgcolor="~w">', [Colour]).
+	format(string(Body), '<body style="background:~w">', [Colour]).
 #(beginbody,		html('<body>')).
 #(endbody,		html('</body>')).
 #(thetitle,		Title) :-
@@ -454,14 +454,17 @@ language_map(table,	'Table').
 #(em(Text),		[html('<em>'),     Text, html('</em>')]).
 #(b(Text),		[html('<b>'),      Text, html('</b>')]).
 #(i(Text),		[html('<i>'),      Text, html('</i>')]).
-#(tt(Text),		[html('<tt>'),	   Text, html('</tt>')]).
-#(sc(Text),		[html('<font size=-1>'), % TBD: upcase Text
-					   Text, html('</font>')]).
+#(tt(Text),		[html('<code>'),   Text, html('</code>')]).
+#(sc(Text),		[html('<span style="font-variant:small-caps">'),
+					   Text, html('</span>')]).
 #(div(Class, Text),	[html(Begin), Text, html('</div>')]) :-
 	format(atom(Begin), '<div class="~w">', [Class]).
 #(span(Class, Text),	[html(Begin), Text, html('</span>')]) :-
 	format(atom(Begin), '<span class="~w">', [Class]).
-#(center(Text),		[html('<center>'), Text, html('</center>')]).
+#(center(Text),		[ html('<div style="text-align:center">'),
+			  Text,
+			  html('</div>')
+			]).
 #(navigate(Text),	[html('<div class="navigate">'), Text, html('</div>')]).
 #(right(Text),		[html('<right>'),  Text, html('</right>')]).
 #(quote(Text),		[html('<blockquote>'), Text, html('</blockquote>')]).
@@ -791,7 +794,7 @@ list_command(description,     _, html('<dl class="latex">'), html('</dl>')).
 list_command(dlist,	      _, html('<dl class="latex">'), html('</dl>')).
 list_command(itemize,         _, html('<ul class="latex">'), html('</ul>')).
 list_command(itemlist,        _, html('<ul class="latex">'), html('</ul>')).
-list_command(shortlist,       _, html('<ul compact>'), html('</ul>')).
+list_command(shortlist,       _, html('<ul class="compact">'), html('</ul>')).
 list_command(enumerate,       _, html('<ol class="latex">'), html('</ol>')).
 list_command(thebibliography, _, html('<dl class="bib">'), html('</dl>')).
 
@@ -1368,9 +1371,10 @@ html_font(bf,		html('<b>'),		html('</b>')).
 html_font(it,		html('<i>'),		html('</i>')).
 html_font(mathit,	html('<i>'),		html('</i>')).
 html_font(cal,		html('<i>'),		html('</i>')).
-html_font(tt,		html('<tt>'),		html('</tt>')).
+html_font(tt,		html('<code>'),		html('</code>')).
 html_font(sf,		html('<b>'),		html('</b>')).
-html_font(sc,		html('<font size=-1>'), html('</font>')).
+html_font(sc,		html('<span style="font-variant:small-caps">'),
+						html('</span>')).
 html_font(rm,		[],			[]).
 html_font(sl,		html('<b>'),		html('</b>')).
 html_font(scriptsize,   [],			[]).
