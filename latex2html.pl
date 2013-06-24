@@ -2640,7 +2640,7 @@ write_html(body_link(Link)) :- !,
 	->  format(string(Anchor), '<a class="nav" href="~w">', [Ref]),
 	    capitalise_atom(Type, Text),
 	    (	link_image(Type, Image)
-	    ->	sformat(Img, '<img src="~w" border=0 alt="~w">', [Image, Text]),
+	    ->	sformat(Img, '<img src="~w" alt="~w">', [Image, Text]),
 		Label = html(Img)
 	    ;	Label = Text
 	    ),
