@@ -425,10 +425,22 @@ cmd(libdoc({Name}, {Summary}),
 	tex:label_tag(SecLabel, Tag).
 cmd(libsummary({Name}),
     [HTML, #label(SecLabel, [], Tag)]) :-
-	atom_concat('sec:summary-lib-', Name, SecLabel),
+	path_minus(Name, RefName),
+	atom_concat('sec:summary-lib-', RefName, SecLabel),
 	format(atom(Label), '~w', [library(Name)]),
 	translate_section(3, -, [Label], HTML),
 	tex:label_tag(SecLabel, Tag).
+
+%%	path_minus(+Path, -Minus) is det.
+%
+%	Replace / in paths  with  -.  /   is  not  allowed  in SGML NAME
+%	attributes.
+
+path_minus(Path, Minus) :-
+	sub_atom(Path, _, _, _, /), !,
+	atomic_list_concat(Segments, /, Path),
+	atomic_list_concat(Segments, -, Minus).
+path_minus(Path, Path).
 
 filebase(Name, File) :-
 	atom_codes(Name, Codes),
