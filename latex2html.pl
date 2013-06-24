@@ -1004,7 +1004,7 @@ cmd('Appref'({Label}), HTML) :-
 
 cmd(title({Title}), []) :-			% \title
 	retractall(title(_)),
-	translate(Title, normal, HTML),
+	translate(Title, title, HTML),
 	assert(title(HTML)).
 cmd(author({Author}), []) :-			% \author
 	retractall(author(_)),
@@ -1355,6 +1355,8 @@ cmd(rem({A1}, {A2}), math, [math+A1, ' ', 'rem', ' ', math+A2]).
 cmd(div, math, div).
 cmd(pow({A1}, {A2}), math, [math+A1, '**', math+A2]).
 cmd(tt, math, []).			% just ignore?
+
+cmd(\([]), title, ' ').			% ignore \\ in title
 
 %
 % cmd(+Command, +Mode0, -Mode, -HTML
