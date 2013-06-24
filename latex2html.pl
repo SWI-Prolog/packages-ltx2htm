@@ -66,7 +66,8 @@ page_header('<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" \c
 	bodycolor/1,			% \bodycolor storage
 	title/1,			% \title{} storage
 	author/1,			% \auther{} command storage
-	link_image/2.			% Id, Image
+	link_image/2,			% Id, Image
+	center_tables/0.
 :- discontiguous
 	cmd/2,
 	cmd/3,
@@ -729,6 +730,11 @@ env(quote(_, Tokens), #quote(Quote)) :-
 	translate_group(Tokens, Quote).
 env(abstract(_, Tokens), #abstract(Quote)) :-
 	translate(Tokens, normal, Quote).
+env(center(_, ['\n',Table,'\n']), HTML) :-
+	tabular_env(Table), !,
+	asserta(center_tables, Ref),
+	translate([Table], normal, HTML),
+	erase(Ref).
 env(center(_, Tokens), #center(Center)) :-
 	translate(Tokens, normal, Center).
 env(titlepage(_, _Page), []) :-
@@ -1899,6 +1905,9 @@ cmd(rule({W}, {H}), []) :-
 		 *	      TABLES		*
 		 *******************************/
 
+tabular_env(env(tabular,_,_)).
+tabular_env(env(tabularlp,_,_)).
+
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Specifying the number of columns makes Netscape make the columns equally
 width.  Thats not what we want.
@@ -1928,8 +1937,13 @@ translate_table(Format, Body, HTML) :-
 	->  Border = 0
 	;   Border = 2
 	),
-	sformat(Head, '<table border="~d" frame="~w" rules="groups">',
-		[Border, FrameAttributes]).
+	(   center_tables
+	->  HeadFmt = '<table border="~d" frame="~w" rules="groups" \c
+	               style="margin:auto">'
+	;   HeadFmt = '<table border="~d" frame="~w" rules="groups">'
+	),
+	format(string(Head), HeadFmt,
+	       [Border, FrameAttributes]).
 
 %	expand_table_commands(+BodyIn, -BodyOut)
 %

@@ -101,6 +101,10 @@
 \appref{-}
 \Appref{-}
 
+% Extended tables
+
+{tabularlp}{-}
+
 % Summary handling
 
 {summarylist}{-}

@@ -58,6 +58,8 @@
 
 list_command(tags,       _, html('<dl class="tags">'), html('</dl>')).
 
+env(tabularlp([{_}], Tokens), HTML) :-
+	translate_table(ll, Tokens, HTML).
 
 		 /*******************************
 		 *	    INDEX HACK		*
