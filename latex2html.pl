@@ -642,7 +642,7 @@ reset_cites :-
 	current_float/2.		% Type, Number
 
 :- meta_predicate
-	do_float(+, :).
+	do_float(+, 0).
 
 %	do_float(+Type(+Number), +Goal)
 %
@@ -1188,14 +1188,11 @@ cmd(input({File}), HTML) :-
 	translate(TeXTokens, file, HTML).
 cmd(appendix, []) :-
 	appendix.
-%cmd(caption({Caption}),
-%    #center([#b([#nameof(Type), ' ', Number, ':', ' ']), +Caption])) :-
-%	current_float(Type, Number).
 cmd(caption({Caption}),
-    [ html('<table align="center" width="75%"><tr><td>'),
+    [ html('<div class="caption">'),
       #b([#nameof(Type), ' ', Number, ':', ' ']),
       +Caption,
-      html('</table>')
+      html('</div>')
     ]) :-
 	current_float(Type, Number).
 
@@ -1245,18 +1242,18 @@ cmd(includegraphics(_Options, {File}), html(Img)) :-
 	).
 cmd(postscript({_Width}, {File}, Title),
     [ LabelHTML,
-      #center(html(Img)),
+      ImgHTML,
       html('<p>'),
       Caption
       ]) :-
 	file_name_extension(File, gif, GifFile),
-	concat('fig:', File, Label),
+	atom_concat('fig:', File, Label),
 	step_counter(figure, Fig),
 	do_float(figure(Fig),
 		 (   translate_command(caption(Title), float, _, Caption),
 		     translate_command(label({Label}), float, _, LabelHTML)
 		 )),
-	sformat(Img, '<img src="~w">', GifFile),
+	centered_img(GifFile, ImgHTML),
 	make_output_directory,
 	current_setting(html_output_dir(Dir)),
 	atomic_list_concat([Dir, '/', GifFile], OutFile),
@@ -1267,18 +1264,18 @@ cmd(postscript({_Width}, {File}, Title),
 	).
 cmd(postscriptfig(_Options, {File}, Title),
     [ LabelHTML,
-      #center(html(Img)),
+      ImgHTML,
       html('<p>'),
       Caption
     ]) :-
 	file_name_extension(File, gif, GifFile),
-	concat('fig:', File, Label),
+	atom_concat('fig:', File, Label),
 	step_counter(figure, Fig),
 	do_float(figure(Fig),
 		 (   translate_command(caption(Title), float, _, Caption),
 		     translate_command(label({Label}), float, _, LabelHTML)
 		 )),
-	sformat(Img, '<img src="~w">', GifFile),
+	centered_img(GifFile, ImgHTML),
 	make_output_directory,
 	current_setting(html_output_dir(Dir)),
 	atomic_list_concat([Dir, '/', GifFile], OutFile),
@@ -1287,6 +1284,10 @@ cmd(postscriptfig(_Options, {File}, Title),
 	->  true
 	;   ps2gif(psfig(File), OutFile, [margin(5)])
 	).
+
+centered_img(File, html(HTML)) :-
+	format(string(HTML),
+	       '<div style="text-align:center"><img src="~w"></div>', File).
 
 ps_extension(eps).
 ps_extension(ps).

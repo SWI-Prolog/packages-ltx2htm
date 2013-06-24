@@ -109,6 +109,12 @@ span.pred-tag
   color: #202020;
 }
 
+div.caption
+{ width: 80%;
+  margin: auto;
+  text-align:center;
+}
+
 /* Footnotes */
 
 sup.fn { color: blue; text-decoration: underline; }
