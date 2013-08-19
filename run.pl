@@ -45,8 +45,7 @@ setup :-
 :- load_files(latex2html, [silent(true)]).
 
 main :-
-	current_prolog_flag(argv, Argv),
-	append(_, [--,File], Argv), !,
+	current_prolog_flag(argv, [File]), !,
 	(   process(File)
 	->  halt
 	;   halt(1)
