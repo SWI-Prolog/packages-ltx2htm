@@ -234,9 +234,9 @@ static const char *texarg;		/* argument for runaway message */
 
 #define CharType(c) (char_type[(c)+1])
 
-#define isspace(c) 	(CharType(c) == SP)
-#define isdigit(c) 	(CharType(c) == DI)
-#define isalnum(c) 	(CharType(c) >= LC)
+#define isspace(c)	(CharType(c) == SP)
+#define isdigit(c)	(CharType(c) == DI)
+#define isalnum(c)	(CharType(c) >= LC)
 #define wbreak(c)	(CharType(c) <= CM) /* breaks a word */
 #define isbegingroup(c) (CharType(c) == BG)
 #define iscommand(c)    (CharType(c) == CM)
@@ -829,7 +829,6 @@ getArgument(Input fd, int flags, char *buf, int size)
 
   if ( isbegingroup(c) )		/* { */
   { int nesting = 1; char *s = buf;
-    int prev = c;
 
     for(;;)
     { c = getc(fd);
@@ -861,7 +860,6 @@ getArgument(Input fd, int flags, char *buf, int size)
 	  error(ERR_RUNAWAY_ARGUMENT, texfile(), texline());
 	}
 	*s++ = c;
-	prev = c;
       } else
 	break;
     }
@@ -885,7 +883,6 @@ getOptionalArgument(Input fd, int flags, char *buf, int size)
 
   if ( c == '[' )
   { int nesting = 1; char *s = buf;
-    int prev = c;
 
     for(;;)
     { c = getc(fd);
@@ -920,7 +917,6 @@ getOptionalArgument(Input fd, int flags, char *buf, int size)
 	  error(ERR_RUNAWAY_ARGUMENT, texfile(), texline());
 	}
 	*s++ = c;
-	prev = c;
       } else
 	break;
     }
@@ -1353,7 +1349,7 @@ parseTeX(Input fd, CallBack func, void *ctx)
       }
       case MM:
       { parseMath(fd, func, ctx);
- 	c = getc(fd);
+	c = getc(fd);
 
         break;
       }
@@ -1433,7 +1429,7 @@ parseTeXFile(const char *file, CallBack func, void *ctx)
 
 
 		 /*******************************
-  		 *	    HTML OUTPUT         *
+		 *	    HTML OUTPUT         *
 		 *******************************/
 
 #define VERB_NORMAL	0
@@ -1799,7 +1795,9 @@ static atom_t	 ATOM_star;		/* * */
 static atom_t	 ATOM_minus;		/* - */
 static atom_t	 ATOM_space;		/* ' ' */
 static atom_t	 ATOM_nl;		/* '\n' */
+#ifndef ATOM_nil
 static atom_t	 ATOM_nil;		/* [] */
+#endif
 static atom_t	 ATOM_true;		/* true */
 static atom_t	 ATOM_false;		/* false */
 
@@ -1832,7 +1830,9 @@ initPrologConstants()
   ATOM_minus	    = PL_new_atom("-");
   ATOM_space	    = PL_new_atom(" ");
   ATOM_nl	    = PL_new_atom("\n");
+#ifndef ATOM_nil
   ATOM_nil	    = PL_new_atom("[]");
+#endif
   ATOM_true	    = PL_new_atom("true");
   ATOM_false	    = PL_new_atom("false");
 }
