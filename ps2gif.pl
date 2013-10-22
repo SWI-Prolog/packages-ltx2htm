@@ -133,5 +133,4 @@ get_option(_, Term) :-
 	arg(1, Term, Def).
 
 aformat(Atom, Fmt, Args) :-
-	sformat(Str, Fmt, Args),
-	string_to_atom(Str, Atom).
+	format(atom(Atom), Fmt, Args).

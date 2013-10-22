@@ -500,10 +500,10 @@ language_map(table,	'Table').
 #(row(Columns),		[html('<tr>'), HtmlCols, html('</tr>')]) :-
 	add_td(Columns, HtmlCols).
 #(label(Lbl, Text, Tag),label(ALabel, Expanded, Tag)) :-
-	string_to_atom(Lbl, ALabel),
+	atom_string(ALabel, Lbl),
 	expand_macros(Text, Expanded).
 #(label(Lbl, Text),	label(ALabel, Expanded, -)) :-
-	string_to_atom(Lbl, ALabel),
+	atom_string(ALabel, Lbl),
 	expand_macros(Text, Expanded).
 #(lref(Label, Text), Expanded) :- !,
 	#(lref('', Label, Text), Expanded).
@@ -583,7 +583,7 @@ canonise_label(Atom, Atom) :-
 	atom(Atom), !.
 canonise_label(Atomic, Atom) :-
 	atomic(Atomic), !,
-	string_to_atom(Atomic, Atom).
+	atom_string(Atom, Atomic).
 canonise_label(fileof(In), Out) :-
 	onefile(true), !,
 	canonise_label(In, Out).
@@ -2626,7 +2626,7 @@ write_html(label(Label, Text, _)) :- !,
 	).
 write_html(h(Level, NumRefS, TitleTerm)) :- !,
 	h(Level, OpenH0, _CloseH),
-	(   string_to_atom(NumRefS, NumRef),
+	(   atom_string(NumRef, NumRefS),
 	    section_label(Human, NumRef)
 	->  format(string(OpenH), '<h~d id="~w">', [Level, Human])
 	;   OpenH = OpenH0,
