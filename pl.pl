@@ -199,6 +199,14 @@ cmd(function(A, {RawName}, {Arity}, {Args}),
 	clean_name(RawName, Name),
 	sformat(RefName, 'f-~w/~w', [Name, Arity]),
 	add_to_index(RefName, +RefName).
+cmd(mapfunction(A, {RawName}, {Arity}, {Args}),
+    #defitem(Class, Content)) :-
+	pred_class(A, Class),
+	pred_tag(A, Content,
+		 [#label(RefName, [#strong(Name), #embrace(#var(+Args))])]),
+	clean_name(RawName, Name),
+	sformat(RefName, 'map.~w/~w', [Name, Arity]),
+	add_to_index(RefName, +RefName).
 cmd(qpredicate(A, {RawM}, {RawName}, {'0'}, {_}),
     #defitem(Class, Content)) :-
 	pred_class(A, Class),

@@ -5,6 +5,7 @@
 \definition{+}=item		1 0
 \predicate[+]{+}{-}{+}=item	1 0
 \function[+]{+}{-}{+}=item	1 0
+\mapfunction[+]{+}{-}{+}=item	1 0
 \qpredicate[+]{+}{+}{-}{+}=item	1 0
 \dcg[+]{+}{-}{+}=item		1 0
 \directive[+]{+}{-}{+}=item	1 0
