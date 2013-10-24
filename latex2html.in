@@ -20,8 +20,8 @@ case "$1" in
 	;;
 esac
 
-$PL -L0 -G0 -T0 \
+$PL \
     -f none \
-    -p library=$libdir \
-    -g "load_files(library(latex2html),[silent(true)]),$goal" \
+    -p latex2html=$libdir \
+    -g "load_files(latex2html(latex2html),[silent(true)]),$goal" \
     -t "$toplevel"

@@ -82,7 +82,7 @@ html_file_base('Title').
 :- dynamic
 	user:file_search_path/2.
 
-user:file_search_path(foreign, library(Lib)) :-
+user:file_search_path(foreign, latex2html(Lib)) :-
 	current_prolog_flag(arch, Arch),
 	atom_concat('lib/', Arch, Lib).
 user:file_search_path(psfig, tex(figs)).
@@ -90,9 +90,16 @@ user:file_search_path(includegraphics, tex(figs)).
 user:file_search_path(tex, '.').
 user:file_search_path(img, '.').
 user:file_search_path(img, icons).
-user:file_search_path(img, library(icons)).
+user:file_search_path(img, latex2html(icons)).
 
 :- load_foreign_library(user:foreign(tex)).
+
+% support list_strings/0
+:- multifile check:valid_string_goal/1.
+
+check:valid_string_goal(tex:delete_all(_,S,_)) :- string(S).
+check:valid_string_goal(tex:replace_all(_,S1,S2,_)) :- string(S1), string(S2).
+check:valid_string_goal(tex:string_without(S,_,_,_)) :- string(S).
 
 
 		 /*******************************
@@ -101,7 +108,7 @@ user:file_search_path(img, library(icons)).
 
 read_tex_inputs :-
 	getenv('TEXINPUTS', Val), !,
-	split(Val, ":", PathElement),
+	split(Val, 0':, PathElement),
 	retractall(user:file_search_path(tex, _)),
 	reverse(PathElement, RevPath),
 	forall(member(E, RevPath), assert_tex_input(E)).
@@ -137,7 +144,7 @@ latex2html_module :-
 %	Load a tex command file
 
 tex_load_commands(File) :-
-	(   member(Term, [tex(File), library(File)]),
+	(   member(Term, [tex(File), latex2html(File)]),
 	    absolute_file_name(Term,
 			       CmdFile,
 			       [ extensions([cmd]),
@@ -429,7 +436,7 @@ language_map(table,	'Table').
 			  html(Style),
 			  html('</style>')
 			]) :-
-	absolute_file_name(library('latex2html.css'), StyleFile,
+	absolute_file_name(latex2html('latex2html.css'), StyleFile,
 			   [ access(read) ]),
 	read_file_to_codes(StyleFile, Codes, []),
 	atom_codes(Style, Codes).
