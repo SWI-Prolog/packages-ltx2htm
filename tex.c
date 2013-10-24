@@ -1801,6 +1801,10 @@ static atom_t	 ATOM_nil;		/* [] */
 static atom_t	 ATOM_true;		/* true */
 static atom_t	 ATOM_false;		/* false */
 
+#ifndef ATOM_dot
+#define ATOM_dot PL_new_atom(".")
+#endif
+
 static void
 initPrologConstants()
 { FUNCTOR_verb2     = PL_new_functor(PL_new_atom("verb"), 2);
@@ -1808,7 +1812,7 @@ initPrologConstants()
   FUNCTOR_verbatim2 = PL_new_functor(PL_new_atom("verbatim"), 2);
   FUNCTOR_verbatim1 = PL_new_functor(PL_new_atom("verbatim"), 1);
   FUNCTOR_pre1	    = PL_new_functor(PL_new_atom("pre"), 1);
-  FUNCTOR_dot2	    = PL_new_functor(PL_new_atom("."), 2);
+  FUNCTOR_dot2	    = PL_new_functor(ATOM_dot, 2);
   FUNCTOR_brace1    = PL_new_functor(PL_new_atom("{}"), 1);
   FUNCTOR_cmd1      = PL_new_functor(PL_new_atom("\\"), 1);
   FUNCTOR_cmd2      = PL_new_functor(PL_new_atom("\\"), 2);
