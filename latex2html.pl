@@ -489,7 +489,8 @@ language_map(table,	'Table').
 			  #span('fn-text', Text),
 			  html('</sup>')
 			]).
-#(embrace([O,C],Text),	[nospace(OA), Text, nospace(CA)]) :-
+#(embrace(OC,Text),	[nospace(OA), Text, nospace(CA)]) :-
+	string_codes(OC, [O,C]),
 	char_code(OA, O),
 	char_code(CA, C).
 #(embrace(Text),	#embrace("()", Text)).
@@ -571,7 +572,7 @@ add_td([H|T0], [html('<td>'), H, html('</td>')|T]) :-
 	add_td(T0, T).
 
 cite_references(KeyIn, Functor, Refs) :-
-	split(KeyIn, ",", Keys),
+	split(KeyIn, 0',, Keys),
 	make_cite_references(Keys, Functor, Refs).
 
 make_cite_references([], _, []).
@@ -867,7 +868,7 @@ translate_items([H0|T0], List, [H1|T1]) :-
 		 *******************************/
 
 prolog_function(\(usepackage, [_,{File},_])) :-
-	(   member(Term, [tex(File), library(File)]),
+	(   member(Term, [tex(File), latex2html(File)]),
 	    absolute_file_name(Term, PlFile,
 			       [ extensions([pl, qlf]),
 				 access(read),
@@ -1204,7 +1205,7 @@ cmd(caption({Caption}),
 	current_float(Type, Number).
 
 cmd(psdirectories({Spec}), []) :-
-	split(Spec, ",", Dirs),
+	split(Spec, 0',, Dirs),
 	retractall(user:file_search_path(psfig, _)),
 	forall(member(D, Dirs),
 	       assert(user:file_search_path(psfig, tex(D)))).
@@ -1432,12 +1433,12 @@ clean_tt([Atom], Atom) :-
 clean_tt('\\Sdot', '.') :- !.
 clean_tt(Raw, Clean) :-
 	atom_codes(Raw, S0),
-	(   append("{", S1, S0),
-	    append(S2, "}", S1)
+	(   append([0'{], S1, S0),
+	    append(S2, [0'}], S1)
 	->  true
 	;   S2 = S0
 	),
-	(   append("\\tt", S3, S2)
+	(   append([0'\\, 0't, 0't], S3, S2)
 	->  true
 	;   S3 = S2
 	),
@@ -1451,26 +1452,35 @@ clean_tt(Raw, Clean) :-
 
 clean_specials([], []).
 clean_specials([0'\\, Special|T0], [Special|T]) :-
-	memberchk(Special, "#$&%{}"), !,
+	string_code(_, "#$&%{}", Special), !,
 	clean_specials(T0, T).
 clean_specials([H|T0], [H|T]) :-
 	clean_specials(T0, T).
 
-delete_all(S0, D, S) :-
+delete_all(S0, DS, S) :-
+	string_codes(DS, D),
+	delete_all_codes(S0, D, S).
+
+delete_all_codes(S0, D, S) :-
 	(   append(D, Post, P2)
 	->  (   append(P1, P2, S0)
 	    ->	append(P1, Post, S1),
-		delete_all(S1, D, S)
+		delete_all_codes(S1, D, S)
 	    ;	S = S0
 	    )
 	).
 
-replace_all(S0, F, T, S) :-
+replace_all(S0, FS, TS, S) :-
+	string_codes(FS, F),
+	string_codes(TS, T),
+	replace_all_codes(S0, F, T, S).
+
+replace_all_codes(S0, F, T, S) :-
 	(   append(F, Post, P2)
 	->  (   append(P1, P2, S0)
 	    ->	append(P1, T, S1),
 		append(S1, Post, S2),
-		replace_all(S2, F, T, S)
+		replace_all_codes(S2, F, T, S)
 	    ;	S = S0
 	    )
 	).
@@ -1927,11 +1937,10 @@ translate_table(Format, Body, HTML) :-
 	atom_codes(Format, Fmt),
 	table_frame(Fmt, Body, FrameAttributes, Fmt2, Body2),
 	expand_table_commands(Body2, Body3),
-	(   table_columns(Fmt2, Ncols, ColAtts)
+	(   table_columns(Fmt2, _Ncols, ColAtts)
 	->  true
 	;   format(user_error, 'Failed to parse tabular spec "~s"~n', [Fmt2]),
-	    ColAtts = [],
-	    Ncols = 0
+	    ColAtts = []
 	),
 	(   table_body(Body3, ColAtts, BodyHTML)
 	->  true
@@ -2074,7 +2083,7 @@ align_char(Chr) -->		% D{inputsep}{outputsep}{decimal places}
 
 string_without(L, [C|T]) -->
 	[C],
-	{\+ member(C, L)}, !,
+	{\+ string_code(_, L, C)}, !,
 	string_without(L, T).
 string_without(_, []) --> [].
 
@@ -2094,9 +2103,9 @@ integer(N) -->
 	  number_codes(N, Chars)
 	}.
 
-optional_sign("-") --> "-", !.
-optional_sign("+") --> "+", !.
-optional_sign("")  --> "".
+optional_sign([0'-]) --> "-", !.
+optional_sign([0'+]) --> "+", !.
+optional_sign([])  --> "".
 
 digit(C) -->
 	[C],
@@ -2358,7 +2367,7 @@ replace_args([C|T0], Args, [C|T]) :-
 		 *	      UTIL		*
 		 *******************************/
 
-%	split(+Atom, +SepString, -ListOfAtoms)
+%	split(+Atom, +SepCode, -ListOfAtoms)
 
 split(Atom, Sep, List) :-
 	atom_codes(Atom, Chars),
@@ -2367,7 +2376,7 @@ split(Atom, Sep, List) :-
 do_split([], _, []).
 do_split(L, Sep, [H|T]) :-
 	append(Head, Rest, L),
-	append(HL, Sep, Head), !,
+	append(HL, [Sep], Head), !,
 	atom_codes(H, HL),
 	do_split(Rest, Sep, T).
 do_split(L, _, [A]) :-

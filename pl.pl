@@ -485,7 +485,7 @@ canonise_glossitem(In, Out) :-
 	->  remove_trailing_spaces(CharsPre, Chars1)
 	;   Chars1 = Chars0
 	),
-	(   append(Chars2, "s", Chars1)
+	(   append(Chars2, [0's], Chars1)
 	->  true
 	;   Chars2 = Chars1
 	),
