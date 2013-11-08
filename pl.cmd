@@ -196,6 +196,7 @@
 \Sane
 \Sgt
 \Sge
+\Seqbowtie
 \Stlt
 \Stle
 \Stgt
