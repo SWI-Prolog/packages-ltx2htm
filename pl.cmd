@@ -197,6 +197,8 @@
 \Sgt
 \Sge
 \Seqbowtie
+\Smapselect
+\Smappunify
 \Stlt
 \Stle
 \Stgt
