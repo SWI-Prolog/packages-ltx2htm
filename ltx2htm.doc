@@ -497,23 +497,23 @@ Emits a row of a table.  Translates to \exam{<TR>\arg{C1}<TD>...</TR>}.
 \arg{Columns} is a list containing the HTML code for each column in the
 row.
     \termitem{label}{Label, Text, Tag}
-Emits \term{label}{Label, Text, Tag}, but canonises the \arg{Label} and
+Emits \term{label}{Label, Text, Tag}, but canonicalises the \arg{Label} and
 \arg{Text} fields first.  \arg{Tag} is the tag of the current section or
 float.
     \termitem{label}{Label, Text}
 As \term{label}{Label, Text, Tag}, but emits a label not related to a
 section or float.
     \termitem{lref}{Label, Text}
-Emits \term{lref}{Label, Text}, but canonises the \arg{Label} and
+Emits \term{lref}{Label, Text}, but canonicalises the \arg{Label} and
 \arg{Text} fields first.
     \termitem{iflref}{Label, Text}
-Emits \term{iflref}{Label, Text}, but canonises the \arg{Label} and
+Emits \term{iflref}{Label, Text}, but canonicalises the \arg{Label} and
 \arg{Text} fields first.
     \termitem{lback}{Label, Text}
-Emits \term{lback}{Label, Text}, but canonises the \arg{Label} and
+Emits \term{lback}{Label, Text}, but canonicalises the \arg{Label} and
 \arg{Text} fields first.
     \termitem{lforw}{Label, Text}
-Emits \term{lforw}{Label, Text}, but canonises the \arg{Label} and
+Emits \term{lforw}{Label, Text}, but canonicalises the \arg{Label} and
 \arg{Text} fields first.
     \termitem{url}{URL, Text}
 Emits an external URL: \exam{<A HREF="\arg{URL}">\arg{Text}</A>}.

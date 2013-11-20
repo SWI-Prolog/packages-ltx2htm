@@ -518,12 +518,12 @@ language_map(table,	'Table').
 #(lref(_, _Label, Text),	Text) :-
 	in_anchor, !.
 #(lref(Class, Label, Text),	lref(Class, ALabel, Expanded)) :-
-	canonise_label(Label, ALabel),
+	canonicalise_label(Label, ALabel),
 	asserta(in_anchor),
 	expand_macros(Text, Expanded),
 	retractall(in_anchor).
 #(iflref(Label, Text),	iflref(ALabel, Expanded)) :-
-	canonise_label(Label, ALabel),
+	canonicalise_label(Label, ALabel),
 	expand_macros(Text, Expanded).
 #(url(_URL, Text),	Text) :-
 	in_anchor, !.
@@ -582,21 +582,21 @@ make_cite_references([Key|T0], F, [#lref(cite, Key, Term), nospace(','), ' '|T])
 	Term =.. [F, Key],
 	make_cite_references(T0, F, T).
 
-%	canonise_label(+Raw, -Canonical)
+%	canonicalise_label(+Raw, -Canonical)
 %
 %	Ensures the label is either an atom, or fileof(Atom), so unification
 %	will work properly.
 
-canonise_label(Atom, Atom) :-
+canonicalise_label(Atom, Atom) :-
 	atom(Atom), !.
-canonise_label(Atomic, Atom) :-
+canonicalise_label(Atomic, Atom) :-
 	atomic(Atomic), !,
 	atom_string(Atom, Atomic).
-canonise_label(fileof(In), Out) :-
+canonicalise_label(fileof(In), Out) :-
 	onefile(true), !,
-	canonise_label(In, Out).
-canonise_label(fileof(In), fileof(Out)) :-
-	canonise_label(In, Out).
+	canonicalise_label(In, Out).
+canonicalise_label(fileof(In), fileof(Out)) :-
+	canonicalise_label(In, Out).
 
 
 %	expand_macros(Raw, Expanded).

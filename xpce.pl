@@ -113,10 +113,10 @@ cmd(noargpredicate(Name), HTML) :-
 %cmd(idx({Term}), nospace(Term)) :-	% If only index to section is wanted
 %	add_to_index(Term).
 cmd(glossitem({Term}), #defitem(#label(RefName, #strong(Term)))) :-
-	canonise_glossitem(Term, Ref),
+	canonicalise_glossitem(Term, Ref),
 	sformat(RefName, 'gloss:~w', [Ref]).
 cmd(g({Term}),	#lref(RefName, Term)) :-
-	canonise_glossitem(Term, Ref),
+	canonicalise_glossitem(Term, Ref),
 	sformat(RefName, 'gloss:~w', [Ref]).
 cmd(line({Tokens}), #quote(Line)) :-
 	translate(Tokens, normal, Line).
@@ -133,7 +133,7 @@ cmd(setupfancyplain, []).
 env(tabularlp(_, Tokens), HTML) :-
 	translate_table('|l|p{3in}|', Tokens, HTML).
 
-canonise_glossitem(In, Out) :-
+canonicalise_glossitem(In, Out) :-
 	downcase_atom(In, In1),
 	atom_codes(In1, Chars0),
 	(   append(Chars1, "s", Chars0)

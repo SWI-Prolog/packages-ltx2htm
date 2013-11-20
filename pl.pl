@@ -414,10 +414,10 @@ cmd(menuref({A1}),            #lref(RefName, Name)) :-
 % Glossary support
 
 cmd(glossitem({Term}), #defitem(#label(RefName, #strong(Term)))) :-
-	canonise_glossitem(Term, Ref),
+	canonicalise_glossitem(Term, Ref),
 	format(string(RefName), 'gloss:~w', [Ref]).
 cmd(g({Term}),	#lref(gloss, RefName, Term)) :-
-	canonise_glossitem(Term, Ref),
+	canonicalise_glossitem(Term, Ref),
 	format(string(RefName), 'gloss:~w', [Ref]).
 
 % library stuff
@@ -478,7 +478,7 @@ pred_class(_, pubdef).
 		 *	     GLOSSARY		*
 		 *******************************/
 
-canonise_glossitem(In, Out) :-
+canonicalise_glossitem(In, Out) :-
 	downcase_atom(In, In1),
 	atom_codes(In1, Chars0),
 	(   append(CharsPre, [0'[|_], Chars0)
