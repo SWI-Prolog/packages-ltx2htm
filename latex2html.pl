@@ -54,7 +54,7 @@
 	  ]).
 :- use_module(library(quintus)).
 
-version('0.98').			% for SWI-Prolog 5.6.18
+ltx2htm_version('0.98').		% for SWI-Prolog 5.6.18
 
 page_header('<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" \c
                "http://www.w3.org/TR/html4/strict.dtd">\n\n').
@@ -285,7 +285,7 @@ current_html_output(Raw) :-
 	File = Raw.
 
 welcome :-
-	version(Version),
+	ltx2htm_version(Version),
 	format(user_error, 'Welcome to LaTeX2HTML version ~w~n~n', [Version]).
 
 goodbye :-
