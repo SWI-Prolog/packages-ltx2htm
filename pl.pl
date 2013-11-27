@@ -199,7 +199,7 @@ cmd(function(A, {RawName}, {Arity}, {Args}),
 	clean_name(RawName, Name),
 	sformat(RefName, 'f-~w/~w', [Name, Arity]),
 	add_to_index(RefName, +RefName).
-cmd(mapfunction(A, {RawName}, {Arity}, {Args}),
+cmd(dictfunction(A, {RawName}, {Arity}, {Args}),
     #defitem(Class, Content)) :-
 	pred_class(A, Class),
 	pred_tag(A, Content,
