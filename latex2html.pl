@@ -2635,7 +2635,7 @@ write_html(ref(Label)) :- !,			% References and labels
 write_html(label(Label, Text, _)) :- !,
 	(   in_anchor
 	->  write_html(Text)
-	;   sformat(Anchor, '<a name="~w">', [Label]),
+	;   format(string(Anchor), '<a id="~w">', [Label]),
 	    asserta(in_anchor),
 	    write_html([html(Anchor), Text, html('</a>')]),
 	    retractall(in_anchor)
