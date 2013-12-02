@@ -498,13 +498,14 @@ language_map(table,	'Table').
 	h(Level, OpenH, CloseH).
 #(h(Level, NumRef, Title), [h(Level, NumRef, Title), Title, html(CloseH)]) :-
 	h(Level, _OpenH, CloseH).
-#(predref(RN, Arity),   #lref(pred, Text, Text)) :-
+#(predref(RN, Arity),   #lref(pred, Label, Text)) :-
 	clean_tt(RN, Name),
-	format(string(Text), '~w/~w', [Name, Arity]).
+	format(string(Text), '~w/~w', [Name, Arity]),
+	latex2html4pl:predicate_refname(Name, Arity, Label).
 #(funcref(RN, Arity),   #lref(function, Label, Text)) :-
 	clean_tt(RN, Name),
 	format(string(Text), '~w/~w', [Name, Arity]),
-	format(string(Label), 'f-~w/~w', [Name, Arity]).
+	latex2html4pl:function_refname(Name, Arity, Label).
 #(row(Columns),		[html('<tr>'), HtmlCols, html('</tr>')]) :-
 	add_td(Columns, HtmlCols).
 #(label(Lbl, Text, Tag),label(ALabel, Expanded, Tag)) :-
@@ -2277,7 +2278,7 @@ fix_predicate_reference(Ref0, Ref) :-
 	 atom_codes(Ref0, Chars),
 	 phrase(predref(Name, Arities), Chars),
 	 member(Arity, Arities),
-	 atomic_list_concat([Name, /, Arity], Ref),
+	 format(atom(Ref), 'p-~w-~w', [Name, Arity]),
 	 label(Ref, _, _), !.
 
 predref(Name, Arities) -->

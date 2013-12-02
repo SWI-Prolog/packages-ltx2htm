@@ -140,16 +140,16 @@ cmd(dcgref({RawName}, {DCGArity}), #lref(pred, RefName, Text)) :-
 cmd(qpredref({Module}, {RawName}, {Arity}), #lref(pred, RefName, Text)) :-
 	clean_name(RawName, Name),
 	predicate_refname(Module:Name, Arity, RefName),
-	sformat(Text, '~w:~w/~w', [Module, Name, Arity]).
+	format(string(Text), '~w:~w/~w', [Module, Name, Arity]).
 cmd(qdcgref({Module}, {RawName}, {DCGArity}), #lref(pred, RefName, Text)) :-
 	clean_name(RawName, Name),
 	atom_number(DCGArity, ArityInt),
 	Arity is ArityInt + 2,
 	predicate_refname(Module:Name, Arity, RefName),
-	sformat(Text, '~w:~w/~w', [Module, Name, Arity]).
+	format(string(Text), '~w:~w/~w', [Module, Name, Arity]).
 cmd(nopredref({RawName}, {Arity}), Text) :-
 	clean_name(RawName, Name),
-	sformat(Text, '~w/~w', [Name, Arity]).
+	format(string(Text), '~w/~w', [Name, Arity]).
 cmd(prologflag({Name}), #lref(flag, RefName, Name)) :-
 	atom_concat('flag:', Name, RefName).
 cmd(functor({Name}, {Arity}), #code([+Name, nospace(/), +Arity])).
@@ -164,7 +164,7 @@ cmd(manref({RawName}, {Section}),
 cmd(cfuncref({RawName}, {Args}),
     #lref(func, RefName, [Name, #embrace(+Args)])) :-
 	clean_name(RawName, Name),
-	sformat(RefName, '~w()', [Name]).
+	cfunction_refname(Name, RefName).
 cmd(definition({Tag}),
     #defitem(#b(+Tag))).
 cmd('DCG'(A,B,C), X) :-
@@ -174,7 +174,7 @@ cmd(predicate(A, {RawName}, {'0'}, {_}),
 	pred_class(A, Class),
 	pred_tag(A, Content, [#label(RefName, #strong(Name))]),
 	clean_name(RawName, Name),
-	sformat(RefName, '~w/0', [Name]),
+	predicate_refname(Name, 0, RefName),
 	add_to_index(RefName, +RefName).
 cmd(predicate(A, {RawName}, {Arity}, {Args}),
     #defitem(Class, Content)) :-
@@ -182,14 +182,14 @@ cmd(predicate(A, {RawName}, {Arity}, {Args}),
 	pred_tag(A, Content,
 		 [#label(RefName, [#strong(Name), #embrace(#var(+Args))])]),
 	clean_name(RawName, Name),
-	sformat(RefName, '~w/~w', [Name, Arity]),
+	predicate_refname(Name, Arity, RefName),
 	add_to_index(RefName, +RefName).
 cmd(function(A, {RawName}, {'0'}, {_}),
     #defitem(Class, Content)) :-
 	pred_class(A, Class),
 	pred_tag(A, Content, [#label(RefName, #strong(Name))]),
 	clean_name(RawName, Name),
-	sformat(RefName, 'f-~w/0', [Name]),
+	function_refname(Name, 0, RefName),
 	add_to_index(RefName, +RefName).
 cmd(function(A, {RawName}, {Arity}, {Args}),
     #defitem(Class, Content)) :-
@@ -197,7 +197,7 @@ cmd(function(A, {RawName}, {Arity}, {Args}),
 	pred_tag(A, Content,
 		 [#label(RefName, [#strong(Name), #embrace(#var(+Args))])]),
 	clean_name(RawName, Name),
-	sformat(RefName, 'f-~w/~w', [Name, Arity]),
+	function_refname(Name, Arity, RefName),
 	add_to_index(RefName, +RefName).
 cmd(dictfunction(A, {RawName}, {Arity}, {Args}),
     #defitem(Class, Content)) :-
@@ -205,7 +205,7 @@ cmd(dictfunction(A, {RawName}, {Arity}, {Args}),
 	pred_tag(A, Content,
 		 [#label(RefName, [#strong(Name), #embrace(#var(+Args))])]),
 	clean_name(RawName, Name),
-	sformat(RefName, 'map.~w/~w', [Name, Arity]),
+	format(string(RefName), 'm-~w-~w', [Name, Arity]),
 	add_to_index(RefName, +RefName).
 cmd(qpredicate(A, {RawM}, {RawName}, {'0'}, {_}),
     #defitem(Class, Content)) :-
@@ -213,7 +213,7 @@ cmd(qpredicate(A, {RawM}, {RawName}, {'0'}, {_}),
 	pred_tag(A, Content, [#label(RefName, [#mod(Module), nospace(:), #strong(Name)])]),
 	clean_name(RawM, Module),
 	clean_name(RawName, Name),
-	format(atom(RefName), '~w:~w/0', [Module, Name]),
+	predicate_refname(Module:Name, 0, RefName),
 	add_to_index(RefName, +RefName).
 cmd(qpredicate(A, {RawM}, {RawName}, {Arity}, {Args}),
     #defitem(Class, Content)) :-
@@ -222,15 +222,15 @@ cmd(qpredicate(A, {RawM}, {RawName}, {Arity}, {Args}),
 		 [#label(RefName, [#mod(Module), nospace(:), #strong(Name), #embrace(#var(+Args))])]),
 	clean_name(RawM, Module),
 	clean_name(RawName, Name),
-	format(atom(RefName), '~w:~w/~w', [Module, Name, Arity]),
+	predicate_refname(Module:Name, Arity, RefName),
 	add_to_index(RefName, +RefName).
 cmd(dcg(A, {RawName}, {'0'}, {_}),
     #defitem(pubdef, Content)) :-
 	pred_tag(A, Content, [#label(RefName, #strong(Name)), #code(//)]),
 	clean_name(RawName, Name),
-	sformat(RefName, '~w/0', [Name]),
+	predicate_refname(Name, 2, RefName),
 	add_to_index(RefName, +RefName).
-cmd(dcg(A, {RawName}, {Arity}, {Args}),
+cmd(dcg(A, {RawName}, {ArityS}, {Args}),
     #defitem(pubdef, Content)) :-
 	pred_tag(A, Content,
 		 [ #label(RefName,
@@ -239,7 +239,9 @@ cmd(dcg(A, {RawName}, {Arity}, {Args}),
 		   #code(//)
 		 ]),
 	clean_name(RawName, Name),
-	sformat(RefName, '~w/~w', [Name, Arity]),
+	atom_number(ArityS, Arity),
+	PredArity is Arity+2,
+	predicate_refname(Name, PredArity, RefName),
 	add_to_index(RefName, +RefName).
 cmd(directive(A, {RawName}, {'0'}, {_}),
     #defitem(pubdef, Content)) :-
@@ -249,7 +251,7 @@ cmd(directive(A, {RawName}, {'0'}, {_}),
 			  ])
 		 ]),
 	clean_name(RawName, Name),
-	sformat(RefName, '~w/~w', [Name, 0]),
+	predicate_refname(Name, 0, RefName),
 	add_to_index(RefName, +RefName).
 cmd(directive(A, {RawName}, {Arity}, {Args}),
     #defitem(pubdef, Content)) :-
@@ -259,7 +261,7 @@ cmd(directive(A, {RawName}, {Arity}, {Args}),
 			  ])
 		 ]),
 	clean_name(RawName, Name),
-	sformat(RefName, '~w/~w', [Name, Arity]),
+	predicate_refname(Name, Arity, RefName),
 	add_to_index(RefName, +RefName).
 cmd(cfunction({RType}, {RawName}, {Args}),
     #defitem(pubdef, #label(RefName,
@@ -267,14 +269,14 @@ cmd(cfunction({RType}, {RawName}, {Args}),
 			      #embrace(#var(+Args))
 			    ]))) :-
 	clean_name(RawName, Name),
-	sformat(RefName, '~w()', [Name]),
+	cfunction_refname(Name, RefName),
 	add_to_index(RefName, +RefName).
 cmd(cmacro({RType}, {Name}, {Args}),
     #defitem(pubdef, #label(RefName,
 			    [ #var(RType), ' ', #strong(Name),
 			      #embrace(#var(+Args))
 			    ]))) :-
-	sformat(RefName, '~w()', [Name]),
+	cfunction_refname(Name, RefName),
 	add_to_index(RefName, +RefName).
 cmd(resitem({Resource}),
     #defitem(pubdef, #label(Resource,
@@ -627,18 +629,23 @@ clean_name(L, Out) :-
 	maplist(clean_name, L, L2),
 	atomic_list_concat(L2, Out).
 
+predicate_refname(Module:Name, Arity, Ref) :- !,
+	format(atom(Ref), 'p-~w:~w-~w', [Module, Name, Arity]).
 predicate_refname(Symbol, Arity, Ref) :-
 	symbol_name(Symbol, Name), !,
-	atomic_list_concat([Name, /, Arity], Ref).
-predicate_refname(Module:Name, Arity, Ref) :- !,
-	atomic_list_concat([Module, :, Name, /, Arity], Ref).
+	format(atom(Ref), 'p-~w-~w', [Name, Arity]).
 predicate_refname(Name, Arity, Ref) :-
-	atomic_list_concat([Name, /, Arity], Ref).
+	format(atom(Ref), 'p-~w-~w', [Name, Arity]).
 
 function_refname(Name, Arity, Ref) :-
-	sformat(Ref, 'f-~w/~w', [Name, Arity]).
+	format(string(Ref), 'f-~w-~w', [Name, Arity]).
+
+cfunction_refname(Name, Ref) :-
+	format(atom(Ref), 'c-~w', [Name]).
 
 
+symbol_name(Symbol, Name) :-
+	urldef(Name, Symbol).
 symbol_name('->',	send_arrow).
 symbol_name('<-',	get_arrow).
 
