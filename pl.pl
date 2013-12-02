@@ -637,17 +637,29 @@ predicate_refname(Symbol, Arity, Ref) :-
 predicate_refname(Name, Arity, Ref) :-
 	format(atom(Ref), 'p-~w-~w', [Name, Arity]).
 
+function_refname(Symbol, Arity, Ref) :-
+	symbol_name(Symbol, Name), !,
+	format(string(Ref), 'f-~w-~w', [Name, Arity]).
 function_refname(Name, Arity, Ref) :-
 	format(string(Ref), 'f-~w-~w', [Name, Arity]).
 
+cfunction_refname(Op, Ref) :-
+	sub_atom(Op, B, _, A, '::operator'), !,
+	sub_atom(Op, 0, B, _, Prefix),
+	sub_atom(Op, _, A, 0, Postfix0),
+	normalize_space(atom(Postfix), Postfix0),
+	symbol_name(Postfix, Name),
+	format(atom(Ref), 'c-~w-~w', [Prefix, Name]).
 cfunction_refname(Name, Ref) :-
 	format(atom(Ref), 'c-~w', [Name]).
 
 
 symbol_name(Symbol, Name) :-
 	urldef(Name, Symbol).
-symbol_name('->',	send_arrow).
-symbol_name('<-',	get_arrow).
+symbol_name('->', send_arrow).
+symbol_name('<-', get_arrow).
+symbol_name('?=', can_decide_eq).
+symbol_name('@',  at_sign).
 
 n_list(0, _, []) :- !.
 n_list(N, X, [X|T]) :-
