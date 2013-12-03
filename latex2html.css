@@ -170,3 +170,17 @@ dt.index-sep
   font-size: +1;
   margin-top: 1ex;
 }
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}

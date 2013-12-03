@@ -1953,17 +1953,13 @@ translate_table(Format, Body, HTML) :-
 		 BodyHTML,
 		 html('</table>')
 	       ],
-	(   FrameAttributes == void
-	->  Border = 0
-	;   Border = 2
-	),
+	atom_concat('frame-', FrameAttributes, FrameClass),
 	(   center_tables
-	->  HeadFmt = '<table border="~d" frame="~w" rules="groups" \c
-	               style="margin:auto">'
-	;   HeadFmt = '<table border="~d" frame="~w" rules="groups">'
+	->  Classes = [latex, FrameClass, center]
+	;   Classes = [latex, FrameClass]
 	),
-	format(string(Head), HeadFmt,
-	       [Border, FrameAttributes]).
+	atomic_list_concat(Classes, ' ', ClassText),
+	format(string(Head), '<table class="~w">', [ClassText]).
 
 %	expand_table_commands(+BodyIn, -BodyOut)
 %
@@ -1978,10 +1974,13 @@ expand_table_commands([\ora|T0], [&,   '|', &|T]) :- !,
 expand_table_commands([H|T0], [H|T]) :-
 	expand_table_commands(T0, T).
 
-%	table_frame(+Format, +Body, -FrameAttributes, -Format2, -Body2)
+%%	table_frame(+Format, +Body, -FrameAttributes, -Format2, -Body2)
 %
 %	Extracts the frame attributes, controlling the border of the
 %	table from the format and opening/closing \hline.
+%
+%	@arg FrameAttributes is one of =void=, =vsides=, =lhs=, =rhs=,
+%	=hsides=, =above=, =below= or =box=
 
 table_frame(Fmt, Body, TableAttributes, Fmt2, Body2) :-
 	v_table_frame(Fmt, VFr, Fmt2),
@@ -2150,7 +2149,7 @@ table_body(['\n'|T0], ColAtts, T) :- !,
 	table_body(T0, ColAtts, T).
 table_body([\hline|T0], ColAtts, [html('<tbody>')|T]) :-
 	table_body(T0, ColAtts, T).
-table_body(Body, ColAtts, [[ html('<tr valign="top">'),
+table_body(Body, ColAtts, [[ html('<tr>'),
 			     Row,
 			     html('</tr>')
 			  ]|Rest]) :-
