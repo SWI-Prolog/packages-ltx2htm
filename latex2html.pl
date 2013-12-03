@@ -739,11 +739,12 @@ env(quote(_, Tokens), #quote(Quote)) :-
 	translate_group(Tokens, Quote).
 env(abstract(_, Tokens), #abstract(Quote)) :-
 	translate(Tokens, normal, Quote).
-env(center(_, ['\n',Table,'\n']), HTML) :-
-	tabular_env(Table), !,
-	asserta(center_tables, Ref),
-	translate([Table], normal, HTML),
-	erase(Ref).
+env(center(_, Tokens), HTML) :-
+	phrase(only_table(Table), Tokens),
+	setup_call_cleanup(
+	    asserta(center_tables, Ref),
+	    translate([Table], normal, HTML),
+	    erase(Ref)).
 env(center(_, Tokens), #center(Center)) :-
 	translate(Tokens, normal, Center).
 env(titlepage(_, _Page), []) :-
@@ -1925,6 +1926,18 @@ cmd(rule({W}, {H}), []) :-
 		 /*******************************
 		 *	      TABLES		*
 		 *******************************/
+
+only_table(Table) -->
+	white_spaces,
+	[ Table ],
+	{ tabular_env(Table) },
+	white_spaces.
+
+white_spaces --> [' '],  !, white_spaces.
+white_spaces --> ['\n'], !, white_spaces.
+white_spaces --> [].
+
+
 
 tabular_env(env(tabular,_,_)).
 tabular_env(env(tabularlp,_,_)).
