@@ -629,19 +629,31 @@ clean_name(L, Out) :-
 	maplist(clean_name, L, L2),
 	atomic_list_concat(L2, Out).
 
+%%	predicate_refname(+Name, +Arity, -Ref)
+%
+%	Reference name for predicates.
+
 predicate_refname(Module:Name, Arity, Ref) :- !,
-	format(atom(Ref), 'p-~w:~w-~w', [Module, Name, Arity]).
+	format(atom(Ref), '~w:~w/~w', [Module, Name, Arity]).
 predicate_refname(Symbol, Arity, Ref) :-
 	symbol_name(Symbol, Name), !,
-	format(atom(Ref), 'p-~w-~w', [Name, Arity]).
+	format(atom(Ref), '~w/~w', [Name, Arity]).
 predicate_refname(Name, Arity, Ref) :-
-	format(atom(Ref), 'p-~w-~w', [Name, Arity]).
+	format(atom(Ref), '~w/~w', [Name, Arity]).
+
+%%	function_refname(+Name, +Arity, -Ref)
+%
+%	Reference name for arithmetic functions.
 
 function_refname(Symbol, Arity, Ref) :-
 	symbol_name(Symbol, Name), !,
-	format(string(Ref), 'f-~w-~w', [Name, Arity]).
+	format(string(Ref), 'f-~w/~w', [Name, Arity]).
 function_refname(Name, Arity, Ref) :-
-	format(string(Ref), 'f-~w-~w', [Name, Arity]).
+	format(string(Ref), 'f-~w/~w', [Name, Arity]).
+
+%%	cfunction_refname(+Name, +Arity, -Ref)
+%
+%	Reference name for C API functions.
 
 cfunction_refname(Op, Ref) :-
 	sub_atom(Op, B, _, A, '::operator'), !,
@@ -649,17 +661,19 @@ cfunction_refname(Op, Ref) :-
 	sub_atom(Op, _, A, 0, Postfix0),
 	normalize_space(atom(Postfix), Postfix0),
 	symbol_name(Postfix, Name),
-	format(atom(Ref), 'c-~w-~w', [Prefix, Name]).
+	format(atom(Ref), '~w~w()', [Prefix, Name]).
 cfunction_refname(Name, Ref) :-
-	format(atom(Ref), 'c-~w', [Name]).
+	format(atom(Ref), '~w()', [Name]).
 
 
+:- if(false).
 symbol_name(Symbol, Name) :-
 	urldef(Name, Symbol).
-symbol_name('->', send_arrow).
-symbol_name('<-', get_arrow).
 symbol_name('?=', can_decide_eq).
 symbol_name('@',  at_sign).
+:- endif.
+symbol_name('->', send_arrow).
+symbol_name('<-', get_arrow).
 
 n_list(0, _, []) :- !.
 n_list(N, X, [X|T]) :-
