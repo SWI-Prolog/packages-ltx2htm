@@ -621,6 +621,8 @@ eol([],[]).
 clean_name([\Special], Out) :-
 	urldef(Special, Out), !.
 clean_name([\tt, Out], Out) :- !.
+clean_name([' '|T], Out) :- !,
+	clean_name(T, Out).
 clean_name($(Out), Out) :- !.
 clean_name([Out], Out) :- !.
 clean_name(X, X) :-
@@ -660,7 +662,10 @@ cfunction_refname(Op, Ref) :-
 	sub_atom(Op, 0, B, _, Prefix),
 	sub_atom(Op, _, A, 0, Postfix0),
 	normalize_space(atom(Postfix), Postfix0),
-	symbol_name(Postfix, Name),
+	(   symbol_name(Postfix, Name)
+	->  true
+	;   Name = Postfix
+	),
 	format(atom(Ref), '~w~w()', [Prefix, Name]).
 cfunction_refname(Name, Ref) :-
 	format(atom(Ref), '~w()', [Name]).

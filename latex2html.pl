@@ -2055,18 +2055,11 @@ table_columns([0'r|T], NC0,   NC,    [[align=right]|TH]) :-
 table_columns([0'p|T0], NC0,   NC,   [Col|TH]) :-
 	phrase(parbox_width(_W), T0, T),
 	Col = [],
-/*	(   integer(W)
-	->  Col = ['WIDTH'=W]
-	;   append(Done, T, T0),
-	    format(user_error,
-		   'Could not determing column width from "~s"~n', [Done]),
-	    Col = []
-	),
-*/
 	NC1 is NC0 + 1,
 	table_columns(T, NC1, NC, TH).
-table_columns([0'D|T0], NC0,   NC,   [['ALIGN'=char, 'CHAR'=Chr]|TH]) :-
-	phrase(align_char(Chr), T0, T),
+% align=char is not supported.  There is no sensible way around
+table_columns([0'D|T0], NC0,   NC,   [[/*align=char, char=Chr*/]|TH]) :-
+	phrase(align_char(_Chr), T0, T),
 	NC1 is NC0 + 1,
 	table_columns(T, NC1, NC, TH).
 table_columns([0'||T], NC0,  NC,     TH) :-
