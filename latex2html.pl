@@ -2160,8 +2160,12 @@ table_body([' '|T0], ColAtts, T) :-
 	table_body(T0, ColAtts, T).
 table_body(['\n'|T0], ColAtts, T) :- !,
 	table_body(T0, ColAtts, T).
-table_body([\hline|T0], ColAtts, [html('<tbody>')|T]) :-
-	table_body(T0, ColAtts, T).
+table_body([\hline|Body], ColAtts, [[ html('<tr class="hline">'),
+				      Row,
+				      html('</tr>')
+				    ]|Rest]) :- !,
+	table_row(Body, 1, ColAtts, BodyRest, Row),
+	table_body(BodyRest, ColAtts, Rest).
 table_body(Body, ColAtts, [[ html('<tr>'),
 			     Row,
 			     html('</tr>')
