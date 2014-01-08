@@ -138,8 +138,7 @@ div.caption
     top: auto;
     left: 10%;
     border: 1px solid #000;
-    border-radius: 10px;
-    box-shadow: 10px 10px 5px #888;
+    box-shadow: 5px 5px 5px #888;
     display: none;
     background: #fff;
     color: #000;
