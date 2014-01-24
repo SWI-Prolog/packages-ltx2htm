@@ -53,6 +53,7 @@
 	    op(100, fx, #)
 	  ]).
 :- use_module(library(quintus)).
+:- use_module(library(filesex)).
 
 ltx2htm_version('0.98').		% for SWI-Prolog 5.6.18
 
@@ -87,6 +88,7 @@ user:file_search_path(foreign, latex2html(Lib)) :-
 	atom_concat('lib/', Arch, Lib).
 user:file_search_path(psfig, tex(figs)).
 user:file_search_path(includegraphics, tex(figs)).
+user:file_search_path(includegraphics, tex(.)).
 user:file_search_path(tex, '.').
 user:file_search_path(img, '.').
 user:file_search_path(img, icons).
@@ -1232,6 +1234,29 @@ cmd(psfig({Spec}), html(Img)) :-
 	    ps2gif(FileSpec, OutFile)
 	).
 cmd(includegraphics(_Options, {File}), html(Img)) :-
+	findall(Ext, img_extension(Ext), Exts),
+	(   is_absolute_file_name(File)
+	->  Spec = File
+	;   Spec = includegraphics(File)
+	),
+	absolute_file_name(Spec, AbsImgFile,
+			   [ extensions([''|Exts]),
+			     access(read),
+			     file_errors(fail)
+			   ]),
+	file_name_extension(_, Ext, AbsImgFile),
+	img_extension(Ext), !,
+	file_base_name(AbsImgFile, ImgFile),
+	sformat(Img, '<img src="~w">', ImgFile),
+	make_output_directory,
+	html_output_dir(Dir),
+	atomic_list_concat([Dir, '/', ImgFile], OutFile),
+	(   keep_figures(true),
+	    exists_file(OutFile)
+	->  true
+	;   copy_file(AbsImgFile, OutFile)
+	).
+cmd(includegraphics(_Options, {File}), html(Img)) :-
 	ps_extension(Ext),
 	absolute_file_name(includegraphics(File), PsFile,
 			   [ extensions([Ext]),
@@ -1301,6 +1326,11 @@ centered_img(File, html(HTML)) :-
 
 ps_extension(eps).
 ps_extension(ps).
+
+img_extension(gif).
+img_extension(png).
+img_extension(jpg).
+img_extension(jpeg).
 
 %
 %	HTML documentation
