@@ -150,6 +150,9 @@ cmd(qdcgref({Module}, {RawName}, {DCGArity}), #lref(pred, RefName, Text)) :-
 cmd(nopredref({RawName}, {Arity}), Text) :-
 	clean_name(RawName, Name),
 	format(string(Text), '~w/~w', [Name, Arity]).
+cmd(nodcgref({RawName}, {Arity}), Text) :-
+	clean_name(RawName, Name),
+	format(string(Text), '~w//~w', [Name, Arity]).
 cmd(prologflag({Name}), #lref(flag, RefName, Name)) :-
 	atom_concat('flag:', Name, RefName).
 cmd(functor({Name}, {Arity}), #code([+Name, nospace(/), +Arity])).
