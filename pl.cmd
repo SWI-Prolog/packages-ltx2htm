@@ -246,6 +246,7 @@
 \backslash
 \bsl
 \Sxor
+\Scons
 
 % These are hacks to get the index right
 
