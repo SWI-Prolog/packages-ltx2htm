@@ -161,6 +161,8 @@ cmd(term({Name}, {Args}), #code([+Name, #embrace(+Args)])).
 cmd(errorterm({Name}, {Args}), #code([+Name, #embrace(+Args)])).
 cmd(infixterm({RawName},{A1},{A2}), #code([+A1, Name, +A2])) :-
 	clean_name(RawName, Name).
+cmd(prefixterm({RawName},{A1}), #code([+A1, Name])) :-
+	clean_name(RawName, Name).
 cmd(manref({RawName}, {Section}),
     [#strong(Name), #embrace(Section)]) :-
 	clean_tt(RawName, Name).
@@ -326,6 +328,8 @@ cmd(termitem({Name}, {Arg}),
     #defitem([#strong(+Name), #embrace(#var(+Arg))])).
 cmd(dictitem({Name}, {Arg}),
     #defitem([#strong(+Name), #embrace("{}", #var(+Arg))])).
+cmd(prefixtermitem({Name}, {Right}),
+    #defitem([#strong(+Name), ' ', #var(+Right)])).
 cmd(infixtermitem({Name}, {Left}, {Right}),
     #defitem([#var(+Left), ' ', #strong(+Name), ' ', #var(+Right)])).
 cmd(prologflagitem({Name}, {Type}, {Access}),

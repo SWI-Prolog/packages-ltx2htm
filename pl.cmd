@@ -43,6 +43,7 @@
 \termitem{+}{+}=item		1 0
 \dictitem{+}{+}=item		1 0
 \infixtermitem{+}{+}{+}=item	1 0
+\prefixtermitem{+}{+}=item	1 0
 \constitem{+}=item		1 0
 \term{+}{+}
 \errorterm{+}{+}
@@ -70,6 +71,7 @@
 \except{+}
 \module{+}
 \infixterm{+}{+}{+}
+\prefixterm{+}{+}
 \fmtseq{-}
 \ctype{+}
 \cglobalvar{+}
