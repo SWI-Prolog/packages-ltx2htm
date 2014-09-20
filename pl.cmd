@@ -41,6 +41,7 @@
 \longoption{+}{+}
 \longoptionitem{+}{+}=item	1 0
 \termitem{+}{+}=item		1 0
+\dictitem{+}{+}=item		1 0
 \infixtermitem{+}{+}{+}=item	1 0
 \constitem{+}=item		1 0
 \term{+}{+}
@@ -57,6 +58,7 @@
 \versionshort
 \arg{+}
 \var{+}
+\key{+}
 \bnfmeta{+}
 \bnfor
 \url[+]{-}
@@ -89,7 +91,6 @@
 \bug{+}
 \hook{+}
 \tm
-\key{+}
 \menu{+}{+}
 
 \secref{-}

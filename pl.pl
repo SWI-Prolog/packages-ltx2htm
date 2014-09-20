@@ -324,6 +324,8 @@ cmd(constitem({Name}), #defitem(#label(RefName, #strong(+Name)))) :-
 cmd(termitem({Name}, {[]}), #defitem(#strong(+Name))).
 cmd(termitem({Name}, {Arg}),
     #defitem([#strong(+Name), #embrace(#var(+Arg))])).
+cmd(dictitem({Name}, {Arg}),
+    #defitem([#strong(+Name), #embrace("{}", #var(+Arg))])).
 cmd(infixtermitem({Name}, {Left}, {Right}),
     #defitem([#var(+Left), ' ', #strong(+Name), ' ', #var(+Right)])).
 cmd(prologflagitem({Name}, {Type}, {Access}),
