@@ -220,6 +220,7 @@
 \arctan{+}
 \ln{+}
 \lg{+}
+\log{+}
 \not{-}
 \frac{+}{+}
 \pow{+}{+}

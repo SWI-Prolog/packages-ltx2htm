@@ -1384,6 +1384,7 @@ cmd(arccos({Arg}), math, ['arccos(', math+Arg, ')']).
 cmd(arctan({Arg}), math, ['arctan(', math+Arg, ')']).
 cmd(ln({Arg}), math, ['ln(', math+Arg, ')']).
 cmd(lg({Arg}), math, ['log10(', math+Arg, ')']).
+cmd(log({Arg}), math, ['log(', math+Arg, ')']).
 cmd(sqrt({Arg}), math, ['sqrt(', math+Arg, ')']).
 cmd(not({=}), math, ['<>']).
 cmd(neq, math, ['<>']).
