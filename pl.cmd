@@ -114,6 +114,7 @@
 
 {summarylist}{-}
 \predicatesummary{+}{-}{+}
+\dcgsummary{+}{-}{+}
 \oppredsummary{+}{-}{-}{-}{+}
 \functionsummary{+}{-}{+}
 \opfuncsummary{+}{-}{-}{-}{+}

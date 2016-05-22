@@ -383,6 +383,9 @@ cmd(ttdef({Def}), #defitem(#code(+Def))).
 cmd(predicatesummary({RawName}, {Arity}, {Summary}),
     #row([#predref(Name, Arity), +Summary])) :-
 	clean_name(RawName, Name).
+cmd(dcgsummary({RawName}, {Arity}, {Summary}),
+    #row([#dcgref(Name, Arity), +Summary])) :-
+	clean_name(RawName, Name).
 cmd(oppredsummary({RawName}, {Arity}, {_Assoc}, {_Pri}, {Summary}),
     #row([#predref(Name, Arity), +Summary])) :-
 	clean_name(RawName, Name).

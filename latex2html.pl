@@ -509,6 +509,10 @@ language_map(table,	'Table').
 	clean_tt(RN, Name),
 	format(string(Text), '~w/~w', [Name, Arity]),
 	latex2html4pl:predicate_refname(Name, Arity, Label).
+#(dcgref(RN, Arity),   #lref(pred, Label, Text)) :-
+	clean_tt(RN, Name),
+	format(string(Text), '~w//~w', [Name, Arity]),
+	latex2html4pl:dcg_refname(Name, Arity, Label).
 #(funcref(RN, Arity),   #lref(function, Label, Text)) :-
 	clean_tt(RN, Name),
 	format(string(Text), '~w/~w', [Name, Arity]),
