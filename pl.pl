@@ -141,7 +141,7 @@ cmd(dcgref({RawName}, {DCGArity}), #lref(pred, RefName, Text)) :-
 	atom_number(DCGArity, ArityInt),
 	Arity is ArityInt + 2,
 	predicate_refname(Name, Arity, RefName),
-	sformat(Text, '~w/~w', [Name, Arity]).
+	sformat(Text, '~w//~w', [Name, DCGArity]).
 cmd(qpredref({Module}, {RawName}, {Arity}), #lref(pred, RefName, Text)) :-
 	clean_name(RawName, Name),
 	predicate_refname(Module:Name, Arity, RefName),
@@ -151,7 +151,7 @@ cmd(qdcgref({Module}, {RawName}, {DCGArity}), #lref(pred, RefName, Text)) :-
 	atom_number(DCGArity, ArityInt),
 	Arity is ArityInt + 2,
 	predicate_refname(Module:Name, Arity, RefName),
-	format(string(Text), '~w:~w/~w', [Module, Name, Arity]).
+	format(string(Text), '~w:~w//~w', [Module, Name, DCGArity]).
 cmd(nopredref({RawName}, {Arity}), Text) :-
 	clean_name(RawName, Name),
 	format(string(Text), '~w/~w', [Name, Arity]).
