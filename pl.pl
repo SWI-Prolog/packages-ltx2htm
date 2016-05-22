@@ -138,19 +138,17 @@ cmd(funcref({RawName}, {Arity}), #lref(function, RefName, Text)) :-
 	sformat(Text, '~w/~w', [Name, Arity]).
 cmd(dcgref({RawName}, {DCGArity}), #lref(pred, RefName, Text)) :-
 	clean_name(RawName, Name),
-	atom_number(DCGArity, ArityInt),
-	Arity is ArityInt + 2,
-	predicate_refname(Name, Arity, RefName),
-	sformat(Text, '~w//~w', [Name, DCGArity]).
+	atom_number(DCGArity, Arity),
+	dcg_refname(Name, Arity, RefName),
+	sformat(Text, '~w//~w', [Name, Arity]).
 cmd(qpredref({Module}, {RawName}, {Arity}), #lref(pred, RefName, Text)) :-
 	clean_name(RawName, Name),
 	predicate_refname(Module:Name, Arity, RefName),
 	format(string(Text), '~w:~w/~w', [Module, Name, Arity]).
 cmd(qdcgref({Module}, {RawName}, {DCGArity}), #lref(pred, RefName, Text)) :-
 	clean_name(RawName, Name),
-	atom_number(DCGArity, ArityInt),
-	Arity is ArityInt + 2,
-	predicate_refname(Module:Name, Arity, RefName),
+	atom_number(DCGArity, Arity),
+	dcg_refname(Module:Name, Arity, RefName),
 	format(string(Text), '~w:~w//~w', [Module, Name, DCGArity]).
 cmd(nopredref({RawName}, {Arity}), Text) :-
 	clean_name(RawName, Name),
@@ -238,7 +236,7 @@ cmd(dcg(A, {RawName}, {'0'}, {_}),
     #defitem(pubdef, Content)) :-
 	pred_tag(A, Content, [#label(RefName, #strong(Name)), #code(//)]),
 	clean_name(RawName, Name),
-	predicate_refname(Name, 2, RefName),
+	dcg_refname(Name, 0, RefName),
 	add_to_index(RefName, +RefName).
 cmd(dcg(A, {RawName}, {ArityS}, {Args}),
     #defitem(pubdef, Content)) :-
@@ -250,8 +248,7 @@ cmd(dcg(A, {RawName}, {ArityS}, {Args}),
 		 ]),
 	clean_name(RawName, Name),
 	atom_number(ArityS, Arity),
-	PredArity is Arity+2,
-	predicate_refname(Name, PredArity, RefName),
+	dcg_refname(Name, Arity, RefName),
 	add_to_index(RefName, +RefName).
 cmd(directive(A, {RawName}, {'0'}, {_}),
     #defitem(pubdef, Content)) :-
@@ -646,16 +643,22 @@ clean_name(L, Out) :-
 	atomic_list_concat(L2, Out).
 
 %%	predicate_refname(+Name, +Arity, -Ref)
+%%	dcg_refname(+Name, +Arity, -Ref)
 %
 %	Reference name for predicates.
 
-predicate_refname(Module:Name, Arity, Ref) :- !,
-	format(atom(Ref), '~w:~w/~w', [Module, Name, Arity]).
-predicate_refname(Symbol, Arity, Ref) :-
-	symbol_name(Symbol, Name), !,
-	format(atom(Ref), '~w/~w', [Name, Arity]).
 predicate_refname(Name, Arity, Ref) :-
-	format(atom(Ref), '~w/~w', [Name, Arity]).
+	pred_refname(Name, Arity, Ref, /).
+dcg_refname(Name, Arity, Ref) :-
+	pred_refname(Name, Arity, Ref, //).
+
+pred_refname(Module:Name, Arity, Ref, Type) :- !,
+	format(atom(Ref), '~w:~w~w~w', [Module, Name, Type, Arity]).
+pred_refname(Symbol, Arity, Ref, Type) :-
+	symbol_name(Symbol, Name), !,
+	format(atom(Ref), '~w~w~w', [Name, Type, Arity]).
+pred_refname(Name, Arity, Ref, Type) :-
+	format(atom(Ref), '~w~w~w', [Name, Type, Arity]).
 
 %%	function_refname(+Name, +Arity, -Ref)
 %
