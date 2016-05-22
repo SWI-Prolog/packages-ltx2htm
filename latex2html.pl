@@ -1449,9 +1449,6 @@ html_font('Huge',       html('<font size=+3>'), html('</font>')).
 %
 %	Used for the translation of \secref, \figref, etc.
 
-translate_reference(Name, sec, Label,
-	  #lref(sec, fileof(RefName), [Name, ' ', ref(RefName)])) :- !,
-	format(atom(RefName), 'sec:~w', [Label]).
 translate_reference(Name, Tag, Label,
 	  #lref(Tag, RefName, [Name, ' ', ref(RefName)])) :-
 	format(atom(RefName), '~w:~w', [Tag, Label]).
@@ -2732,6 +2729,14 @@ write_html(iflref(Label, Text)) :- !,
 	).
 write_html(lref(Label, Text)) :- !,
 	write_html(lref('', Label, Text)).
+write_html(lref(sec, Label, Text)) :-
+	label(Label, File, Nr),
+	section(Level, _Title, Nr),
+	html_split_level(Split),
+	Level =< Split, !,
+	format(string(Anchor),
+	       '<a class="~w" href="~w.html">', [sec, File]),
+	write_html([html(Anchor), Text, html('</a>')]).
 write_html(lref(Class, fileof(Label), Text)) :-
 	(   label(Label, File, _)
 	->  format(string(Anchor),
