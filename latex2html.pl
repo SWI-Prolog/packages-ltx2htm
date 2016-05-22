@@ -2324,7 +2324,7 @@ fix_predicate_reference(Ref0, Ref) :-
 	 atom_codes(Ref0, Chars),
 	 phrase(predref(Name, Arities), Chars),
 	 member(Arity, Arities),
-	 format(atom(Ref), 'p-~w-~w', [Name, Arity]),
+	 format(atom(Ref), '~w/~w', [Name, Arity]),
 	 label(Ref, _, _), !.
 
 predref(Name, Arities) -->
