@@ -153,6 +153,9 @@ cmd(qdcgref({Module}, {RawName}, {DCGArity}), #lref(pred, RefName, Text)) :-
 cmd(nopredref({RawName}, {Arity}), Text) :-
 	clean_name(RawName, Name),
 	format(string(Text), '~w/~w', [Name, Arity]).
+cmd(libpredref({RawName}, {Arity}), Text) :-
+	clean_name(RawName, Name),
+	format(string(Text), '~w/~w', [Name, Arity]).
 cmd(nodcgref({RawName}, {Arity}), Text) :-
 	clean_name(RawName, Name),
 	format(string(Text), '~w//~w', [Name, Arity]).
@@ -421,7 +424,8 @@ cmd(nodescription, []).
 cmd(class({Name}),              #lref(Label, Name)) :-
         concat('class:', Name, Label),
         add_to_index(Name).
-cmd(menuref({A1}),            #lref(RefName, Name)) :-
+cmd(noclass({Name}),            #i(Name)).
+cmd(menuref({A1}),              #lref(RefName, Name)) :-
 	clean_name(A1, RefName0),
 	atom_concat('menu:', RefName0, RefName),
 	atomic_list_concat(A1, ' ', Name),

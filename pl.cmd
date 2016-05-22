@@ -27,6 +27,7 @@
 \dcgref{+}{-}
 \qdcgref{-}{+}{-}
 \nopredref{+}{-}
+\libpredref{+}{-}
 \nodcgref{+}{-}
 \functor{+}{+}
 \compound{+}{+}
