@@ -1143,12 +1143,10 @@ cmd(footrulewidth(_), []).
 cmd(centerline({Tex}), #center(+Tex)).
 cmd(rightline({Tex}), #right(+Tex)).
 
-cmd(email([], {Address}), #url(URL, Address)) :-
+cmd(email({Address}), #url(URL, Address)) :-
 	sformat(URL, 'mailto:~w', [Address]).
-cmd(email([Text], {Address}), #url(URL, +Text)) :-
-	sformat(URL, 'mailto:~w', [Address]).
-cmd(url([], {Address}), #url(Address, Address)).
-cmd(url([Text], {Address}), #url(Address, +Text)).
+cmd(url({Address}), #url(Address, Address)).
+cmd(href({URL}, {Text}), #url(URL, +Text)).
 cmd(file({File}), #tt(File)).
 cmd(strong(		{A1}), #strong(+A1)).
 cmd(tick({Tokens}),

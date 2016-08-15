@@ -104,7 +104,7 @@
 \begin=begin		2 1
 \end{-}=end		1 2
 \\[d]			0 1
-\ 
+\
 \-
 \verb=verb
 \newline
@@ -293,8 +293,7 @@
 \excludecomment{-}
 \obeylines
 \raggedright
-\email[+]{-}
-\url[+]{-}
+\email{-}
 \file{-}
 
 % Output control commands

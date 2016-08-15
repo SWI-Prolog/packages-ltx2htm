@@ -63,8 +63,9 @@
 \key{+}
 \bnfmeta{+}
 \bnfor
-\url[+]{-}
-\email[+]{-}
+\href{-}{+}
+\url{-}
+\email{-}
 \const{+}
 \plflag{+}
 \type{+}
