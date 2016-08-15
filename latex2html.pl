@@ -541,9 +541,10 @@ language_map(table,	'Table').
 	in_anchor, !.
 #(url(URL, Text),	[html(Anchor), Expanded, html('</a>')]) :-
 	format(string(Anchor), '<a class="url" href="~w">', URL),
-	asserta(in_anchor),
-	expand_macros(Text, Expanded),
-	retractall(in_anchor).
+	setup_call_cleanup(
+	    asserta(in_anchor, Ref),
+	    expand_macros(Text, Expanded),
+	    erase(Ref)).
 #(cite(Key),		[ html('<cite>'),
 			  Cites,
 			  html('</cite>')
