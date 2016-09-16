@@ -253,6 +253,7 @@
 \bsl
 \Sxor
 \Scons
+\Snil
 
 % These are hacks to get the index right
 
