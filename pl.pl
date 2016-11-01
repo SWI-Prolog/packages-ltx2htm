@@ -694,15 +694,12 @@ cfunction_refname(Op, Ref) :-
 cfunction_refname(Name, Ref) :-
 	format(atom(Ref), '~w()', [Name]).
 
-
 :- if(false).
-symbol_name(Symbol, Name) :-
-	urldef(Name, Symbol).
-symbol_name('?=', can_decide_eq).
-symbol_name('@',  at_sign).
-:- endif.
 symbol_name('->', send_arrow).
 symbol_name('<-', get_arrow).
+:- else.
+symbol_name(_,_) :- fail.
+:- endif.
 
 n_list(0, _, []) :- !.
 n_list(N, X, [X|T]) :-
