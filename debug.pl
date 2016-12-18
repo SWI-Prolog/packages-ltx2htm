@@ -4,4 +4,4 @@ user:file_search_path(library, '.').
 :- use_module(latex2html).
 
 test :-
-	latex2html(manual).
+    latex2html(manual).

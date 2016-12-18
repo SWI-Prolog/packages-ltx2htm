@@ -35,38 +35,41 @@
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Run latex2html without installing it.  Usage:
 
-	% pl -s path/to/run.pl -g main -- file
+        % pl -s path/to/run.pl -g main -- file
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 setup :-
-	prolog_load_context(directory, Dir),
-	file_directory_name(Dir, Parent),
-	asserta(user:file_search_path(ltx2html, Dir)),
-	asserta(user:file_search_path(foreign, Dir)),
-	asserta(user:file_search_path(library, Parent)), % find library(pldoc)
-	asserta(user:file_search_path(library, Dir)).
+    prolog_load_context(directory, Dir),
+    file_directory_name(Dir, Parent),
+    asserta(user:file_search_path(ltx2html, Dir)),
+    asserta(user:file_search_path(foreign, Dir)),
+    asserta(user:file_search_path(library, Parent)), % find library(pldoc)
+    asserta(user:file_search_path(library, Dir)).
 
 :- setup.
 :- load_files(latex2html, [silent(true)]).
 
 main :-
-	current_prolog_flag(argv, [File]), !,
-	(   process(File)
-	->  halt
-	;   halt(1)
-	).
+    current_prolog_flag(argv, [File]),
+    !,
+    (   process(File)
+    ->  halt
+    ;   halt(1)
+    ).
 main :-
-	format(user_error, 'Usage: script options -- file~n', []),
-	halt(1).
+    format(user_error, 'Usage: script options -- file~n', []),
+    halt(1).
 
 process(File) :-
-	exists_file(File),
-	file_name_extension(Base, tex, File), !,
-	latex2html(Base).
+    exists_file(File),
+    file_name_extension(Base, tex, File),
+    !,
+    latex2html(Base).
 process(Base) :-
-	file_name_extension(Base, tex, File),
-	exists_file(File), !,
-	latex2html(Base).
+    file_name_extension(Base, tex, File),
+    exists_file(File),
+    !,
+    latex2html(Base).
 
 
 

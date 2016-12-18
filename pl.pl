@@ -39,295 +39,295 @@
 :- latex2html_module.
 :- tex_load_commands(pl).
 
-		 /*******************************
-		 *	       MACROS		*
-		 *******************************/
+                 /*******************************
+                 *             MACROS           *
+                 *******************************/
 
-#(defitem(Class,Label),	[ html(Begin), Label, html('</dt>'),
-			  html('<dd class="defbody">')
-			]) :-
-	format(atom(Begin), '<dt class="~w">', [Class]).
-#(defitem(Label),	[ html('<dt>'), Label,
-			  html('<dd class="defbody">')
-			]).
-#(predtag(Value),	[ html('<span class="pred-tag">'), Value,
-			  html('</span>')
-			]).
-#(mod(Module),		[ html('<span class="module">'), Module,
-			  html('</span>')
-			]).
+#(defitem(Class,Label), [ html(Begin), Label, html('</dt>'),
+                          html('<dd class="defbody">')
+                        ]) :-
+    format(atom(Begin), '<dt class="~w">', [Class]).
+#(defitem(Label),       [ html('<dt>'), Label,
+                          html('<dd class="defbody">')
+                        ]).
+#(predtag(Value),       [ html('<span class="pred-tag">'), Value,
+                          html('</span>')
+                        ]).
+#(mod(Module),          [ html('<span class="module">'), Module,
+                          html('</span>')
+                        ]).
 
-		 /*******************************
-		 *	   ENVIRONMENTS		*
-		 *******************************/
+                 /*******************************
+                 *         ENVIRONMENTS         *
+                 *******************************/
 
 list_command(tags,       _, html('<dl class="tags">'), html('</dl>')).
 
 env(tabularlp([{_}], Tokens), HTML) :-
-	translate_table(ll, Tokens, HTML).
+    translate_table(ll, Tokens, HTML).
 
-		 /*******************************
-		 *	    INDEX HACK		*
-		 *******************************/
+                 /*******************************
+                 *          INDEX HACK          *
+                 *******************************/
 
 cmd(+, index, nospace('\\+')).
 cmd(=, index, nospace('\\=')).
 
-		 /*******************************
-		 *	     COMMANDS		*
-		 *******************************/
+                 /*******************************
+                 *           COMMANDS           *
+                 *******************************/
 
 cmd(spaces({X}), html(Spaces)) :-
-	atom_number(X, N),
-	n_list(N, '&nbsp;', L),
-	atomic_list_concat(L, Spaces).
+    atom_number(X, N),
+    n_list(N, '&nbsp;', L),
+    atomic_list_concat(L, Spaces).
 cmd(hrule, html('<hr>')).
 cmd(bug({TeX}), #footnote(bug, +TeX)).
 cmd(fileext({Ext}), #code(Text)) :-
-	sformat(Text, '.~w', [Ext]).
+    sformat(Text, '.~w', [Ext]).
 
-cmd(var(		{A1}), #var(+A1)).
-cmd(arg(		{A1}), #var(+A1)).
-cmd(metafile(		{A1}), #code(+A1)).
-cmd(file(		{A0}), #code(A1)) :-
-	clean_tt(A0, A1).
-cmd(clib(		{A1}), #code(+A1)).
-cmd(cglobalvar(		{A1}), #code(+A1)).
-cmd(ctype(		{A1}), #code(+A1)).
-cmd(type(		{A1}), #code(+A1)).
-cmd(pllib(		{A1}), #code([library, #embrace(+A1)])).
-cmd(hook(		{_A1}), #i(#embrace(hook))).
-cmd(env(		{A1}), #code(+A1)).
-cmd(program(		{A1}), #b(A1)).
-cmd(exam(		{A1}), #code(+A1)).
-cmd(jargon(		{A1}), #em(+A1)).
-cmd(chr(		{A1}), #code(+A1)).
-cmd(const(		{A1}), #code(+A1)).
-cmd(resource(		{A1}), #code(A1)).
-cmd(key(		{A1}), #code(+A1)).
-cmd(plflag(		{A1}), #code(+A1)).
-cmd(module(		{A1}), #code(+A1)).
-cmd(except(		{A1}), #code(+A1)).
-cmd(op(			{A1}), #strong(+A1)).
-cmd(cmdlineoption(	{A1}), #strong(+A1)).
-cmd(menu({A1},{[]}),	       #strong(+A1)).
-cmd(menu({A1},{A2}),	       [#strong(+A1), ' ', #embrace(#code(+A2))]).
-cmd(longoption(	   {A1},{[]}), [#strong([nospace(--), +A1])]).
-cmd(longoption(	   {A1},{A2}), [#strong([nospace(--), +A1,
-					 nospace(=)]), #var(+A2)]).
-cmd(fmtseq(		{A1}), #code(A1)).
-cmd(versionshort,	    _, nospace(Version)) :-
-	feature(version, V),
-	Major is V // 10000,
-	Minor is (V // 100) mod 100,
-	Patch is V mod 100,
-	atomic_list_concat([Major, Minor, Patch], '.', Version).
+cmd(var(                {A1}), #var(+A1)).
+cmd(arg(                {A1}), #var(+A1)).
+cmd(metafile(           {A1}), #code(+A1)).
+cmd(file(               {A0}), #code(A1)) :-
+    clean_tt(A0, A1).
+cmd(clib(               {A1}), #code(+A1)).
+cmd(cglobalvar(         {A1}), #code(+A1)).
+cmd(ctype(              {A1}), #code(+A1)).
+cmd(type(               {A1}), #code(+A1)).
+cmd(pllib(              {A1}), #code([library, #embrace(+A1)])).
+cmd(hook(               {_A1}), #i(#embrace(hook))).
+cmd(env(                {A1}), #code(+A1)).
+cmd(program(            {A1}), #b(A1)).
+cmd(exam(               {A1}), #code(+A1)).
+cmd(jargon(             {A1}), #em(+A1)).
+cmd(chr(                {A1}), #code(+A1)).
+cmd(const(              {A1}), #code(+A1)).
+cmd(resource(           {A1}), #code(A1)).
+cmd(key(                {A1}), #code(+A1)).
+cmd(plflag(             {A1}), #code(+A1)).
+cmd(module(             {A1}), #code(+A1)).
+cmd(except(             {A1}), #code(+A1)).
+cmd(op(                 {A1}), #strong(+A1)).
+cmd(cmdlineoption(      {A1}), #strong(+A1)).
+cmd(menu({A1},{[]}),           #strong(+A1)).
+cmd(menu({A1},{A2}),           [#strong(+A1), ' ', #embrace(#code(+A2))]).
+cmd(longoption(    {A1},{[]}), [#strong([nospace(--), +A1])]).
+cmd(longoption(    {A1},{A2}), [#strong([nospace(--), +A1,
+                                         nospace(=)]), #var(+A2)]).
+cmd(fmtseq(             {A1}), #code(A1)).
+cmd(versionshort,           _, nospace(Version)) :-
+    feature(version, V),
+    Major is V // 10000,
+    Minor is (V // 100) mod 100,
+    Patch is V mod 100,
+    atomic_list_concat([Major, Minor, Patch], '.', Version).
 cmd(bnfor, '|').
 cmd(bnfmeta({Meta}), [nospace('<'), #var(+Meta), nospace('>')]).
 cmd(argoption({RawName}, {ArgName}),
     [ #strong(Name), ' ', #var(ArgName)
     ]) :-
-	clean_tt(RawName, Name).
+    clean_tt(RawName, Name).
 cmd(predref({RawName}, {Arity}), #lref(pred, RefName, Text)) :-
-	clean_name(RawName, Name),
-	predicate_refname(Name, Arity, RefName),
-	sformat(Text, '~w/~w', [Name, Arity]).
+    clean_name(RawName, Name),
+    predicate_refname(Name, Arity, RefName),
+    sformat(Text, '~w/~w', [Name, Arity]).
 cmd(funcref({RawName}, {Arity}), #lref(function, RefName, Text)) :-
-	clean_name(RawName, Name),
-	function_refname(Name, Arity, RefName),
-	sformat(Text, '~w/~w', [Name, Arity]).
+    clean_name(RawName, Name),
+    function_refname(Name, Arity, RefName),
+    sformat(Text, '~w/~w', [Name, Arity]).
 cmd(dcgref({RawName}, {DCGArity}), #lref(pred, RefName, Text)) :-
-	clean_name(RawName, Name),
-	atom_number(DCGArity, Arity),
-	dcg_refname(Name, Arity, RefName),
-	sformat(Text, '~w//~w', [Name, Arity]).
+    clean_name(RawName, Name),
+    atom_number(DCGArity, Arity),
+    dcg_refname(Name, Arity, RefName),
+    sformat(Text, '~w//~w', [Name, Arity]).
 cmd(qpredref({Module}, {RawName}, {Arity}), #lref(pred, RefName, Text)) :-
-	clean_name(RawName, Name),
-	predicate_refname(Module:Name, Arity, RefName),
-	format(string(Text), '~w:~w/~w', [Module, Name, Arity]).
+    clean_name(RawName, Name),
+    predicate_refname(Module:Name, Arity, RefName),
+    format(string(Text), '~w:~w/~w', [Module, Name, Arity]).
 cmd(qdcgref({Module}, {RawName}, {DCGArity}), #lref(pred, RefName, Text)) :-
-	clean_name(RawName, Name),
-	atom_number(DCGArity, Arity),
-	dcg_refname(Module:Name, Arity, RefName),
-	format(string(Text), '~w:~w//~w', [Module, Name, DCGArity]).
+    clean_name(RawName, Name),
+    atom_number(DCGArity, Arity),
+    dcg_refname(Module:Name, Arity, RefName),
+    format(string(Text), '~w:~w//~w', [Module, Name, DCGArity]).
 cmd(nopredref({RawName}, {Arity}), Text) :-
-	clean_name(RawName, Name),
-	format(string(Text), '~w/~w', [Name, Arity]).
+    clean_name(RawName, Name),
+    format(string(Text), '~w/~w', [Name, Arity]).
 cmd(libpredref({RawName}, {Arity}), Text) :-
-	clean_name(RawName, Name),
-	format(string(Text), '~w/~w', [Name, Arity]).
+    clean_name(RawName, Name),
+    format(string(Text), '~w/~w', [Name, Arity]).
 cmd(nodcgref({RawName}, {Arity}), Text) :-
-	clean_name(RawName, Name),
-	format(string(Text), '~w//~w', [Name, Arity]).
+    clean_name(RawName, Name),
+    format(string(Text), '~w//~w', [Name, Arity]).
 cmd(prologflag({Name}), #lref(flag, RefName, Name)) :-
-	atom_concat('flag:', Name, RefName).
+    atom_concat('flag:', Name, RefName).
 cmd(functor({Name}, {Arity}), #code([+Name, nospace(/), +Arity])).
 cmd(compound({Name}, {Args}), #code([+Name, #embrace(+Args)])).
 cmd(term({Name}, {Args}), #code([+Name, #embrace(+Args)])).
 cmd(errorterm({Name}, {Args}), #code([+Name, #embrace(+Args)])).
 cmd(infixterm({RawName},{A1},{A2}), #code([+A1, Name, +A2])) :-
-	clean_name(RawName, Name).
+    clean_name(RawName, Name).
 cmd(prefixterm({RawName},{A1}), #code([+A1, Name])) :-
-	clean_name(RawName, Name).
+    clean_name(RawName, Name).
 cmd(manref({RawName}, {Section}),
     [#strong(Name), #embrace(Section)]) :-
-	clean_tt(RawName, Name).
+    clean_tt(RawName, Name).
 cmd(cfuncref({RawName}, {Args}),
     #lref(func, RefName, [Name, #embrace(+Args)])) :-
-	clean_name(RawName, Name),
-	cfunction_refname(Name, RefName).
+    clean_name(RawName, Name),
+    cfunction_refname(Name, RefName).
 cmd(definition({Tag}),
     #defitem(#b(+Tag))).
 cmd('DCG'(A,B,C), X) :-
-	cmd(predicate(A,B,C), X).
+    cmd(predicate(A,B,C), X).
 cmd(predicate(A, {RawName}, {'0'}, {_}),
     #defitem(Class, Content)) :-
-	pred_class(A, Class),
-	pred_tag(A, Content, [#label(RefName, #strong(Name))]),
-	clean_name(RawName, Name),
-	predicate_refname(Name, 0, RefName),
-	add_to_index(RefName, +RefName).
+    pred_class(A, Class),
+    pred_tag(A, Content, [#label(RefName, #strong(Name))]),
+    clean_name(RawName, Name),
+    predicate_refname(Name, 0, RefName),
+    add_to_index(RefName, +RefName).
 cmd(predicate(A, {RawName}, {Arity}, {Args}),
     #defitem(Class, Content)) :-
-	pred_class(A, Class),
-	pred_tag(A, Content,
-		 [#label(RefName, [#strong(Name), #embrace(#var(+Args))])]),
-	clean_name(RawName, Name),
-	predicate_refname(Name, Arity, RefName),
-	add_to_index(RefName, +RefName).
+    pred_class(A, Class),
+    pred_tag(A, Content,
+             [#label(RefName, [#strong(Name), #embrace(#var(+Args))])]),
+    clean_name(RawName, Name),
+    predicate_refname(Name, Arity, RefName),
+    add_to_index(RefName, +RefName).
 cmd(function(A, {RawName}, {'0'}, {_}),
     #defitem(Class, Content)) :-
-	pred_class(A, Class),
-	pred_tag(A, Content, [#label(RefName, #strong(Name))]),
-	clean_name(RawName, Name),
-	function_refname(Name, 0, RefName),
-	add_to_index(RefName, +RefName).
+    pred_class(A, Class),
+    pred_tag(A, Content, [#label(RefName, #strong(Name))]),
+    clean_name(RawName, Name),
+    function_refname(Name, 0, RefName),
+    add_to_index(RefName, +RefName).
 cmd(function(A, {RawName}, {Arity}, {Args}),
     #defitem(Class, Content)) :-
-	pred_class(A, Class),
-	pred_tag(A, Content,
-		 [#label(RefName, [#strong(Name), #embrace(#var(+Args))])]),
-	clean_name(RawName, Name),
-	function_refname(Name, Arity, RefName),
-	add_to_index(RefName, +RefName).
+    pred_class(A, Class),
+    pred_tag(A, Content,
+             [#label(RefName, [#strong(Name), #embrace(#var(+Args))])]),
+    clean_name(RawName, Name),
+    function_refname(Name, Arity, RefName),
+    add_to_index(RefName, +RefName).
 cmd(dictfunction(A, {RawName}, {Arity}, {Args}),
     #defitem(Class, Content)) :-
-	pred_class(A, Class),
-	pred_tag(A, Content,
-		 [#label(RefName, [#strong(Name), #embrace(#var(+Args))])]),
-	clean_name(RawName, Name),
-	format(string(RefName), 'm-~w-~w', [Name, Arity]),
-	add_to_index(RefName, +RefName).
+    pred_class(A, Class),
+    pred_tag(A, Content,
+             [#label(RefName, [#strong(Name), #embrace(#var(+Args))])]),
+    clean_name(RawName, Name),
+    format(string(RefName), 'm-~w-~w', [Name, Arity]),
+    add_to_index(RefName, +RefName).
 cmd(qpredicate(A, {RawM}, {RawName}, {'0'}, {_}),
     #defitem(Class, Content)) :-
-	pred_class(A, Class),
-	pred_tag(A, Content, [#label(RefName, [#mod(Module), nospace(:), #strong(Name)])]),
-	clean_name(RawM, Module),
-	clean_name(RawName, Name),
-	predicate_refname(Module:Name, 0, RefName),
-	add_to_index(RefName, +RefName).
+    pred_class(A, Class),
+    pred_tag(A, Content, [#label(RefName, [#mod(Module), nospace(:), #strong(Name)])]),
+    clean_name(RawM, Module),
+    clean_name(RawName, Name),
+    predicate_refname(Module:Name, 0, RefName),
+    add_to_index(RefName, +RefName).
 cmd(qpredicate(A, {RawM}, {RawName}, {Arity}, {Args}),
     #defitem(Class, Content)) :-
-	pred_class(A, Class),
-	pred_tag(A, Content,
-		 [#label(RefName, [#mod(Module), nospace(:), #strong(Name), #embrace(#var(+Args))])]),
-	clean_name(RawM, Module),
-	clean_name(RawName, Name),
-	predicate_refname(Module:Name, Arity, RefName),
-	add_to_index(RefName, +RefName).
+    pred_class(A, Class),
+    pred_tag(A, Content,
+             [#label(RefName, [#mod(Module), nospace(:), #strong(Name), #embrace(#var(+Args))])]),
+    clean_name(RawM, Module),
+    clean_name(RawName, Name),
+    predicate_refname(Module:Name, Arity, RefName),
+    add_to_index(RefName, +RefName).
 cmd(dcg(A, {RawName}, {'0'}, {_}),
     #defitem(pubdef, Content)) :-
-	pred_tag(A, Content, [#label(RefName, #strong(Name)), #code(//)]),
-	clean_name(RawName, Name),
-	dcg_refname(Name, 0, RefName),
-	add_to_index(RefName, +RefName).
+    pred_tag(A, Content, [#label(RefName, #strong(Name)), #code(//)]),
+    clean_name(RawName, Name),
+    dcg_refname(Name, 0, RefName),
+    add_to_index(RefName, +RefName).
 cmd(dcg(A, {RawName}, {ArityS}, {Args}),
     #defitem(pubdef, Content)) :-
-	pred_tag(A, Content,
-		 [ #label(RefName,
-			  [ #strong(Name), #embrace(#var(+Args))
-			  ]),
-		   #code(//)
-		 ]),
-	clean_name(RawName, Name),
-	atom_number(ArityS, Arity),
-	dcg_refname(Name, Arity, RefName),
-	add_to_index(RefName, +RefName).
+    pred_tag(A, Content,
+             [ #label(RefName,
+                      [ #strong(Name), #embrace(#var(+Args))
+                      ]),
+               #code(//)
+             ]),
+    clean_name(RawName, Name),
+    atom_number(ArityS, Arity),
+    dcg_refname(Name, Arity, RefName),
+    add_to_index(RefName, +RefName).
 cmd(directive(A, {RawName}, {'0'}, {_}),
     #defitem(pubdef, Content)) :-
-	pred_tag(A, Content,
-		 [ #label(RefName,
-			  [ ':- ', #strong(Name)
-			  ])
-		 ]),
-	clean_name(RawName, Name),
-	predicate_refname(Name, 0, RefName),
-	add_to_index(RefName, +RefName).
+    pred_tag(A, Content,
+             [ #label(RefName,
+                      [ ':- ', #strong(Name)
+                      ])
+             ]),
+    clean_name(RawName, Name),
+    predicate_refname(Name, 0, RefName),
+    add_to_index(RefName, +RefName).
 cmd(directive(A, {RawName}, {Arity}, {Args}),
     #defitem(pubdef, Content)) :-
-	pred_tag(A, Content,
-		 [ #label(RefName,
-			  [ ':- ', #strong(Name), #embrace(#var(+Args))
-			  ])
-		 ]),
-	clean_name(RawName, Name),
-	predicate_refname(Name, Arity, RefName),
-	add_to_index(RefName, +RefName).
+    pred_tag(A, Content,
+             [ #label(RefName,
+                      [ ':- ', #strong(Name), #embrace(#var(+Args))
+                      ])
+             ]),
+    clean_name(RawName, Name),
+    predicate_refname(Name, Arity, RefName),
+    add_to_index(RefName, +RefName).
 cmd(cfunction({RType}, {RawName}, {Args}),
     #defitem(pubdef, #label(RefName,
-			    [ #var(RType), ' ', #strong(+RawName),
-			      #embrace(#var(+Args))
-			    ]))) :-
-	clean_name(RawName, Name),
-	cfunction_refname(Name, RefName),
-	add_to_index(RefName, +RefName).
+                            [ #var(RType), ' ', #strong(+RawName),
+                              #embrace(#var(+Args))
+                            ]))) :-
+    clean_name(RawName, Name),
+    cfunction_refname(Name, RefName),
+    add_to_index(RefName, +RefName).
 cmd(cmacro({RType}, {Name}, {Args}),
     #defitem(pubdef, #label(RefName,
-			    [ #var(RType), ' ', #strong(Name),
-			      #embrace(#var(+Args))
-			    ]))) :-
-	cfunction_refname(Name, RefName),
-	add_to_index(RefName, +RefName).
+                            [ #var(RType), ' ', #strong(Name),
+                              #embrace(#var(+Args))
+                            ]))) :-
+    cfunction_refname(Name, RefName),
+    add_to_index(RefName, +RefName).
 cmd(resitem({Resource}),
     #defitem(pubdef, #label(Resource,
-			    [ #strong(Resource)
-			    ]))) :-
-	add_to_index(Resource, +Resource).
+                            [ #strong(Resource)
+                            ]))) :-
+    add_to_index(Resource, +Resource).
 cmd(prefixop(A, {RawName}, {Arg}),
     #defitem(pubdef, Content)) :-
-	pred_tag(A, Content,
-		 #label(RefName, [#strong(Name), ' ', #var(+Arg)])),
-	clean_name(RawName, Name),
-	predicate_refname(Name, 1, RefName),
-	add_to_index(RefName, +RefName).
+    pred_tag(A, Content,
+             #label(RefName, [#strong(Name), ' ', #var(+Arg)])),
+    clean_name(RawName, Name),
+    predicate_refname(Name, 1, RefName),
+    add_to_index(RefName, +RefName).
 cmd(prefixfunction(A, {RawName}, {Arg}),
     #defitem(pubdef, Content)) :-
-	pred_tag(A, Content,
-		 #label(RefName, [#strong(Name), ' ', #var(Arg)])),
-	clean_name(RawName, Name),
-	function_refname(Name, 1, RefName),
-	add_to_index(RefName, +RefName).
+    pred_tag(A, Content,
+             #label(RefName, [#strong(Name), ' ', #var(Arg)])),
+    clean_name(RawName, Name),
+    function_refname(Name, 1, RefName),
+    add_to_index(RefName, +RefName).
 cmd(infixop(A, {RawName}, {Arg1}, {Arg2}),
     #defitem(pubdef, Content)) :-
-	pred_tag(A, Content,
-		 #label(RefName,
-			[ #var(Arg1), ' ', #strong(Name), ' ', #var(Arg2)
-			])),
-	clean_name(RawName, Name),
-	predicate_refname(Name, 2, RefName),
-	add_to_index(RefName, +RefName).
+    pred_tag(A, Content,
+             #label(RefName,
+                    [ #var(Arg1), ' ', #strong(Name), ' ', #var(Arg2)
+                    ])),
+    clean_name(RawName, Name),
+    predicate_refname(Name, 2, RefName),
+    add_to_index(RefName, +RefName).
 cmd(infixfunction(A, {RawName}, {Arg1}, {Arg2}),
     #defitem(pubdef, Content)) :-
-	pred_tag(A, Content,
-		 #label(RefName,
-			[ #var(Arg1), ' ', #strong(Name), ' ', #var(Arg2)
-			])),
-	clean_name(RawName, Name),
-	function_refname(Name, 2, RefName),
-	add_to_index(RefName, +RefName).
+    pred_tag(A, Content,
+             #label(RefName,
+                    [ #var(Arg1), ' ', #strong(Name), ' ', #var(Arg2)
+                    ])),
+    clean_name(RawName, Name),
+    function_refname(Name, 2, RefName),
+    add_to_index(RefName, +RefName).
 cmd(constitem({Name}), #defitem(#label(RefName, #strong(+Name)))) :-
-	clean_name(Name, RefName),
-	add_to_index(RefName, +RefName).
+    clean_name(Name, RefName),
+    add_to_index(RefName, +RefName).
 cmd(termitem({Name}, {[]}), #defitem(#strong(+Name))).
 cmd(termitem({Name}, {Arg}),
     #defitem([#strong(+Name), #embrace(#var(+Arg))])).
@@ -339,68 +339,68 @@ cmd(infixtermitem({Name}, {Left}, {Right}),
     #defitem([#var(+Left), ' ', #strong(+Name), ' ', #var(+Right)])).
 cmd(prologflagitem({Name}, {Type}, {Access}),
     #defitem(pubdef, #label(RefName, [#strong(Name), #embrace([#var(Type)|Change])]))) :-
-	atom_concat('flag:', Name, RefName),
-	(   Access == r
-	->  Change = []
-	;   Change = nospace(', changeable')
-	).
+    atom_concat('flag:', Name, RefName),
+    (   Access == r
+    ->  Change = []
+    ;   Change = nospace(', changeable')
+    ).
 cmd(fmtchar({Name}), [html('<li>'), #code(+Name), html('<br>')]).
 cmd(optionval({Value}), #defitem(#strong(+Value))).
 cmd(cmdlineoptionitem(M, {Option}, {Arg}),
     #defitem([#strong(+Option), Sep, #var(+Arg)])) :-
-	(   M = *
-	->  Sep = []
-	;   Sep = [' ']
-	).
+    (   M = *
+    ->  Sep = []
+    ;   Sep = [' ']
+    ).
 cmd(longoptionitem({Name}, {[]}), #defitem(#strong([nospace(--), +Name]))).
 cmd(longoptionitem({Name}, {Arg}), #defitem(#strong([nospace(--), +Name,
-						     nospace(=),
-						     #var(+Arg)]))).
+                                                     nospace(=),
+                                                     #var(+Arg)]))).
 cmd(optionarg({Option}, {Arg}),
     #defitem([#strong(Option), #var(Arg)])).
 cmd(traceoption({CharSpec}, {Name}, {Description}),
     [ #defitem([#strong(Name), ' ', #embrace(#code(Char))]),
       +Description
     ]) :-
-	clean_name(CharSpec, Char).
+    clean_name(CharSpec, Char).
 cmd(pleaseoption({Name}, {Type}, {Default}),
     #defitem([ #strong(Name), ' ', #embrace(#var(Type)), ' ',
-	       'Default:', ' ', Default
-	     ])).
+               'Default:', ' ', Default
+             ])).
 cmd(featureoption({Name}, {Type}),
     #defitem([#strong(Name), ' ', #embrace(#var(Type))])).
 cmd(menuitem({Name}, {[]}),
     #defitem(#label(RefName, #strong(+Name)))) :-
-	clean_name(Name, RefName0),
-	atom_concat('menu:', RefName0, RefName),
-	atomic_list_concat(Name, ' ', Atom),
-	add_to_index(Atom, +RefName).
+    clean_name(Name, RefName0),
+    atom_concat('menu:', RefName0, RefName),
+    atomic_list_concat(Name, ' ', Atom),
+    add_to_index(Atom, +RefName).
 cmd(menuitem({Name}, {Arg}),
     #defitem([#label(RefName, #strong(+Name)), ' ', #embrace(#var(+Arg))])) :-
-	clean_name(Name, RefName0),
-	atom_concat('menu:', RefName0, RefName),
-	atomic_list_concat(Name, ' ', Atom),
-	add_to_index(Atom, +RefName).
+    clean_name(Name, RefName0),
+    atom_concat('menu:', RefName0, RefName),
+    atomic_list_concat(Name, ' ', Atom),
+    add_to_index(Atom, +RefName).
 cmd(escapeitem({Name}), #defitem(#code([nospace('\\'), +Name]))).
 cmd(ttdef({Def}), #defitem(#code(+Def))).
 cmd(predicatesummary({RawName}, {Arity}, {Summary}),
     #row([#predref(Name, Arity), +Summary])) :-
-	clean_name(RawName, Name).
+    clean_name(RawName, Name).
 cmd(dcgsummary({RawName}, {Arity}, {Summary}),
     #row([#dcgref(Name, Arity), +Summary])) :-
-	clean_name(RawName, Name).
+    clean_name(RawName, Name).
 cmd(oppredsummary({RawName}, {Arity}, {_Assoc}, {_Pri}, {Summary}),
     #row([#predref(Name, Arity), +Summary])) :-
-	clean_name(RawName, Name).
+    clean_name(RawName, Name).
 cmd(functionsummary({RawName}, {Arity}, {Summary}),
     #row([#funcref(Name, Arity), +Summary])) :-
-	clean_name(RawName, Name).
+    clean_name(RawName, Name).
 cmd(opfuncsummary({RawName}, {Arity}, {_Assoc}, {_Pri}, {Summary}),
     #row([#funcref(Name, Arity), +Summary])) :-
-	clean_name(RawName, Name).
+    clean_name(RawName, Name).
 cmd(opsummary({Pri}, {Assoc}, {RawName}, {Summary}),
     #row([Pri, Assoc, Name, +Summary])) :-
-	clean_name(RawName, Name).
+    clean_name(RawName, Name).
 
 cmd(texcmd({Name}), #code([nospace(\), Name])).
 cmd(texenv({Name}), #code(Name)).
@@ -410,7 +410,7 @@ cmd(texmode({Name}), #var(Name)).
 
 cmd(classitem({Class}),
     #defitem(#label(RefName, #strong(Class)))) :-
-	sformat(RefName, 'class:~w', [Class]).
+    sformat(RefName, 'class:~w', [Class]).
 cmd(constructor({Class}, {Args}),
     #defitem([#strong([Class, ::, Class]), #embrace(#var(+Args))])).
 cmd(destructor({Class}),
@@ -422,103 +422,106 @@ cmd(nodescription, []).
 % Some XPCE things
 
 cmd(class({Name}),              #lref(Label, Name)) :-
-        concat('class:', Name, Label),
-        add_to_index(Name).
+    concat('class:', Name, Label),
+    add_to_index(Name).
 cmd(noclass({Name}),            #i(Name)).
 cmd(menuref({A1}),              #lref(RefName, Name)) :-
-	clean_name(A1, RefName0),
-	atom_concat('menu:', RefName0, RefName),
-	atomic_list_concat(A1, ' ', Name),
-        add_to_index(Name).
+    clean_name(A1, RefName0),
+    atom_concat('menu:', RefName0, RefName),
+    atomic_list_concat(A1, ' ', Name),
+    add_to_index(Name).
 
 % Glossary support
 
 cmd(glossitem({Term}), #defitem(#label(RefName, #strong(Term)))) :-
-	canonicalise_glossitem(Term, Ref),
-	format(string(RefName), 'gloss:~w', [Ref]).
-cmd(g({Term}),	#lref(gloss, RefName, Term)) :-
-	canonicalise_glossitem(Term, Ref),
-	format(string(RefName), 'gloss:~w', [Ref]).
+    canonicalise_glossitem(Term, Ref),
+    format(string(RefName), 'gloss:~w', [Ref]).
+cmd(g({Term}),  #lref(gloss, RefName, Term)) :-
+    canonicalise_glossitem(Term, Ref),
+    format(string(RefName), 'gloss:~w', [Ref]).
 
 % library stuff
 cmd(libdoc({Name}, {Summary}),
     [HTML, #label(SecLabel, [], Tag)]) :-
-	atom_concat('sec:', Name, SecLabel),
-	filebase(Name, File),
-	format(atom(Label), '~w:', [library(Name)]),
-	translate_section(2, -,
-			  [Label, Summary],
-			  HTML,
-			  File),
-	tex:label_tag(SecLabel, Tag).
+    atom_concat('sec:', Name, SecLabel),
+    filebase(Name, File),
+    format(atom(Label), '~w:', [library(Name)]),
+    translate_section(2, -,
+                      [Label, Summary],
+                      HTML,
+                      File),
+    tex:label_tag(SecLabel, Tag).
 cmd(libsummary({Name}),
     [HTML, #label(SecLabel, [], Tag)]) :-
-	path_minus(Name, RefName),
-	atom_concat('sec:summary-lib-', RefName, SecLabel),
-	format(atom(Label), '~w', [library(Name)]),
-	translate_section(3, -, [Label], HTML),
-	tex:label_tag(SecLabel, Tag).
+    path_minus(Name, RefName),
+    atom_concat('sec:summary-lib-', RefName, SecLabel),
+    format(atom(Label), '~w', [library(Name)]),
+    translate_section(3, -, [Label], HTML),
+    tex:label_tag(SecLabel, Tag).
 
-%%	path_minus(+Path, -Minus) is det.
+%!  path_minus(+Path, -Minus) is det.
 %
-%	Replace / in paths  with  -.  /   is  not  allowed  in SGML NAME
-%	attributes.
+%   Replace / in paths  with  -.  /   is  not  allowed  in SGML NAME
+%   attributes.
 
 path_minus(Path, Minus) :-
-	sub_atom(Path, _, _, _, /), !,
-	atomic_list_concat(Segments, /, Path),
-	atomic_list_concat(Segments, -, Minus).
+    sub_atom(Path, _, _, _, /),
+    !,
+    atomic_list_concat(Segments, /, Path),
+    atomic_list_concat(Segments, -, Minus).
 path_minus(Path, Path).
 
 filebase(Name, File) :-
-	atom_codes(Name, Codes),
-	select_csym(Codes, Alnums),
-	atom_codes(File, Alnums).
+    atom_codes(Name, Codes),
+    select_csym(Codes, Alnums),
+    atom_codes(File, Alnums).
 
 select_csym([], []).
 select_csym([H|T0], [H|T]) :-
-	code_type(H, csymf), !,
-	select_csym(T0, T).
+    code_type(H, csymf),
+    !,
+    select_csym(T0, T).
 select_csym([_|T0], T) :-
-	select_csym(T0, T).
+    select_csym(T0, T).
 
 
 pred_tag([], L, L).
 pred_tag([Value], [#predtag(#embrace("[]", +Value))|L], L).
 
 pred_class([Opt], Class) :-
-	sub_term(Tag, Opt),
-	atom(Tag),
-	sub_atom(Tag, _, _, _, multifile), !,
-	Class = multidef.
+    sub_term(Tag, Opt),
+    atom(Tag),
+    sub_atom(Tag, _, _, _, multifile),
+    !,
+    Class = multidef.
 pred_class(_, pubdef).
 
 
-		 /*******************************
-		 *	     GLOSSARY		*
-		 *******************************/
+                 /*******************************
+                 *           GLOSSARY           *
+                 *******************************/
 
 canonicalise_glossitem(In, Out) :-
-	downcase_atom(In, In1),
-	atom_codes(In1, Chars0),
-	(   append(CharsPre, [0'[|_], Chars0)
-	->  remove_trailing_spaces(CharsPre, Chars1)
-	;   Chars1 = Chars0
-	),
-	(   append(Chars2, [0's], Chars1)
-	->  true
-	;   Chars2 = Chars1
-	),
-	maplist(canonical_char, Chars2, Chars),
-	atom_codes(Out0, Chars),
-	canonical(Out0, Out).
+    downcase_atom(In, In1),
+    atom_codes(In1, Chars0),
+    (   append(CharsPre, [0'[|_], Chars0)
+    ->  remove_trailing_spaces(CharsPre, Chars1)
+    ;   Chars1 = Chars0
+    ),
+    (   append(Chars2, [0's], Chars1)
+    ->  true
+    ;   Chars2 = Chars1
+    ),
+    maplist(canonical_char, Chars2, Chars),
+    atom_codes(Out0, Chars),
+    canonical(Out0, Out).
 
 canonical(unified, unify) :- !.
 canonical(bound, binding) :- !.
 canonical(proven, prove) :- !.
 canonical(succeeded, succeed) :- !.
 canonical(compiled, compile) :- !.
-canonical(propertie, property) :- !.	% s has alredy gone
+canonical(propertie, property) :- !.    % s has alredy gone
 canonical(X, X).
 
 canonical_char(0' , 0'-) :- !.
@@ -527,14 +530,15 @@ canonical_char(X, X).
 
 remove_trailing_spaces([], []).
 remove_trailing_spaces([0' |T], []) :-
-	maplist(=(0' ), T), !.		% '
+    maplist(=(0' ), T), 
+    !.          % '
 remove_trailing_spaces([H|T0], [H|T]) :-
-	remove_trailing_spaces(T0, T).
+    remove_trailing_spaces(T0, T).
 
 
-		 /*******************************
-		 *	   PlDoc KEYWORDS	*
-		 *******************************/
+                 /*******************************
+                 *         PlDoc KEYWORDS       *
+                 *******************************/
 
 cmd(tag({Tag}),
     [ html('<dt class="tag">'), +Tag, html('<dd>') ]).
@@ -555,77 +559,81 @@ cmd(arg({Param}, {Description}),
     ]).
 
 
-		 /*******************************
-		 *               C		*
-		 *******************************/
+                 /*******************************
+                 *               C              *
+                 *******************************/
 
 cmd(backslash, #code(\)).
 cmd(bsl, #code(\)).
 cmd(Cmd, HTML) :-
-	urldef(Cmd, Atom), !,
-	HTML = #code(Atom).
+    urldef(Cmd, Atom),
+    !,
+    HTML = #code(Atom).
 
 
-		 /*******************************
-		 *    LATEX SPECIAL SEQUENCES	*
-		 *******************************/
+                 /*******************************
+                 *    LATEX SPECIAL SEQUENCES   *
+                 *******************************/
 
-%	NOTE: This code is copied from doc_latex.pl from PlDoc.
+%       NOTE: This code is copied from doc_latex.pl from PlDoc.
 
-%%	urldef(?DefName, ?String)
+%!  urldef(?DefName, ?String)
 %
-%	True if \DefName is  a  urldef   for  String.  UrlDefs are LaTeX
-%	sequences that can be used to  represent strings with symbols in
-%	fragile environments. Whenever a word can   be  expressed with a
-%	urldef, we will  do  this  to   enhance  the  robustness  of the
-%	generated LaTeX code.
+%   True if \DefName is  a  urldef   for  String.  UrlDefs are LaTeX
+%   sequences that can be used to  represent strings with symbols in
+%   fragile environments. Whenever a word can   be  expressed with a
+%   urldef, we will  do  this  to   enhance  the  robustness  of the
+%   generated LaTeX code.
 
 :- dynamic
-	urldef/2,
-	urldefs_loaded/1.
+    urldef/2,
+    urldefs_loaded/1.
 
-%%	load_urldefs.
-%%	load_urldefs(+File)
+%!  load_urldefs.
+%!  load_urldefs(+File)
 %
-%	Load   =|\urldef|=   definitions   from    File   and   populate
-%	urldef_name/2. See =|pldoc.sty|= for details.
+%   Load   =|\urldef|=   definitions   from    File   and   populate
+%   urldef_name/2. See =|pldoc.sty|= for details.
 
 load_urldefs :-
-	urldefs_loaded(_), !.
+    urldefs_loaded(_), 
+    !.
 load_urldefs :-
-	absolute_file_name(library('pldoc/pldoc.sty'), File,
-			   [ access(read) ]),
-	load_urldefs(File).
+    absolute_file_name(library('pldoc/pldoc.sty'), File,
+                       [ access(read) ]),
+    load_urldefs(File).
 
 load_urldefs(File) :-
-	urldefs_loaded(File), !.
+    urldefs_loaded(File), 
+    !.
 load_urldefs(File) :-
-	open(File, read, In),
-	call_cleanup((   read_line_to_codes(In, L0),
-			 process_urldefs(L0, In)),
-		     close(In)),
-	assert(urldefs_loaded(File)).
+    open(File, read, In),
+    call_cleanup((   read_line_to_codes(In, L0),
+                     process_urldefs(L0, In)),
+                 close(In)),
+    assert(urldefs_loaded(File)).
 
 process_urldefs(end_of_file, _) :- !.
 process_urldefs(Line, In) :-
-	(   phrase(urldef(Name, String), Line)
-	->  assert(urldef(Name, String))
-	;   true
-	),
-	read_line_to_codes(In, L2),
-	process_urldefs(L2, In).
+    (   phrase(urldef(Name, String), Line)
+    ->  assert(urldef(Name, String))
+    ;   true
+    ),
+    read_line_to_codes(In, L2),
+    process_urldefs(L2, In).
 
 urldef(Name, String) -->
-	"\\urldef{\\", string(NameS), "}\\satom{", string(StringS), "}",
-	ws,
-	(   "%"
-	->  string(_)
-	;   []
-	),
-	eol, !,
-	{ atom_codes(Name, NameS),
-	  atom_codes(String, StringS)
-	}.
+    "\\urldef{\\", string(NameS), "}\\satom{", string(StringS), "}",
+    ws,
+    (   "%"
+    ->  string(_)
+    ;   []
+    ),
+    eol,
+    !,
+    { atom_codes(Name, NameS),
+      atom_codes(String, StringS)
+    }.
 
 ws --> [C], { C =< 32 }, !, ws.
 ws --> [].
@@ -637,62 +645,69 @@ eol([],[]).
 
 
 clean_name([\Special], Out) :-
-	urldef(Special, Out), !.
+    urldef(Special, Out), 
+    !.
 clean_name([\tt, Out], Out) :- !.
-clean_name([' '|T], Out) :- !,
-	clean_name(T, Out).
+clean_name([' '|T], Out) :-
+    !,
+    clean_name(T, Out).
 clean_name($(Out), Out) :- !.
 clean_name([Out], Out) :- !.
 clean_name(X, X) :-
-	atomic(X), !.
+    atomic(X), 
+    !.
 clean_name(L, Out) :-
-	maplist(clean_name, L, L2),
-	atomic_list_concat(L2, Out).
+    maplist(clean_name, L, L2),
+    atomic_list_concat(L2, Out).
 
-%%	predicate_refname(+Name, +Arity, -Ref) is det.
-%%	dcg_refname(+Name, +Arity, -Ref) is det.
+%!  predicate_refname(+Name, +Arity, -Ref) is det.
+%!  dcg_refname(+Name, +Arity, -Ref) is det.
 %
-%	Reference name for predicates.
+%   Reference name for predicates.
 
 predicate_refname(Name, Arity, Ref) :-
-	pred_refname(Name, Arity, Ref, /).
+    pred_refname(Name, Arity, Ref, /).
 dcg_refname(Name, Arity, Ref) :-
-	pred_refname(Name, Arity, Ref, //).
+    pred_refname(Name, Arity, Ref, //).
 
-pred_refname(Module:Name, Arity, Ref, Type) :- !,
-	format(atom(Ref), '~w:~w~w~w', [Module, Name, Type, Arity]).
+pred_refname(Module:Name, Arity, Ref, Type) :-
+    !,
+    format(atom(Ref), '~w:~w~w~w', [Module, Name, Type, Arity]).
 pred_refname(Symbol, Arity, Ref, Type) :-
-	symbol_name(Symbol, Name), !,
-	format(atom(Ref), '~w~w~w', [Name, Type, Arity]).
+    symbol_name(Symbol, Name),
+    !,
+    format(atom(Ref), '~w~w~w', [Name, Type, Arity]).
 pred_refname(Name, Arity, Ref, Type) :-
-	format(atom(Ref), '~w~w~w', [Name, Type, Arity]).
+    format(atom(Ref), '~w~w~w', [Name, Type, Arity]).
 
-%%	function_refname(+Name, +Arity, -Ref)
+%!  function_refname(+Name, +Arity, -Ref)
 %
-%	Reference name for arithmetic functions.
+%   Reference name for arithmetic functions.
 
 function_refname(Symbol, Arity, Ref) :-
-	symbol_name(Symbol, Name), !,
-	format(string(Ref), 'f-~w/~w', [Name, Arity]).
+    symbol_name(Symbol, Name),
+    !,
+    format(string(Ref), 'f-~w/~w', [Name, Arity]).
 function_refname(Name, Arity, Ref) :-
-	format(string(Ref), 'f-~w/~w', [Name, Arity]).
+    format(string(Ref), 'f-~w/~w', [Name, Arity]).
 
-%%	cfunction_refname(+Name, +Arity, -Ref)
+%!  cfunction_refname(+Name, +Arity, -Ref)
 %
-%	Reference name for C API functions.
+%   Reference name for C API functions.
 
 cfunction_refname(Op, Ref) :-
-	sub_atom(Op, B, _, A, '::operator'), !,
-	sub_atom(Op, 0, B, _, Prefix),
-	sub_atom(Op, _, A, 0, Postfix0),
-	normalize_space(atom(Postfix), Postfix0),
-	(   symbol_name(Postfix, Name)
-	->  true
-	;   Name = Postfix
-	),
-	format(atom(Ref), '~w~w()', [Prefix, Name]).
+    sub_atom(Op, B, _, A, '::operator'),
+    !,
+    sub_atom(Op, 0, B, _, Prefix),
+    sub_atom(Op, _, A, 0, Postfix0),
+    normalize_space(atom(Postfix), Postfix0),
+    (   symbol_name(Postfix, Name)
+    ->  true
+    ;   Name = Postfix
+    ),
+    format(atom(Ref), '~w~w()', [Prefix, Name]).
 cfunction_refname(Name, Ref) :-
-	format(atom(Ref), '~w()', [Name]).
+    format(atom(Ref), '~w()', [Name]).
 
 :- if(false).
 symbol_name('->', send_arrow).
@@ -703,8 +718,8 @@ symbol_name(_,_) :- fail.
 
 n_list(0, _, []) :- !.
 n_list(N, X, [X|T]) :-
-	N > 0,
-	N2 is N - 1,
-	n_list(N2, X, T).
+    N > 0,
+    N2 is N - 1,
+    n_list(N2, X, T).
 
 :- load_urldefs.
