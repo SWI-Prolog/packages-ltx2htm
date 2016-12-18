@@ -649,8 +649,8 @@ clean_name(L, Out) :-
 	maplist(clean_name, L, L2),
 	atomic_list_concat(L2, Out).
 
-%%	predicate_refname(+Name, +Arity, -Ref)
-%%	dcg_refname(+Name, +Arity, -Ref)
+%%	predicate_refname(+Name, +Arity, -Ref) is det.
+%%	dcg_refname(+Name, +Arity, -Ref) is det.
 %
 %	Reference name for predicates.
 
