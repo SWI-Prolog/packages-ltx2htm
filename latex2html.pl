@@ -253,7 +253,7 @@ latex2html(Spec) :-
     done_make_output_directory/0.
 
 make_output_directory :-
-    done_make_output_directory, 
+    done_make_output_directory,
     !.
 make_output_directory :-
     html_output_dir(Dir),
@@ -359,11 +359,11 @@ translate_2(verbatim(_Cmd, Text), Mode, Mode,           % \begin{verbatim} ...
             #pre(code, pre(Text))).
 translate_2(verb(_, Text), pcecode, pcecode, pre(Text)).
 translate_2(Layout, pcecode, pcecode, []) :-
-    atomic(Layout), 
+    atomic(Layout),
     !.
 translate_2('\n', Mode, Mode, [html('<br>')]) :-
     Mode = group(Atts),
-    memberchk(obeylines, Atts), 
+    memberchk(obeylines, Atts),
     !.
 translate_2(verb(_, Text), Mode, Mode, #code(Text)).    % \verbX...X
 translate_2([Atom], Mode, Mode, nospace(Atom)) :-       % {foo}
@@ -396,15 +396,15 @@ translate_command(Cmd, Mode0, Mode, HTML) :-
 
 translate_cmd(Cmd, Mode0, Mode, HTML) :-
     tex_extension_module(M),
-    M:cmd(Cmd, Mode0, Mode, HTML), 
+    M:cmd(Cmd, Mode0, Mode, HTML),
     !.
 translate_cmd(Cmd, Mode, Mode, HTML) :-
     tex_extension_module(M),
-    M:cmd(Cmd, Mode, HTML), 
+    M:cmd(Cmd, Mode, HTML),
     !.
 translate_cmd(Cmd, Mode, Mode, HTML) :-
     tex_extension_module(M),
-    M:cmd(Cmd, HTML), 
+    M:cmd(Cmd, HTML),
     !.
 translate_cmd(Cmd, Mode, Mode, []) :-
     functor(Cmd, Name, _),
@@ -419,7 +419,7 @@ translate_environment(Env, Mode, Mode, HTML) :-
 
 translate_env(Env, Mode, Mode, HTML) :-
     tex_extension_module(M),
-    M:env(Env, HTML), 
+    M:env(Env, HTML),
     !.
 translate_env(Env, Mode, Mode, []) :-
     functor(Env, Name, _),
@@ -544,7 +544,7 @@ language_map(table,     'Table').
     !,
     #(lref('', Label, Text), Expanded).
 #(lref(_, _Label, Text),        Text) :-
-    in_anchor, 
+    in_anchor,
     !.
 #(lref(Class, Label, Text),     lref(Class, ALabel, Expanded)) :-
     canonicalise_label(Label, ALabel),
@@ -555,7 +555,7 @@ language_map(table,     'Table').
     canonicalise_label(Label, ALabel),
     expand_macros(Text, Expanded).
 #(url(_URL, Text),      Text) :-
-    in_anchor, 
+    in_anchor,
     !.
 #(url(URL, Text),       [html(Anchor), Expanded, html('</a>')]) :-
     format(string(Anchor), '<a class="url" href="~w">', URL),
@@ -620,7 +620,7 @@ make_cite_references([Key|T0], F, [#lref(cite, Key, Term), nospace(','), ' '|T])
 %       will work properly.
 
 canonicalise_label(Atom, Atom) :-
-    atom(Atom), 
+    atom(Atom),
     !.
 canonicalise_label(Atomic, Atom) :-
     atomic(Atomic),
@@ -735,7 +735,7 @@ collect_labels([_|T], File) :-
     collect_labels(T, File).
 
 label_tag(_Label, Tag) :-
-    current_float(_, Tag), 
+    current_float(_, Tag),
     !.
 label_tag(Label, Tag) :-
     section_tag(Tag),
@@ -895,7 +895,7 @@ item_commands(List, [], List) :-
     List = [Cmd|_],
     functor(Cmd, \, _),
     arg(1, Cmd, TexCmd),
-    tex_command_function(TexCmd, item), 
+    tex_command_function(TexCmd, item),
     !.
 item_commands([H|T0], [H|T1], T2) :-
     item_commands(T0, T1, T2).
@@ -1233,7 +1233,7 @@ cmd(include({File}), HTML) :-
     tex_tokens(TeXFile, TeXTokens),
     translate(TeXTokens, file, HTML).
 cmd(input({File}), []) :-
-    file_name_extension(_, sty, File), 
+    file_name_extension(_, sty, File),
     !.
 cmd(input({File}), HTML) :-
     absolute_file_name(tex(File), TeXFile,
@@ -1451,7 +1451,7 @@ cmd(\([]), title, ' ').                 % ignore \\ in title
 %
 
 cmd(Cmd, Mode0, Mode, HTML) :-
-    user_cmd(Cmd, Mode0, Mode, HTML), 
+    user_cmd(Cmd, Mode0, Mode, HTML),
     !.
 cmd(obeylines, group(Atts), group([obeylines|Atts]), []).
 cmd(Font, group(Old), group([font(Font)|Old1]), HTML) :-
@@ -1507,7 +1507,7 @@ translate_reference(Name, Tag, Label,
 %       the input.
 
 clean_tt([Atom], Atom) :-
-    atomic(Atom), 
+    atomic(Atom),
     !.
 clean_tt('\\Sdot', '.') :- !.
 clean_tt(Raw, Clean) :-
@@ -1745,7 +1745,7 @@ section_tag('').
 
 parent_tag(Section, Parent) :-
     atom_codes(Section, Chars),
-    phrase(parent_section(Parent), Chars), 
+    phrase(parent_section(Parent), Chars),
     !.
 
 parent_section(Parent) -->
@@ -1758,7 +1758,7 @@ parent_section(Parent) -->
     section_level/1.
 
 tableofcontents([]) :-
-    \+ section(_,_,_), 
+    \+ section(_,_,_),
     !.
 tableofcontents(Sections) :-
     tableofcontents('', Sections).
@@ -1858,10 +1858,10 @@ get_lower_letters([_|T0], T) :-
 
 
 make_index([]) :-
-    makeindex(false), 
+    makeindex(false),
     !.
 make_index([]) :-
-    \+ index(_, _, _), 
+    \+ index(_, _, _),
     !.
 make_index(HTML) :-
     HTML0 = [ #tell('DocIndex'),
@@ -1905,7 +1905,7 @@ index_href(Tag, [' ', #lref(sec, RefName, Tag)]) :-
     format(string(RefName), 'sec:~w', Tag).
 
 add_separator(Term, CL, CL, []) :-
-    atom_chars(Term, [CL|_]), 
+    atom_chars(Term, [CL|_]),
     !.
 add_separator(Term, _, CL, [ html('<dt class="index-sep">'),
                              Char,
@@ -1924,7 +1924,7 @@ add_separator(Term, _, CL, [ html('<dt class="index-sep">'),
 node_header([#head(#title(#thetitle)),
              #beginbody
             ]) :-
-    onefile(true), 
+    onefile(true),
     !.
 node_header([#head([#title(#thetitle),
                     link(home),
@@ -1944,7 +1944,7 @@ node_header([#head([#title(#thetitle),
             ]).
 
 node_header(_, []) :-
-    onefile(true), 
+    onefile(true),
     !.
 node_header(SectionTag,
             [#head([#title([#thetitle, nospace(:), ' ',
@@ -1986,7 +1986,7 @@ subsection_index(Tag,
     Tag \== '',
     atom_concat(Tag, '.', Filter),
     tableofcontents(Filter, SubIndex),
-    sub_term(#lref(_,_,_), SubIndex), 
+    sub_term(#lref(_,_,_), SubIndex),
     !. % it is not empty
 subsection_index(_, []).
 
@@ -2177,7 +2177,7 @@ parbox_width(W) -->
 parbox_width(-) -->
     "{",
     string_without("{}", _),
-    "}", 
+    "}",
     !.
 
 align_char(Chr) -->             % D{inputsep}{outputsep}{decimal places}
@@ -2406,7 +2406,7 @@ fix_predicate_reference(Ref0, Ref) :-
     phrase(predref(Name, Arities), Chars),
     member(Arity, Arities),
     format(atom(Ref), '~w/~w', [Name, Arity]),
-    label(Ref, _, _), 
+    label(Ref, _, _),
     !.
 
 predref(Name, Arities) -->
@@ -2610,7 +2610,7 @@ gs_command(Options, Cmd) :-
 
 
 get_option(List, Term) :-
-    memberchk(Term, List), 
+    memberchk(Term, List),
     !.
 get_option(_, Term) :-
     functor(Term, Name, _),
@@ -2663,7 +2663,7 @@ is_end(X, HTML) :-
 
 implicit_par(html(Begin)) :-
     implicit_par_tag(Tag),
-    is_begin(Tag, Begin), 
+    is_begin(Tag, Begin),
     !.
 
 implicit_par_tag(h1).
@@ -2744,10 +2744,10 @@ write_html([H|T]) :-
     write_html(H),
     write_html(T).
 write_html('\n') :-
-    pending_par, 
+    pending_par,
     !.
 write_html(' ') :-
-    pending_par, 
+    pending_par,
     !.
 write_html(html('<p>')) :-
     !,
@@ -2928,7 +2928,7 @@ write_html(tell(Base)) :-
     close_output,
     open_output(Base).
 write_html(H) :-
-    put_html_token(H), 
+    put_html_token(H),
     !.
 write_html(_).
 
@@ -2938,7 +2938,7 @@ nl_html :-
 empty_dd([], []) :- !.
 empty_dd(L, L) :-
     L = [html(DT)|_],
-    is_begin(dt, DT), 
+    is_begin(dt, DT),
     !.
 empty_dd(['\n'|T0], T) :-
     empty_dd(T0, T).

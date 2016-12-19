@@ -129,7 +129,7 @@ gs_command(Options, Cmd) :-
 
 
 get_option(List, Term) :-
-    memberchk(Term, List), 
+    memberchk(Term, List),
     !.
 get_option(_, Term) :-
     functor(Term, Name, _),

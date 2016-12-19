@@ -530,7 +530,7 @@ canonical_char(X, X).
 
 remove_trailing_spaces([], []).
 remove_trailing_spaces([0' |T], []) :-
-    maplist(=(0' ), T), 
+    maplist(=(0' ), T),
     !.          % '
 remove_trailing_spaces([H|T0], [H|T]) :-
     remove_trailing_spaces(T0, T).
@@ -596,7 +596,7 @@ cmd(Cmd, HTML) :-
 %   urldef_name/2. See =|pldoc.sty|= for details.
 
 load_urldefs :-
-    urldefs_loaded(_), 
+    urldefs_loaded(_),
     !.
 load_urldefs :-
     absolute_file_name(library('pldoc/pldoc.sty'), File,
@@ -604,7 +604,7 @@ load_urldefs :-
     load_urldefs(File).
 
 load_urldefs(File) :-
-    urldefs_loaded(File), 
+    urldefs_loaded(File),
     !.
 load_urldefs(File) :-
     open(File, read, In),
@@ -645,7 +645,7 @@ eol([],[]).
 
 
 clean_name([\Special], Out) :-
-    urldef(Special, Out), 
+    urldef(Special, Out),
     !.
 clean_name([\tt, Out], Out) :- !.
 clean_name([' '|T], Out) :-
@@ -654,7 +654,7 @@ clean_name([' '|T], Out) :-
 clean_name($(Out), Out) :- !.
 clean_name([Out], Out) :- !.
 clean_name(X, X) :-
-    atomic(X), 
+    atomic(X),
     !.
 clean_name(L, Out) :-
     maplist(clean_name, L, L2),
