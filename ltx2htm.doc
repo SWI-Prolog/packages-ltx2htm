@@ -6,7 +6,7 @@
 \makeindex
 
 \htmloutput{.}
-\htmlmainfile{ltx2htm}	
+\htmlmainfile{ltx2htm}
 
 \title{Converting LaTeX into HTML}
 \author{Jan Wielemaker\\
@@ -119,17 +119,12 @@ HTML document.
 \section{Installing the translator}
 
 To install the translator, edit first install
-\href{http://www.swi.psy.uva.nl/usr/jan/SWI-Prolog.home}{SWI-Prolog},
-version 2.7.18 or later. Next edit the \file{Makefile} and finally run
-\program{make} to install the system. Without modifications, the
-Makefile should work on any system on which SWI-Prolog supports an
-interface to shared objects and \program{gcc} supports the
-\cmdlineoption{-shared} option.
-
-After successful execution, the program may be run as:
+\href{http://www.swi-prolog.org}{SWI-Prolog}. Next edit the
+\file{Makefile} and finally run \program{make} to install the system.
+After successful installation, the program may be run as:
 
 \begin{verbatim}
-% latex2html file
+$ latex2html file
 \end{verbatim}
 
 
@@ -567,12 +562,12 @@ argument as a SWI-Prolog string. Otherwise, if the specifier is
 the \texcmd{url} command is defined as
 
 \begin{code}
-\href{-}{+}
+\url[+]{-}
 \end{code}
 
 and the command
-\verb$\href{ftp://swi.psy.uva.nl/pub/SWI-Prolog}{SWI-Prolog}$ will
-be handed to cmd/4 as:
+\verb$\url[SWI-Prolog]{ftp://swi.psy.uva.nl/pub/SWI-Prolog}$
+will be handed to cmd/4 as:
 
 \begin{code}
 url([[SWI-Prolog]], {'ftp://swi.psy.uva.nl/pub/SWI-Prolog'})
@@ -770,14 +765,8 @@ bibliography.
 
 \section{Problems and limitations}
 
-The current translator is not very complete. It is likely that HTML
-version 3 will allow us to complete the translation in many respects,
-notably handling more then just the very basic math symbols.
-
-Sofar the translator has been used to translate the
-\href{http://www.swi.psy.uva.nl/usr/jan/SWI-Prolog/Manual/Title.html}{SWI-Prolog manual} and the XPCE (GUI package for Prolog)
-\href{http://www.swi.psy.uva.nl/projects/xpce/UserGuide/Title.html}{User Guide}
-and the PHD thesis \href{/staff/jan/anja/main/main.html}{Cognitive Tools}.
+The current translator is not very complete.  It is mainly maintained
+to translate the SWI-Prolog documentation into clean HTML.
 
 \printindex
 
