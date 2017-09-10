@@ -119,7 +119,7 @@ HTML document.
 \section{Installing the translator}
 
 To install the translator, edit first install
-\url[SWI-Prolog]{http://www.swi.psy.uva.nl/usr/jan/SWI-Prolog.home},
+\href{http://www.swi.psy.uva.nl/usr/jan/SWI-Prolog.home}{SWI-Prolog},
 version 2.7.18 or later. Next edit the \file{Makefile} and finally run
 \program{make} to install the system. Without modifications, the
 Makefile should work on any system on which SWI-Prolog supports an
@@ -567,11 +567,11 @@ argument as a SWI-Prolog string. Otherwise, if the specifier is
 the \texcmd{url} command is defined as
 
 \begin{code}
-\url[+]{-}
+\href{-}{+}
 \end{code}
 
 and the command
-\verb$\url[SWI-Prolog]{ftp://swi.psy.uva.nl/pub/SWI-Prolog}$ will
+\verb$\href{ftp://swi.psy.uva.nl/pub/SWI-Prolog}{SWI-Prolog}$ will
 be handed to cmd/4 as:
 
 \begin{code}
@@ -775,9 +775,9 @@ version 3 will allow us to complete the translation in many respects,
 notably handling more then just the very basic math symbols.
 
 Sofar the translator has been used to translate the
-\url[SWI-Prolog manual]{http://www.swi.psy.uva.nl/usr/jan/SWI-Prolog/Manual/Title.html} and the XPCE (GUI package for Prolog)
-\url[User Guide]{http://www.swi.psy.uva.nl/projects/xpce/UserGuide/Title.html}
-and the PHD thesis \url[Cognitive Tools]{/staff/jan/anja/main/main.html}.
+\href{http://www.swi.psy.uva.nl/usr/jan/SWI-Prolog/Manual/Title.html}{SWI-Prolog manual} and the XPCE (GUI package for Prolog)
+\href{http://www.swi.psy.uva.nl/projects/xpce/UserGuide/Title.html}{User Guide}
+and the PHD thesis \href{/staff/jan/anja/main/main.html}{Cognitive Tools}.
 
 \printindex
 
