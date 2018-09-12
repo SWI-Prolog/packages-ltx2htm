@@ -3,8 +3,9 @@
     Author:        Jan Wielemaker
     E-mail:        J.Wielemaker@vu.nl
     WWW:           http://www.swi-prolog.org
-    Copyright (c)  1997-2015, University of Amsterdam
+    Copyright (c)  1997-2018, University of Amsterdam
                               VU University Amsterdam
+                              CWI, Amsterdam
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -88,9 +89,6 @@ html_file_base('Title').
 :- dynamic
     user:file_search_path/2.
 
-user:file_search_path(foreign, latex2html(Lib)) :-
-    current_prolog_flag(arch, Arch),
-    atom_concat('lib/', Arch, Lib).
 user:file_search_path(psfig, tex(figs)).
 user:file_search_path(includegraphics, tex(figs)).
 user:file_search_path(includegraphics, tex(.)).
@@ -99,7 +97,7 @@ user:file_search_path(img, '.').
 user:file_search_path(img, icons).
 user:file_search_path(img, latex2html(icons)).
 
-:- load_foreign_library(user:foreign(tex)).
+:- use_foreign_library(foreign(tex)).
 
 % support list_strings/0
 :- multifile check:valid_string_goal/1.
