@@ -9,6 +9,10 @@ set(ICONS home.gif index.gif info.gif next.gif prev.gif up.gif
     yellow_pages.gif)
 prepend(ICONS icons/ ${ICONS})
 
+set(prefix ${SWIPL_INSTALL_PREFIX}/library)
+set(PL ${SWIPL_INSTALL_PREFIX}/bin/${SWIPL_ARCH}/swipl)
+configure_file(latex2html.in latex2html)
+
 add_compile_options(-D__SWI_PROLOG__)
 
 swipl_plugin(
@@ -29,5 +33,5 @@ swipl_plugin(
     PL_LIB_SUBDIR latex2html/icons
     PL_LIBS ${ICONS})
 
-install(PROGRAMS latex2html
+install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/latex2html
 	DESTINATION ${SWIPL_INSTALL_PREFIX}/bin)

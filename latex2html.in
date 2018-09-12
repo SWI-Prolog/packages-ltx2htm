@@ -1,6 +1,6 @@
 #!/bin/sh
 
-libdir=@prefix@/lib/latex2html
+libdir=@prefix@/latex2html
 PL=@PL@
 
 case "$1" in
