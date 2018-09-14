@@ -9,8 +9,7 @@ set(ICONS home.gif index.gif info.gif next.gif prev.gif up.gif
     yellow_pages.gif)
 prepend(ICONS icons/ ${ICONS})
 
-set(prefix ${SWIPL_INSTALL_PREFIX}/library)
-set(PL ${SWIPL_INSTALL_PREFIX}/bin/${SWIPL_ARCH}/swipl)
+set(SWIPL ${SWIPL_INSTALL_PREFIX}/bin/${SWIPL_ARCH}/swipl)
 configure_file(latex2html.in latex2html)
 
 add_compile_options(-D__SWI_PROLOG__)

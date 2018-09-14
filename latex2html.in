@@ -1,27 +1,8 @@
 #!/bin/sh
 
-libdir=@prefix@/latex2html
-PL=@PL@
+SWIPL=@SWIPL@
 
-case "$1" in
-    -pl)
-	goal=welcome
-	toplevel=prolog
-	;;
-    *)
-	in=`echo "$1" | sed 's/\.tex$//'`
-	if [ -z "$in" ]; then
-	    echo "Usage: $0 file"
-	    echo "   or: $0 -pl"
-	    exit 1
-	fi
-	goal="latex2html('$in')"
-	toplevel=halt
-	;;
-esac
+eval `$SWIPL --dump-runtime-variables`
+libdir="$PLBASE/library/latex2html"
 
-$PL \
-    -f none \
-    -p latex2html=$libdir \
-    -g "load_files(latex2html(latex2html),[silent(true)]),$goal" \
-    -t "$toplevel"
+$SWIPL -f none -p latex2html=$libdir -s $libdir/latex2html.pl -t halt -- $*

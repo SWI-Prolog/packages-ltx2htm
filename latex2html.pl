@@ -37,6 +37,7 @@
 :- module(tex,
           [ welcome/0,
             latex2html/1,               % +BaseName
+            latex2html/2,               % +BaseName, +Options
             macro_expand/2,             % +In, -Out
             translate/4,                % +In, +ModeIn, -ModeOut, -Out
             translate/3,                % +In, +ModeIn, -Out
@@ -60,6 +61,7 @@
           ]).
 :- use_module(library(quintus)).
 :- use_module(library(filesex)).
+:- use_module(library(option)).
 
 ltx2htm_version('0.98').                % for SWI-Prolog 5.6.18
 
@@ -74,7 +76,9 @@ page_header('<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" \c
     title/1,                        % \title{} storage
     author/1,                       % \auther{} command storage
     link_image/2,                   % Id, Image
-    center_tables/0.
+    center_tables/0,
+    quiet/0.
+
 :- discontiguous
     cmd/2,
     cmd/3,
@@ -159,7 +163,10 @@ tex_load_commands(File) :-
                              file_errors(fail)
                            ])
     ->  tex_read_commands(CmdFile),
-        format(user_error, 'Loaded LaTeX commands from "~w"~n', [CmdFile])
+        (   quiet
+        ->  true
+        ;   format(user_error, 'Loaded LaTeX commands from "~w"~n', [CmdFile])
+        )
     ;   format(user_error, 'Can not find command file "~w"~n', [File]),
         fail
     ).
@@ -228,7 +235,10 @@ run_latex2html(TeXFile) :-
 
 
 latex2html(Spec) :-
-    welcome,
+    latex2html(Spec, []).
+
+latex2html(Spec, Options) :-
+    welcome(Options),
     tex_load_commands(latex),
     file_name_extension(Spec, tex,  TeXFile),
     file_name_extension(Base, tex,  TeXFile),
@@ -239,7 +249,7 @@ latex2html(Spec) :-
     asserta(html_output_dir(Base)),
     asserta(tex_file_base(Base)),
     run_latex2html(TheTeXFile),
-    goodbye,
+    goodbye(Options),
     retract(tex_file_base(_)),
     retract(html_output_dir(_)).
 
@@ -296,10 +306,19 @@ current_html_output(Raw) :-
     File = Raw.
 
 welcome :-
+    welcome([]).
+
+welcome(Options) :-
+    option(quiet(true), Options),
+    !.
+welcome(_Options) :-
     ltx2htm_version(Version),
     format(user_error, 'Welcome to LaTeX2HTML version ~w~n~n', [Version]).
 
-goodbye :-
+goodbye(Options) :-
+    option(quiet(true), Options),
+    !.
+goodbye(_Options) :-
     html_output_dir(Dir),
     html_file_base(Html),
     format(user_error, '~*t~72|~n', [0'*]),
@@ -2517,10 +2536,10 @@ do_split(L, _, [A]) :-
                  *             PS2GIF           *
                  *******************************/
 
-option(gs,      gs).
-option(res,     72).
-option(device,  ppmraw).
-option(tmp,     Tmp) :-
+default_option(gs,      gs).
+default_option(res,     72).
+default_option(device,  ppmraw).
+default_option(tmp,     Tmp) :-
     tmp_file(ps2gif, Tmp).
 
 ps2gif(In, Out) :-
@@ -2612,7 +2631,7 @@ get_option(List, Term) :-
     !.
 get_option(_, Term) :-
     functor(Term, Name, _),
-    option(Name, Def),
+    default_option(Name, Def),
     !,
     arg(1, Term, Def).
 
@@ -2882,12 +2901,18 @@ write_html(lref(pred, Label, Text)) :-
     write_html(lref(pred, FixedLabel, Text)).
 write_html(lref(pred, Label, Text)) :-
     !,
-    format(user_error, 'No description for predicate "~w"~n', [Label]),
+    (   quiet
+    ->  true
+    ;   format(user_error, 'No description for predicate "~w"~n', [Label])
+    ),
     macro_expand(#span('pred-ext', Text), Expanded),
     write_html(Expanded).
 write_html(lref(Class, Label, Text)) :-
     !,
-    format(user_error, 'No label for ~w reference "~w"~n', [Class, Label]),
+    (   quiet
+    ->  true
+    ;   format(user_error, 'No label for ~w reference "~w"~n', [Class, Label])
+    ),
     macro_expand(#b(Text), Expanded),
     write_html(Expanded).
 write_html(cite(Key)) :-
@@ -3038,4 +3063,35 @@ cmd_layout(sloppy,     end,   1, 1).
 :- initialization
    read_tex_inputs.
 
+:- initialization(main, main).
 
+main(Argv) :-
+    argv_options(Argv, Files, Options),
+    set_options(Options),
+    (   select_option(pl(true), Options, ROptions)
+    ->  set_prolog_flag(toplevel_goal, prolog),
+        (   input_file(Files, File)
+        ->  format('Run using ?- ~q.~n', [latex2html(File, ROptions)])
+        ;   true
+        )
+    ;   input_file(Files, File)
+    ->  latex2html(File, Options)
+    ;   usage,
+        halt(1)
+    ).
+
+input_file([File], Base) :-
+    file_name_extension(Base, tex, File),
+    !.
+input_file([File], File).
+
+
+set_options(Options) :-
+    option(quiet(true), Options),
+    !,
+    assert(quiet).
+set_options(_).
+
+
+usage :-
+    format('Usage: latex2html [--pl] [--quiet] file~n').
