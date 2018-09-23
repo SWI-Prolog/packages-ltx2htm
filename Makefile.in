@@ -15,7 +15,7 @@ DOC=ltx2htm
 include ../Makefile.defs
 
 TARGETS=tex.@SO@
-LIB=	latex2html.pl latex.cmd pl.pl pl.cmd xpce.pl xpce.cmd \
+LIBPL=	latex2html.pl latex.cmd pl.pl pl.cmd xpce.pl xpce.cmd \
 	latex2html.css
 LIBDIR=@libdir@/latex2html
 bindir=@bindir@
@@ -32,14 +32,17 @@ tex.@SO@:	$(TEXOBJ)
 ################################################################
 
 install:	$(TARGETS)
-	mkdir -p $(DESTDIR)$(LIBDIR)/lib/$(PLARCH)
-	$(INSTALL_DATA) tex.@SO@ $(DESTDIR)$(LIBDIR)/lib/$(PLARCH)
-	$(INSTALL_PROGRAM) latex2html $(DESTDIR)$(bindir)
-	for f in $(LIB); do $(INSTALL_DATA) $$f $(DESTDIR)$(LIBDIR); done
-	$(INSTALL_DATA) pl.pl $(DESTDIR)$(LIBDIR)/pldoc.pl
-	$(INSTALL_DATA) pl.cmd $(DESTDIR)$(LIBDIR)/pldoc.cmd
-	mkdir -p $(DESTDIR)$(LIBDIR)/icons
-	for f in icons/*.gif; do $(INSTALL_DATA) $$f $(DESTDIR)$(LIBDIR)/icons; done
+	mkdir -p $(DESTDIR)$(SOLIBDIR)
+	for f in $(TARGETS); do \
+	  $(INSTALL_PROGRAM) $$f $(DESTDIR)$(SOLIBDIR); \
+	done
+	mkdir -p $(DESTDIR)$(PLBASE)/library/latex2html/icons
+	for f in $(LIBPL); do \
+	  $(INSTALL_DATA) $(srcdir)/$$f $(DESTDIR)$(PLBASE)/library/latex2html; \
+	done
+	for f in icons/*.gif; do \
+	  $(INSTALL_DATA) $(srcdir)/$$f $(DESTDIR)$(PLBASE)/library/latex2html/icons; \
+	done
 
 ln-install::
 	@$(MAKE) INSTALL_DATA='../ln-install' \
