@@ -653,6 +653,7 @@ clean_name([' '|T], Out) :-
     clean_name(T, Out).
 clean_name($(Out), Out) :- !.
 clean_name([Out], Out) :- !.
+clean_name(\($), $) :- !.
 clean_name(X, X) :-
     atomic(X),
     !.

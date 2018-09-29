@@ -651,8 +651,8 @@ canonicalise_label(fileof(In), fileof(Out)) :-
     canonicalise_label(In, Out).
 
 
-%       expand_macros(Raw, Expanded).
-%       macro_expand(Raw, Expanded).
+%!      expand_macros(Raw, Expanded).
+%!      macro_expand(Raw, Expanded).
 %
 %       Expand +Term, Mode+Term and #Macro commands into plain HTML
 
@@ -1075,7 +1075,11 @@ cmd(appref({Label}), HTML) :-
     translate_reference(appendix, sec, Label, HTML).
 cmd('Appref'({Label}), HTML) :-
     translate_reference('Appendix', sec, Label, HTML).
-
+cmd(ifthenelse({Cond},{If},{Else}), [Result]) :-
+    (   eval_if_then_else(Cond)
+    ->  Result = If
+    ;   Result = Else
+    ).
 cmd(title({Title}), []) :-                      % \title
     retractall(title(_)),
     translate(Title, title, HTML),
@@ -1211,6 +1215,8 @@ cmd(item([Tag]),
 cmd(mbox({Boxed}), HTML) :-
     translate_group(Boxed, HTML).
 cmd(makebox(_, _, {Boxed}), HTML) :-
+    translate_group(Boxed, HTML).
+cmd(raisebox(_, {Boxed}), HTML) :-
     translate_group(Boxed, HTML).
 cmd(parbox(_, _, {Boxed}), HTML) :-
     translate_group(Boxed, HTML).
@@ -1422,6 +1428,7 @@ cmd(rightarrow, ['->']).
 cmd('Rightarrow', ['=>']).
 cmd('Leftrightarrow', ['<=>']).
 cmd(pi, math, 'pi').
+cmd(mu, math, html('&mu')).
 %cmd(circ, math, html('&omicron;')).            % not in Netscape 4.51
 cmd(circ, math, o).
 cmd(rhd, math, html('&gt;')).
@@ -1513,6 +1520,18 @@ translate_reference(Name, Tag, Label,
           #lref(Tag, RefName, [Name, ' ', ref(RefName)])) :-
     format(atom(RefName), '~w:~w', [Tag, Label]).
 
+
+%!  eval_if_then_else(+Cond) is semidet.
+%
+%   Currently only evaluates whether a command is empty, as in
+%   \ifthenelse{\equal{}{\command}}{Then}{Else}
+
+eval_if_then_else([\(equal,[{[]},{[\Command]}])]) :-
+    clause(user_cmd(Command, Mode, Mode, HTML),
+           expand_macro(macro_arg, '', Mode, Mode, HTML)),
+    !.
+eval_if_then_else(Cond) :-
+    format('Cond = ~p~n', [Cond]).
 
                  /*******************************
                  *            TTY STUFF         *
@@ -2464,7 +2483,7 @@ string([H|T]) --> [H], string(T).
     user_cmd/4.
 
 declare_command(Name, ArgCAtom, Expanded) :-
-    concat(\, CmdName, Name),
+    atom_concat(\, CmdName, Name),
     (   tex_command_property(CmdName, _, _) % test for existence
     ->  true
     ;   atom_codes(ArgCAtom, ArgCChars),

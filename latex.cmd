@@ -74,6 +74,8 @@
 \footnotetext[-]{+}	1 1
 \newlength{-}
 \setlength{-}{-}
+\ifthenelse{+}{+}{+}
+\equal{+}{+}
 \itemsep{-}
 \settowidth{-}{-}
 \newcommand{-}[-]{-}=prolog	1 1
@@ -100,6 +102,7 @@
 \string{-}
 \mbox{+}
 \makebox[-][-]{+}
+\raisebox{-}{+}
 \parbox[-]{d}{+}
 \begin=begin		2 1
 \end{-}=end		1 2
@@ -209,6 +212,7 @@
 \neq
 \pm
 \mid
+\mu
 \sin{+}
 \cos{+}
 \tan{+}
