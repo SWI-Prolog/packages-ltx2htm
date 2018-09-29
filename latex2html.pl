@@ -1372,20 +1372,29 @@ cmd(postscriptfig(_Options, {File}, Title),
       html('<p>'),
       Caption
     ]) :-
-    file_name_extension(File, gif, GifFile),
+    (   absolute_file_name(psfig(File), ImgPath,
+                           [ extensions([png,gif]),
+                             file_errors(fail),
+                             access(read)
+                           ])
+    ->  file_base_name(ImgPath, ImgFile)
+    ;   file_name_extension(File, gif, ImgFile)
+    ),
     atom_concat('fig:', File, Label),
     step_counter(figure, Fig),
     do_float(figure(Fig),
              (   translate_command(caption(Title), float, _, Caption),
                  translate_command(label({Label}), float, _, LabelHTML)
              )),
-    centered_img(GifFile, ImgHTML),
+    centered_img(ImgFile, ImgHTML),
     make_output_directory,
     current_setting(html_output_dir(Dir)),
-    atomic_list_concat([Dir, '/', GifFile], OutFile),
+    directory_file_path(Dir, ImgFile, OutFile),
     (   current_setting(keep_figures),
         exists_file(OutFile)
     ->  true
+    ;   nonvar(ImgPath)
+    ->  copy_file(ImgPath, OutFile)
     ;   ps2gif(psfig(File), OutFile, [margin(5)])
     ).
 
