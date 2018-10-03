@@ -155,7 +155,8 @@ latex2html_module :-
 %       Load a tex command file
 
 tex_load_commands(File) :-
-    (   member(Term, [tex(File), latex2html(File)]),
+    (   package_alias(File, Alias),
+        member(Term, [tex(Alias), latex2html(Alias)]),
         absolute_file_name(Term,
                            CmdFile,
                            [ extensions([cmd]),
@@ -167,7 +168,8 @@ tex_load_commands(File) :-
         ->  true
         ;   format(user_error, 'Loaded LaTeX commands from "~w"~n', [CmdFile])
         )
-    ;   format(user_error, 'Can not find command file "~w"~n', [File]),
+    ;   format(user_error,
+               'Can not find command file "~w"~n', [File]),
         fail
     ).
 
@@ -934,7 +936,8 @@ translate_items([H0|T0], List, [H1|T1]) :-
                  *******************************/
 
 prolog_function(\(usepackage, [_,{File},_])) :-
-    (   member(Term, [tex(File), latex2html(File)]),
+    (   package_alias(File, Alias),
+        member(Term, [tex(Alias), latex2html(Alias)]),
         absolute_file_name(Term, PlFile,
                            [ extensions([pl, qlf]),
                              access(read),
@@ -951,6 +954,9 @@ prolog_function(\(renewcommand, [{Name}, [], {Expanded}])) :-
     declare_command(Name, 0, Expanded).
 prolog_function(\(renewcommand, [{Name}, [Args], {Expanded}])) :-
     declare_command(Name, Args, Expanded).
+
+package_alias(pl, pldoc) :- !.
+package_alias(Pkg, Pkg).
 
 
                  /*******************************
