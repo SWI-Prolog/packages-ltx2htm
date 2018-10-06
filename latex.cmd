@@ -128,7 +128,6 @@
 \sl
 \sf
 \it
-\mathit
 \rm
 \tt
 \Huge
@@ -144,6 +143,7 @@
 
 % Modern LaTeX font commands
 
+\mathit{+}
 \emph{+}
 \texttt{+}
 \textbf{+}

@@ -1189,6 +1189,7 @@ cmd(emph({Tex}),   #em(+Tex)).                  % \emph{text}
 cmd(texttt({Tex}), #tt(+Tex)).                  % \texttt{text}
 cmd(textbf({Tex}), #b(+Tex)).                   % \textbf{text}
 cmd(textit({Tex}), #i(+Tex)).                   % \textit{text}
+cmd(mathit({Tex}), #i(+Tex)).                   % \textit{text}
 cmd(textsf({Tex}), #b(+Tex)).                   % \textsf{text}
 cmd(textsc({Tex}), #sc(+Tex)).                  % \textsc{text}
 
@@ -2866,8 +2867,12 @@ write_html(h(Level, NumRefS, TitleTerm)) :-
     ->  format(string(OpenH), '<h~d id="~w">', [Level, Human])
     ;   OpenH = OpenH0,
         (   sub_term(span('sec-title', Title), TitleTerm)
-        ->  format(user_error,
-                   'No label for section ~w ~w~n', [NumRefS, Title])
+        ->  (   quiet,
+                Title == ['Bibliography']
+            ->  true
+            ;   format(user_error,
+                       'No label for section ~w ~w~n', [NumRefS, Title])
+            )
         ;   format(user_error,
                    'No label for section ~w~n', [NumRefS])
         )
