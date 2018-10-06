@@ -25,5 +25,11 @@ swipl_plugin(
     PL_LIB_SUBDIR latex2html/icons
     PL_LIBS ${ICONS})
 
+define_package(
+    ltx2htm
+    PLUGINS tex
+            #latex2html_icons	# fixme: install_src should become a target
+)
+
 install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/latex2html
 	DESTINATION ${SWIPL_INSTALL_PREFIX}/bin)

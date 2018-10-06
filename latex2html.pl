@@ -93,6 +93,15 @@ html_file_base('Title').
 :- dynamic
     user:file_search_path/2.
 
+add_my_path :-
+    user:file_search_path(latex2html, _),
+    !.
+add_my_path :-
+    prolog_load_context(directory, Dir),
+    asserta(user:file_search_path(latex2html, Dir)).
+
+:- initialization(add_my_path, now).
+
 user:file_search_path(psfig, tex(figs)).
 user:file_search_path(includegraphics, tex(figs)).
 user:file_search_path(includegraphics, tex(.)).
@@ -118,17 +127,23 @@ check:valid_string_goal(tex:string_without(S,_,_,_)) :- string(S).
 read_tex_inputs :-
     getenv('TEXINPUTS', Val),
     !,
+    read_tex_inputs(Val).
+read_tex_inputs.
+
+read_tex_inputs(Val) :-
     split(Val, 0':, PathElement),
     retractall(user:file_search_path(tex, _)),
     reverse(PathElement, RevPath),
     forall(member(E, RevPath), assert_tex_input(E)).
-read_tex_inputs.
 
 assert_tex_input('') :-
     !,
+    retractall(user:file_search_path(tex, '.')),
     asserta(user:file_search_path(tex, '.')).
 assert_tex_input(Dir) :-
+    retractall(user:file_search_path(tex, Dir)),
     asserta(user:file_search_path(tex, Dir)).
+
 
                  /*******************************
                  *       EXTENSION MODULES      *
@@ -811,7 +826,10 @@ env(center(_, Tokens), HTML) :-
 env(center(_, Tokens), #center(Center)) :-
     translate(Tokens, normal, Center).
 env(titlepage(_, _Page), []) :-
-    format(user_error, 'Ignored the titlepage~n', []).
+    (   quiet
+    ->  true
+    ;   format(user_error, 'Ignored the titlepage~n', [])
+    ).
 env(tabular([{Format}], Tokens), HTML) :-
     translate_table(Format, Tokens, HTML).
 env(array([{Format}], Tokens), HTML) :-
@@ -2902,6 +2920,7 @@ write_html(lref(sec, Label, Text)) :-
            '<a class="~w" href="~w.html">', [sec, File]),
     write_html([html(Anchor), Text, html('</a>')]).
 write_html(lref(Class, fileof(Label), Text)) :-
+    !,
     (   label(Label, File, _)
     ->  format(string(Anchor),
                '<a class="~w" href="~w.html">', [Class, File]),
@@ -3097,11 +3116,17 @@ cmd_layout(sloppy,     end,   1, 1).
 :- initialization
    read_tex_inputs.
 
+
+		 /*******************************
+		 *            MAIN		*
+		 *******************************/
+
 :- initialization(main, main).
 
 main(Argv) :-
     argv_options(Argv, Files, Options),
     set_options(Options),
+    set_text_inputs(Options),
     (   select_option(pl(true), Options, ROptions)
     ->  set_prolog_flag(toplevel_goal, prolog),
         (   input_file(Files, File)
@@ -3126,6 +3151,11 @@ set_options(Options) :-
     assert(quiet).
 set_options(_).
 
+set_text_inputs(Options) :-
+    option(texinputs(Val), Options),
+    !,
+    read_tex_inputs(Val).
+set_text_inputs(_).
 
 usage :-
-    format('Usage: latex2html [--pl] [--quiet] file~n').
+    format('Usage: latex2html [--pl] [--quiet] [--tex_inputs=...] file~n').

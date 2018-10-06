@@ -2,7 +2,4 @@
 
 SWIPL=@SWIPL@
 
-eval `$SWIPL --dump-runtime-variables`
-libdir="$PLBASE/library/latex2html"
-
-$SWIPL -f none -p latex2html=$libdir -s $libdir/latex2html.pl -t halt -- $*
+$SWIPL -f none -s $libdir/latex2html.pl -t halt -- $*
