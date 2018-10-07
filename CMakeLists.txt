@@ -12,24 +12,13 @@ prepend(ICONS icons/ ${ICONS})
 set(SWIPL ${SWIPL_INSTALL_PREFIX}/bin/${SWIPL_ARCH}/swipl)
 configure_file(latex2html.in latex2html)
 
-add_compile_options(-D__SWI_PROLOG__)
-
 swipl_plugin(
-    tex
+    latex2html
     C_SOURCES tex.c psfile.c
     PL_LIB_SUBDIR latex2html
-    PL_LIBS ${PL_LIB})
-
-swipl_plugin(
-    latex2html_icons
+        PL_LIBS ${PL_LIB}
     PL_LIB_SUBDIR latex2html/icons
-    PL_LIBS ${ICONS})
-
-define_package(
-    ltx2htm
-    PLUGINS tex
-            #latex2html_icons	# fixme: install_src should become a target
-)
+        PL_LIBS ${ICONS})
 
 install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/latex2html
 	DESTINATION ${SWIPL_INSTALL_PREFIX}/bin)
