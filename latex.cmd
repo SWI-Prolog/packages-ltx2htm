@@ -19,6 +19,8 @@
 % Include
 \include{-}
 \input{-}
+\InputIfFileExists{-}{+}{+}
+\IfFileExists{-}{+}{+}
 
 % Environments
 

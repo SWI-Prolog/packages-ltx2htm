@@ -1291,6 +1291,26 @@ cmd(input({File}), HTML) :-
                        ]),
     tex_tokens(TeXFile, TeXTokens),
     translate(TeXTokens, file, HTML).
+cmd('InputIfFileExists'({File},{True},{False}), HTML) :-
+    (   absolute_file_name(tex(File), TeXFile,
+                           [ extensions([tex, '']),
+                             access(read),
+                             file_errors(fail)
+                           ])
+    ->  HTML = [+True|FileHTML],
+        tex_tokens(TeXFile, TeXTokens),
+        translate(TeXTokens, file, FileHTML)
+    ;   HTML = [+False]
+    ).
+cmd('IfFileExists'({File},{True},{False}), HTML) :-
+    (   absolute_file_name(tex(File), _TeXFile,
+                           [ extensions([tex, '']),
+                             access(read),
+                             file_errors(fail)
+                           ])
+    ->  HTML = [+True]
+    ;   HTML = [+False]
+    ).
 cmd(appendix, []) :-
     appendix.
 cmd(caption({Caption}),
@@ -3130,7 +3150,7 @@ cmd_layout(sloppy,     end,   1, 1).
 
 main(Argv) :-
     argv_options(Argv, Files, Options),
-    set_options(Options),
+    set_quiet(Options),
     set_text_inputs(Options),
     (   select_option(pl(true), Options, ROptions)
     ->  set_prolog_flag(toplevel_goal, prolog),
@@ -3149,12 +3169,11 @@ input_file([File], Base) :-
     !.
 input_file([File], File).
 
-
-set_options(Options) :-
+set_quiet(Options) :-
     option(quiet(true), Options),
     !,
     assert(quiet).
-set_options(_).
+set_quiet(_).
 
 set_text_inputs(Options) :-
     option(texinputs(Val), Options),
