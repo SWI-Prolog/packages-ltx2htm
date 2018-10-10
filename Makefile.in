@@ -6,16 +6,16 @@
 #
 # Copying: Simplified BSD
 #
-# Copyright (c) 1996-2008, HCS, University of Amsterdam, all rights
+# Copyright (c) 1996-2018, HCS, University of Amsterdam, all rights
 # reserved
-# ###############################################################
+################################################################
 
 PACKAGE=ltx2htm
 DOC=ltx2htm
 include ../Makefile.defs
 
 TARGETS=tex.@SO@
-LIBPL=	latex2html.pl latex.cmd pl.pl pl.cmd xpce.pl xpce.cmd \
+LIBPL=	latex2html.pl latex.cmd pldoc.pl pldoc.cmd xpce.pl xpce.cmd \
 	latex2html.css
 LIBDIR=@libdir@/latex2html
 bindir=@bindir@

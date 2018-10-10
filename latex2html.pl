@@ -62,6 +62,7 @@
 :- use_module(library(quintus)).
 :- use_module(library(filesex)).
 :- use_module(library(option)).
+:- use_module(library(apply)).
 
 ltx2htm_version('0.98').                % for SWI-Prolog 5.6.18
 
@@ -2588,21 +2589,12 @@ replace_args([C|T0], Args, [C|T]) :-
                  *            UTIL              *
                  *******************************/
 
-%       split(+Atom, +SepCode, -ListOfAtoms)
+%!  split(+Atom, +SepCode, -ListOfAtoms)
 
 split(Atom, Sep, List) :-
-    atom_codes(Atom, Chars),
-    do_split(Chars, Sep, List).
-
-do_split([], _, []).
-do_split(L, Sep, [H|T]) :-
-    append(Head, Rest, L),
-    append(HL, [Sep], Head),
-    !,
-    atom_codes(H, HL),
-    do_split(Rest, Sep, T).
-do_split(L, _, [A]) :-
-    atom_codes(A, L).
+    string_codes(SepS, [Sep]),
+    split_string(Atom, SepS, "", Parts),
+    maplist(atom_string, List, Parts).
 
 
                  /*******************************
@@ -3150,6 +3142,7 @@ cmd_layout(sloppy,     end,   1, 1).
 
 main(Argv) :-
     argv_options(Argv, Files, Options),
+    set_debugging(Options),
     set_quiet(Options),
     set_text_inputs(Options),
     (   select_option(pl(true), Options, ROptions)
@@ -3180,6 +3173,15 @@ set_text_inputs(Options) :-
     !,
     read_tex_inputs(Val).
 set_text_inputs(_).
+
+set_debugging(Options) :-
+    (   option(gtrace(true), Options)
+    ->  gtrace
+    ;   option(trace(true), Options)
+    ->  trace
+    ;   true
+    ).
+
 
 usage :-
     format('Usage: latex2html [--pl] [--quiet] [--tex_inputs=...] file~n').
