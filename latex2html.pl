@@ -956,7 +956,10 @@ translate_items([H0|T0], List, [H1|T1]) :-
 
 prolog_function(\(usepackage, [_,{File},_])) :-
     (   package_alias(File, Alias),
-        member(Term, [tex(Alias), latex2html(Alias)]),
+        (   atom_concat(sty_, Alias, Extension)
+        ;   Extension = Alias
+        ),
+        member(Term, [tex(Extension), latex2html(Extension)]),
         absolute_file_name(Term, PlFile,
                            [ extensions([pl, qlf]),
                              access(read),

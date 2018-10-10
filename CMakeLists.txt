@@ -3,7 +3,7 @@ project(swipl-ltx2htm)
 
 include("../cmake/PrologPackage.cmake")
 
-set(PL_LIB latex2html.pl latex.cmd pldoc.pl pldoc.cmd xpce.pl xpce.cmd
+set(PL_LIB latex2html.pl latex.cmd sty_pldoc.pl pldoc.cmd sty_xpce.pl xpce.cmd
     latex2html.css)
 set(ICONS home.gif index.gif info.gif next.gif prev.gif up.gif
     yellow_pages.gif)
