@@ -34,7 +34,7 @@
 */
 
 :- module(latex2html4xpce, []).
-:- use_module(library(latex2html)).
+:- use_module(library(latex2html/latex2html)).
 
 :- latex2html_module.
 :- tex_load_commands(xpce).
