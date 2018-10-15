@@ -286,8 +286,7 @@ make_output_directory :-
     !,
     (   exists_directory(Dir)
     ->  true
-    ;   sformat(Cmd, 'mkdir ~w~n', [Dir]),
-        shell(Cmd)
+    ;   make_directory(Dir)
     ),
     assert(done_make_output_directory).
 
@@ -1125,8 +1124,7 @@ cmd(linkimage({Name}, {Icon}), []) :-           % \linkimage{Id, Path}
     absolute_file_name(img(Icon), Path),
     file_base_name(Path, Base),
     atomic_list_concat([Dir, Base], /, To),
-    sformat(Cmd, 'cp ~w ~w', [Path, To]),
-    shell(Cmd),
+    copy_file(Path, To),
     asserta(link_image(Name, Base)).
 cmd(htmloutput({Dir}), []) :-
     (   done_make_output_directory
