@@ -20,6 +20,8 @@ swipl_plugin(
         PL_LIBS ${PL_LIB}
     PL_LIB_SUBDIR latex2html/icons
         PL_LIBS ${ICONS})
+# Needed to run latex2html
+add_dependencies(latex2html clib)
 
 install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/latex2html
 	DESTINATION ${SWIPL_INSTALL_PREFIX}/bin)
