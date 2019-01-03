@@ -163,10 +163,15 @@ cmd(prologflag({Name}), #lref(flag, RefName, Name)) :-
     atom_concat('flag:', Name, RefName).
 cmd(functor({Name}, {Arity}), #code([+Name, nospace(/), +Arity])).
 cmd(compound({Name}, {Args}), #code([+Name, #embrace(+Args)])).
+cmd(term({Name}, {[]}), #code([+Name])) :- !.
 cmd(term({Name}, {Args}), #code([+Name, #embrace(+Args)])).
 cmd(errorterm({Name}, {Args}), #code([+Name, #embrace(+Args)])).
-cmd(infixterm({RawName},{A1},{A2}), #code([+A1, Name, +A2])) :-
-    clean_name(RawName, Name).
+cmd(infixterm({RawName},{A1},{A2}), #code([+A1, Op, +A2])) :-
+    clean_name(RawName, Name),
+    (   nospace_op(Name)
+    ->  Op = nospace(Name)
+    ;   Op = Name
+    ).
 cmd(prefixterm({RawName},{A1}), #code([+A1, Name])) :-
     clean_name(RawName, Name).
 cmd(manref({RawName}, {Section}),
@@ -336,7 +341,12 @@ cmd(dictitem({Name}, {Arg}),
 cmd(prefixtermitem({Name}, {Right}),
     #defitem([#strong(+Name), ' ', #var(+Right)])).
 cmd(infixtermitem({Name}, {Left}, {Right}),
-    #defitem([#var(+Left), ' ', #strong(+Name), ' ', #var(+Right)])).
+    #defitem([#var(+Left), Sep, #strong(+Name), Sep, #var(+Right)])) :-
+    clean_name(Name, Clean),
+    (   nospace_op(Clean)
+    ->  Sep = []
+    ;   Sep = ' '
+    ).
 cmd(prologflagitem({Name}, {Type}, {Access}),
     #defitem(pubdef, #label(RefName, [#strong(Name), #embrace([#var(Type)|Change])]))) :-
     atom_concat('flag:', Name, RefName),
@@ -660,6 +670,8 @@ clean_name(X, X) :-
 clean_name(L, Out) :-
     maplist(clean_name, L, L2),
     atomic_list_concat(L2, Out).
+
+nospace_op(:).
 
 %!  predicate_refname(+Name, +Arity, -Ref) is det.
 %!  dcg_refname(+Name, +Arity, -Ref) is det.
