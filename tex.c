@@ -1056,18 +1056,20 @@ env_verbatim(Environment e, Input fd, CallBack func, void *ctx)
   char buf[MAXVERBATIM];
   int left = MAXVERBATIM-1;
   char *s = buf;
+  char *ms;
   int el;
   token t;
 
   sprintf(end, "\\end{%s}", e->environment->name);
   el = strlen(end);
+  ms = buf+el;
 
   for(;;)
   { if ( --left == 0 )
       error(ERR_VERBATIM_TOO_LONG, texfile(), texline());
     *s++ = getc(fd);
 
-    if ( s[-el] == '\\' && strncmp(&s[-el], end, el) == 0 )
+    if ( s >= ms && s[-el] == '\\' && strncmp(&s[-el], end, el) == 0 )
     { s[-el] = EOS;
       t.type = TOK_VERBATIM;
       t.context = (char *)e->environment->name;
