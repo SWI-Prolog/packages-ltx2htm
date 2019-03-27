@@ -391,6 +391,8 @@ mygetc(Input fd)
     case INPUT_STRING:
     default:
       c = *fd->stream.string++;
+      if ( c == '\0' )
+	c = EOF;
       break;
   }
 
