@@ -620,8 +620,10 @@ parseArgSpec(const char *fname, int lineno, char **line, CmdArg args)
 	switch(s[1])
 	{ case '+':
 	    args[nargs].flags |= CA_TEXT;
+	    break;
 	  case 'd':
 	    args[nargs].flags |= CA_DIM;
+	    break;
 	  case '-':
 	    break;
 	  default:
@@ -1403,6 +1405,7 @@ parseTeX(Input fd, CallBack func, void *ctx)
 
 	do
 	{ *s++ = c;
+	  assert(s < buf+MAXWORD);
 	  c = getc(fd);
 	} while(!wbreak(c));
 	*s = EOS;
