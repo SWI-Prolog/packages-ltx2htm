@@ -664,12 +664,16 @@ clean_name([' '|T], Out) :-
 clean_name($(Out), Out) :- !.
 clean_name([Out], Out) :- !.
 clean_name(\($), $) :- !.
+clean_name(\Special, Out) :-
+    urldef(Special, Out),
+    !.
 clean_name(X, X) :-
     atomic(X),
     !.
 clean_name(L, Out) :-
     maplist(clean_name, L, L2),
-    atomic_list_concat(L2, Out).
+    delete(L2, [], L3),
+    atomic_list_concat(L3, Out).
 
 nospace_op(:).
 
