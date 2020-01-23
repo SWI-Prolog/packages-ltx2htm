@@ -1512,11 +1512,11 @@ cmd(ln({Arg}), math, ['ln(', math+Arg, ')']).
 cmd(lg({Arg}), math, ['log10(', math+Arg, ')']).
 cmd(log({Arg}), math, ['log(', math+Arg, ')']).
 cmd(sqrt({Arg}), math, ['sqrt(', math+Arg, ')']).
-cmd(not({=}), math, ['<>']).
-cmd(neq, math, ['<>']).
-cmd(exists, math, 'E').
-cmd(emptyset, match, html('&Oslash;')).
-cmd(subset, match, 'subset').
+cmd(not({=}), math, html('&ne')).
+cmd(neq, math, html('&ne')).
+cmd(exists, math, html('&exist')).
+cmd(emptyset, math, html('&Oslash;')).
+cmd(subset, math, 'subset').
 cmd(frac({A1}, {A2}), math, [math+A1, '/', math+A2]).
 cmd(mod({A1}, {A2}), math, [math+A1, ' ', 'mod', ' ', math+A2]).
 cmd(rem({A1}, {A2}), math, [math+A1, ' ', 'rem', ' ', math+A2]).
