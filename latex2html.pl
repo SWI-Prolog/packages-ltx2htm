@@ -356,6 +356,12 @@ translate([\(Section, -, [{Title}])|T], Mode, Mode, HTML) :-
     !,
     append(TitleHtml, BodyHtml, HTML),
     translate(T, Mode, Mode, BodyHtml).
+translate(['`','`'|T0], Mode0, Mode, [html(' &ldquo;')|T]) :-
+    !,
+    translate(T0, Mode0, Mode, T).
+translate(['\'','\''|T0], Mode0, Mode, [html('&rdquo; ')|T]) :-
+    !,
+    translate(T0, Mode0, Mode, T).
 translate([H0|T0], Mode0, Mode, [H|T]) :-
     !,
     translate_1(H0, Mode0, Mode1, H),
@@ -405,6 +411,9 @@ translate_2([Atom], Mode, Mode, nospace(Atom)) :-       % {foo}
 translate_2(Group, Mode, Mode, HTML) :-                 % {...}
     Group = [_|_],
     translate_group(Group, HTML).
+translate_2(~, Mode, Mode, html('&nbsp;')).             % ~
+translate_2('`', Mode, Mode, html('&lsquo;')).          % `
+translate_2('\'', Mode, Mode, html('&rsquo;')).         % '
 translate_2(~, Mode, Mode, html('&nbsp;')).             % ~
 translate_2('\\[]', Mode, Mode, html('[]')).            % []
 translate_2(Atom0, Mode, Mode, Atom) :-                 % Normal word

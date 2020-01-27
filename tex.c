@@ -3,7 +3,8 @@
     Author:        Jan Wielemaker
     E-mail:        J.Wielemaker@vu.nl
     WWW:           http://www.swi-prolog.org
-    Copyright (c)  1997-2013, University of Amsterdam
+    Copyright (c)  1997-2020, University of Amsterdam
+			      CWI, Amsterdam
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -239,8 +240,11 @@ static const char *texarg;		/* argument for runaway message */
 #define PU 9				/* punctuation */
 #define DI 10				/* digit */
 
-#define LC 11				/* lower-case letter */
-#define UC 12				/* uppercase letter */
+#define BQ 11				/* back quote (`) */
+#define SQ 12				/* single quote (') */
+
+#define LC 13				/* lower-case letter */
+#define UC 14				/* uppercase letter */
 
 #define CharType(c) (char_type[(c)+1])
 
@@ -259,7 +263,7 @@ static char char_type[] = {
 /* ^P  ^Q  ^R  ^S  ^T  ^U  ^V  ^W  ^X  ^Y  ^Z  ^[  ^\  ^]  ^^  ^_   16-31 */
    SP, SP, SP, SP, SP, SP, SP, SP, SP, SP, SP, SP, SP, SP, SP, SP,
 /* sp   !   "   #   $   %   &   '   (   )   *   +   ,   -   .   /   32-47 */
-   SP, PU, PU, PU, MM, SC, TD, PU, PU, PU, PU, PU, PU, PU, PU, PU,
+   SP, PU, PU, PU, MM, SC, TD, SQ, PU, PU, PU, PU, PU, PU, PU, PU,
 /*  0   1   2   3   4   5   6   7   8   9   :   ;   <   =   >   ?   48-63 */
    DI, DI, DI, DI, DI, DI, DI, DI, DI, DI, PU, PU, PU, PU, PU, PU,
 /*  @   A   B   C   D   E   F   G   H   I   J   K   L   M   N   O   64-79 */
@@ -267,7 +271,7 @@ static char char_type[] = {
 /*  P   Q   R   S   T   U   V   W   X   Y   Z   [   \   ]   ^   _   80-95 */
    UC, UC, UC, UC, UC, UC, UC, UC, UC, UC, UC, PU, CM, PU, PU, UC,
 /*  `   a   b   c   d   e   f   g   h   i   j   k   l   m   n   o   96-111 */
-   PU, LC, LC, LC, LC, LC, LC, LC, LC, LC, LC, LC, LC, LC, LC, LC,
+   BQ, LC, LC, LC, LC, LC, LC, LC, LC, LC, LC, LC, LC, LC, LC, LC,
 /*  p   q   r   s   t   u   v   w   x   y   z   {   |   }   ~  ^?   112-127 */
    LC, LC, LC, LC, LC, LC, LC, LC, LC, LC, LC, BG, PU, EG, NB, SP,
 			  /* 128-255 */
@@ -1327,7 +1331,7 @@ parseTeX(Input fd, CallBack func, void *ctx)
 
 	break;
       }
-      case BG:
+      case BG:				/* { */
       { char buf[2];
 
 	buf[0] = c;
@@ -1340,7 +1344,7 @@ parseTeX(Input fd, CallBack func, void *ctx)
 
 	break;
       }
-      case EG:
+      case EG:				/* } */
       { char buf[2];
 
 	buf[0] = c;
@@ -1388,6 +1392,8 @@ parseTeX(Input fd, CallBack func, void *ctx)
       }
       case TD:				/* & */
       case NB:				/* ~ */
+      case BQ:				/* ` */
+      case SQ:				/* ' */
       { char buf[2];
 
 	buf[0] = c;
