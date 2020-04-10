@@ -3,7 +3,7 @@
     Author:        Jan Wielemaker
     E-mail:        J.Wielemaker@vu.nl
     WWW:           http://www.swi-prolog.org
-    Copyright (c)  1999-2013, University of Amsterdam
+    Copyright (c)  1999-2020, University of Amsterdam
                               VU University Amsterdam
     All rights reserved.
 
@@ -34,7 +34,17 @@
 */
 
 :- module(latex2html4xpce, []).
-:- use_module(library(latex2html/latex2html)).
+:- autoload(library(apply),[maplist/3]).
+:- autoload(library(lists),[append/3]).
+:- autoload(library(latex2html/latex2html),
+	    [ latex2html_module/0,
+	      tex_load_commands/1,
+	      translate/3,
+	      add_to_index/1,
+	      clean_tt/2,
+	      add_to_index/2,
+	      translate_table/3
+	    ]).
 
 :- latex2html_module.
 :- tex_load_commands(xpce).
@@ -73,11 +83,11 @@ env(xpceonly(_, Tokens), HTML) :-
 cmd(objectname({Name}),         #b([nospace(@), Name])).
 cmd(noclass({Name}),            #b(Name)).
 cmd(class({Name}),              #lref(Label, Name)) :-
-    concat('class:', Name, Label),
+    atom_concat('class:', Name, Label),
     add_to_index(Name).
 cmd(classs({Name}),             #lref(Label, NameS)) :-
-    concat('class:', Name, Label),
-    concat(Name, s, NameS),
+    atom_concat('class:', Name, Label),
+    atom_concat(Name, s, NameS),
     add_to_index(Name).
 cmd(tool({Name}),               #strong(+Name)).
 cmd(demo({Name}),               #strong(+Name)).
@@ -104,11 +114,11 @@ cmd(manualtool({Descr}, {Menu}),
     #defitem([ #strong(+Descr), ' ', #i(#embrace(+Menu))])).
 cmd(secoverview({Label}, {Title}),
     [ html('<li>'), #lref(RefName, +Title) ]) :-
-    sformat(RefName, 'sec:~w', Label).
+    format(string(RefName), 'sec:~w', Label).
 cmd(classsummary(_M, {RawClass}, {Args}, {_FigRef}),
     #defitem(#label(Label, [#strong(Class), #embrace(#var(+Args))]))) :-
     clean_tt(RawClass, Class),
-    concat('class:', Class, Label),
+    atom_concat('class:', Class, Label),
     add_to_index(Class, +Label).
 cmd(fontalias({Alias}, {Term}), #defitem([#code(Alias), #i(+Term)])).
 cmd(noargpredicate(Name), HTML) :-
@@ -117,10 +127,10 @@ cmd(noargpredicate(Name), HTML) :-
 %       add_to_index(Term).
 cmd(glossitem({Term}), #defitem(#label(RefName, #strong(Term)))) :-
     canonicalise_glossitem(Term, Ref),
-    sformat(RefName, 'gloss:~w', [Ref]).
+    format(string(RefName), 'gloss:~w', [Ref]).
 cmd(g({Term}),  #lref(RefName, Term)) :-
     canonicalise_glossitem(Term, Ref),
-    sformat(RefName, 'gloss:~w', [Ref]).
+    format(string(RefName), 'gloss:~w', [Ref]).
 cmd(line({Tokens}), #quote(Line)) :-
     translate(Tokens, normal, Line).
 cmd(classvar({Class}, {Var}), #b([#code([+Class,nospace('.'),+Var])])).

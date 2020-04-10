@@ -3,7 +3,7 @@
     Author:        Jan Wielemaker
     E-mail:        J.Wielemaker@vu.nl
     WWW:           http://www.swi-prolog.org
-    Copyright (c)  1997-2014, University of Amsterdam
+    Copyright (c)  1997-2020, University of Amsterdam
                               VU University Amsterdam
     All rights reserved.
 
@@ -34,7 +34,21 @@
 */
 
 :- module(latex2html4pl, []).
-:- use_module(latex2html).
+:- use_module(latex2html,
+              [ latex2html_module/0,
+                tex_load_commands/1,
+                translate_table/3,
+                clean_tt/2,
+                add_to_index/2,
+                add_to_index/1,
+                translate_section/5,
+                translate_section/4,
+                op(_,_,_)
+              ]).
+:- autoload(library(apply),[maplist/3,maplist/2]).
+:- autoload(library(lists),[append/3,delete/3]).
+:- autoload(library(occurs),[sub_term/2]).
+:- autoload(library(readutil),[read_line_to_codes/2]).
 
 :- latex2html_module.
 :- tex_load_commands(pl).
@@ -84,7 +98,7 @@ cmd(spaces({X}), html(Spaces)) :-
 cmd(hrule, html('<hr>')).
 cmd(bug({TeX}), #footnote(bug, +TeX)).
 cmd(fileext({Ext}), #code(Text)) :-
-    sformat(Text, '.~w', [Ext]).
+    format(string(Text), '.~w', [Ext]).
 
 cmd(var(                {A1}), #var(+A1)).
 cmd(arg(                {A1}), #var(+A1)).
@@ -117,7 +131,7 @@ cmd(longoption(    {A1},{A2}), [#strong([nospace(--), +A1,
                                          nospace(=)]), #var(+A2)]).
 cmd(fmtseq(             {A1}), #code(A1)).
 cmd(versionshort,           _, nospace(Version)) :-
-    feature(version, V),
+    current_prolog_flag(version, V),
     Major is V // 10000,
     Minor is (V // 100) mod 100,
     Patch is V mod 100,
@@ -131,16 +145,16 @@ cmd(argoption({RawName}, {ArgName}),
 cmd(predref({RawName}, {Arity}), #lref(pred, RefName, Text)) :-
     clean_name(RawName, Name),
     predicate_refname(Name, Arity, RefName),
-    sformat(Text, '~w/~w', [Name, Arity]).
+    format(string(Text), '~w/~w', [Name, Arity]).
 cmd(funcref({RawName}, {Arity}), #lref(function, RefName, Text)) :-
     clean_name(RawName, Name),
     function_refname(Name, Arity, RefName),
-    sformat(Text, '~w/~w', [Name, Arity]).
+    format(string(Text), '~w/~w', [Name, Arity]).
 cmd(dcgref({RawName}, {DCGArity}), #lref(pred, RefName, Text)) :-
     clean_name(RawName, Name),
     atom_number(DCGArity, Arity),
     dcg_refname(Name, Arity, RefName),
-    sformat(Text, '~w//~w', [Name, Arity]).
+    format(string(Text), '~w//~w', [Name, Arity]).
 cmd(qpredref({Module}, {RawName}, {Arity}), #lref(pred, RefName, Text)) :-
     clean_name(RawName, Name),
     predicate_refname(Module:Name, Arity, RefName),
@@ -420,7 +434,7 @@ cmd(texmode({Name}), #var(Name)).
 
 cmd(classitem({Class}),
     #defitem(#label(RefName, #strong(Class)))) :-
-    sformat(RefName, 'class:~w', [Class]).
+    format(string(RefName), 'class:~w', [Class]).
 cmd(constructor({Class}, {Args}),
     #defitem([#strong([Class, ::, Class]), #embrace(#var(+Args))])).
 cmd(destructor({Class}),
@@ -432,7 +446,7 @@ cmd(nodescription, []).
 % Some XPCE things
 
 cmd(class({Name}),              #lref(Label, Name)) :-
-    concat('class:', Name, Label),
+    atom_concat('class:', Name, Label),
     add_to_index(Name).
 cmd(noclass({Name}),            #i(Name)).
 cmd(menuref({A1}),              #lref(RefName, Name)) :-

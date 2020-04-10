@@ -67,7 +67,7 @@ ps2gif(In, Out, Options) :-
     ResY is Res0 * ScaleY,
     (   ResX =:= ResY
     ->  Res = ResX
-    ;   sformat(Res, '~wx~w', [ResX, ResY])
+    ;   format(string(Res), '~wx~w', [ResX, ResY])
     ),
     BBX is -X1,
     BBY is -Y1,
@@ -120,7 +120,7 @@ gs_command(Options, Cmd) :-
     get_option(Options, device(Dev)),
     get_option(Options, tmp(Tmp)),
     (   get_option(Options, size(W, H))
-    ->  sformat(SCmd, '-g~wx~w', [W, H])
+    ->  format(string(SCmd), '-g~wx~w', [W, H])
     ;   SCmd = ''
     ),
     aformat(Cmd,

@@ -3,7 +3,7 @@
     Author:        Jan Wielemaker
     E-mail:        J.Wielemaker@vu.nl
     WWW:           http://www.swi-prolog.org
-    Copyright (c)  1997-2018, University of Amsterdam
+    Copyright (c)  1997-2020, University of Amsterdam
                               VU University Amsterdam
                               CWI, Amsterdam
     All rights reserved.
@@ -59,10 +59,27 @@
             clean_tt/2,                 % +Raw, -Clean
             op(100, fx, #)
           ]).
-:- use_module(library(quintus)).
-:- use_module(library(filesex)).
-:- use_module(library(option)).
-:- use_module(library(apply)).
+:- autoload(library(apply),[maplist/3]).
+:- autoload(library(backcomp),[convert_time/8]).
+:- autoload(library(ctypes),
+	    [is_lower/1,to_upper/2,is_alpha/1,is_upper/1,to_lower/2]).
+:- autoload(library(debug),[debug/3]).
+:- autoload(library(filesex),[copy_file/2,directory_file_path/3]).
+:- autoload(library(gui_tracer),[gtrace/0]).
+:- autoload(library(lists),
+	    [ reverse/2,
+	      member/2,
+	      flatten/2,
+	      append/3,
+	      select/3,
+	      nth1/3,
+	      last/2
+	    ]).
+:- autoload(library(main),[main/0,argv_options/3]).
+:- autoload(library(occurs),[sub_term/2]).
+:- autoload(library(option),[option/2,select_option/3]).
+:- autoload(library(readutil),[read_file_to_codes/3]).
+:- autoload(library(statistics),[statistics/0]).
 
 ltx2htm_version('0.98').                % for SWI-Prolog 5.6.18
 
@@ -1237,7 +1254,7 @@ cmd(centerline({Tex}), #center(+Tex)).
 cmd(rightline({Tex}), #right(+Tex)).
 
 cmd(email({Address}), #url(URL, Address)) :-
-    sformat(URL, 'mailto:~w', [Address]).
+    format(string(URL), 'mailto:~w', [Address]).
 cmd(url({Address}), #url(Address, Address)).
 cmd(href({URL}, {Text}), #url(URL, +Text)).
 cmd(file({File}), #tt(File)).
@@ -1344,7 +1361,7 @@ cmd(psfig({Spec}), html(Img)) :-
     ps_extension(Ext),
     file_base_name(Base, GifBase),
     file_name_extension(GifBase, gif, GifFile),
-    sformat(Img, '<img src="~w">', GifFile),
+    format(string(Img), '<img src="~w">', GifFile),
     make_output_directory,
     html_output_dir(Dir),
     atomic_list_concat([Dir, '/', GifFile], OutFile),
@@ -1372,7 +1389,7 @@ cmd(includegraphics(_Options, {File}), html(Img)) :-
     img_extension(Ext),
     !,
     file_base_name(AbsImgFile, ImgFile),
-    sformat(Img, '<img src="~w">', ImgFile),
+    format(string(Img), '<img src="~w">', ImgFile),
     make_output_directory,
     html_output_dir(Dir),
     atomic_list_concat([Dir, '/', ImgFile], OutFile),
@@ -1391,7 +1408,7 @@ cmd(includegraphics(_Options, {File}), html(Img)) :-
     file_name_extension(Base, Ext, PsFile),
     file_base_name(Base, GifBase),
     file_name_extension(GifBase, gif, GifFile),
-    sformat(Img, '<img src="~w">', GifFile),
+    format(string(Img), '<img src="~w">', GifFile),
     make_output_directory,
     html_output_dir(Dir),
     atomic_list_concat([Dir, '/', GifFile], OutFile),
@@ -1472,7 +1489,7 @@ img_extension(jpeg).
 
 cmd('HTML'({Tag}),      #code(Tag)).
 cmd(latexcmd({Cmd}),    #code(BslCmd)) :-
-    concat(\, Cmd, BslCmd).
+    atom_concat(\, Cmd, BslCmd).
 cmd(latexenv({Env}),    #code(Env)).
 cmd(mode({Mode}),       #code(Mode)).
 
