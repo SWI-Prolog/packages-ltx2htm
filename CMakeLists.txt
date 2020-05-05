@@ -14,6 +14,7 @@ configure_file(latex2html.in latex2html)
 
 swipl_plugin(
     latex2html
+    NOINDEX
     MODULE tex
     C_SOURCES tex.c psfile.c
     PL_LIB_SUBDIR latex2html
