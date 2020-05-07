@@ -1914,7 +1914,7 @@ reset_index :-
 translate_index(Term, RefName) :-
     step_counter(index, N),
     clean_index(Term, Clean),
-    sformat(RefName, 'idx:~w:~w', [Clean, N]),
+    format(string(RefName), 'idx:~w:~w', [Clean, N]),
     section_tag(Tag),
     add_to_index(Term, Tag:RefName).
 
@@ -2086,7 +2086,7 @@ node_header(SectionTag,
             ]) :-
     parent_tag(SectionTag, UpTag),
     !,
-    sformat(UpRef, 'sec:~w', [UpTag]).
+    format(string(UpRef), 'sec:~w', [UpTag]).
 node_header(_, HTML) :-
     node_header(HTML).
 
@@ -2406,7 +2406,7 @@ table_row([\(multicolumn, [{N}, {A}, {Tokens}])|R0], C, ColAtts, R,
           [html(MC), Item|THtml]) :-
     column_alignment(A, Alignment),
     !,
-    sformat(MC, '<td colspan=~w align=~w>', [N, Alignment]),
+    format(string(MC), '<td colspan=~w align=~w>', [N, Alignment]),
     translate_group(Tokens, Item),
     to_integer(N, N2),
     C2 is C + N2,
@@ -2672,7 +2672,7 @@ ps2gif(In, Out, Options) :-
     ResY is Res0 * ScaleY,
     (   ResX =:= ResY
     ->  Res = ResX
-    ;   sformat(Res, '~wx~w', [ResX, ResY])
+    ;   format(string(Res), '~wx~w', [ResX, ResY])
     ),
     BBX is -X1,
     BBY is -Y1,
@@ -2710,7 +2710,7 @@ gs_command(Options, Cmd) :-
     get_option(Options, device(Dev)),
     get_option(Options, tmp(Tmp)),
     (   get_option(Options, size(W, H))
-    ->  sformat(SCmd, '-g~wx~w', [W, H])
+    ->  format(string(SCmd), '-g~wx~w', [W, H])
     ;   SCmd = ''
     ),
     format(atom(Cmd),
@@ -2923,7 +2923,7 @@ write_html(body_link(Link)) :-
     ->  format(string(Anchor), '<a class="nav" href="~w">', [Ref]),
         capitalise_atom(Type, Text),
         (   link_image(Type, Image)
-        ->  sformat(Img, '<img src="~w" alt="~w">', [Image, Text]),
+        ->  format(string(Img), '<img src="~w" alt="~w">', [Image, Text]),
             Label = html(Img)
         ;   Label = Text
         ),
@@ -2934,7 +2934,7 @@ write_html(body_link(Link)) :-
 write_html(link(Link)) :-
     !,
     (   translate_ref(Link, Ref, Type)
-    ->  sformat(Html, '<link rel="~w" href="~w">', [Type, Ref]),
+    ->  format(string(Html), '<link rel="~w" href="~w">', [Type, Ref]),
         write_html(html(Html)),
         nl_html
     ;   true
