@@ -2412,7 +2412,7 @@ pl_tex_tell(term_t file)
   { FILE *fd = (streq(name, "-") ? stdout : fopen(name, "w"));
 
     if ( fd )
-    { ppctx.envnesting   = 0;		/* seperate predicate? */
+    { ppctx.envnesting   = 0;		/* separate predicate? */
       ppctx.last_type    = TOK_EOF;
       ppctx.line_pos     = 0;
       ppctx.newlines     = 0;
@@ -2771,7 +2771,7 @@ install()
   PL_register_foreign("tex_atom_to_tokens",   2, pl_tex_atom_to_tokens,   0);
   PL_register_foreign("tex_emit_spaces",      2, pl_tex_emit_spaces,      0);
 
-  ppctx.envnesting   = 0;		/* seperate predicate? */
+  ppctx.envnesting   = 0;		/* separate predicate? */
   ppctx.last_type    = TOK_EOF;
   ppctx.line_pos     = 0;
   ppctx.newlines     = 0;
