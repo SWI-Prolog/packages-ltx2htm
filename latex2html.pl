@@ -374,9 +374,11 @@ translate([\(Section, -, [{Title}])|T], Mode, Mode, HTML) :-
     append(TitleHtml, BodyHtml, HTML),
     translate(T, Mode, Mode, BodyHtml).
 translate(['`','`'|T0], Mode0, Mode, [html(' &ldquo;')|T]) :-
+    \+ in_macro(code(_)),
     !,
     translate(T0, Mode0, Mode, T).
 translate(['\'','\''|T0], Mode0, Mode, [html('&rdquo; ')|T]) :-
+    \+ in_macro(code(_)),
     !,
     translate(T0, Mode0, Mode, T).
 translate([H0|T0], Mode0, Mode, [H|T]) :-
@@ -725,12 +727,30 @@ expand_macro(#Macro, HTML) :-
     tex_extension_module(M),
     M:'#'(Macro, HTML0),
     !,
-    expand_macros(HTML0, HTML).
+    push_macro(Macro),
+    expand_macros(HTML0, HTML),
+    pop_macro.
 expand_macro(List, Expanded) :-
     List = [_|_],
     !,
     expand_macros(List, Expanded).
 expand_macro(NoExpand, NoExpand).
+
+push_macro(Macro) :-
+    nb_current(macro_stack, Stack),
+    !,
+    b_setval(macro_stack, [Macro|Stack]).
+push_macro(Macro) :-
+    b_setval(macro_stack, [Macro]).
+
+pop_macro :-
+    nb_current(macro_stack, [_|Stack]),
+    !,
+    b_setval(macro_stack, Stack).
+
+in_macro(Env) :-
+    nb_current(macro_stack, Stack),
+    \+ \+ memberchk(Env, Stack).
 
 
                  /*******************************
