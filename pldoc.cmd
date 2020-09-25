@@ -42,6 +42,7 @@
 \longoption{+}{+}
 \longoptionitem{+}{+}=item	1 0
 \termitem{+}{+}=item		1 0
+\curltermitem{+}=item		1 0
 \dictitem{+}{+}=item		1 0
 \infixtermitem{+}{+}{+}=item	1 0
 \prefixtermitem{+}{+}=item	1 0

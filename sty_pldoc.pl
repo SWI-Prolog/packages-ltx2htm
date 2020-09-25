@@ -350,6 +350,8 @@ cmd(constitem({Name}), #defitem(#label(RefName, #strong(+Name)))) :-
 cmd(termitem({Name}, {[]}), #defitem(#strong(+Name))).
 cmd(termitem({Name}, {Arg}),
     #defitem([#strong(+Name), #embrace(#var(+Arg))])).
+cmd(curltermitem({Arg}),
+    #defitem([#embrace("{}", #var(+Arg))])).
 cmd(dictitem({Name}, {Arg}),
     #defitem([#strong(+Name), #embrace("{}", #var(+Arg))])).
 cmd(prefixtermitem({Name}, {Right}),
