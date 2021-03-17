@@ -2030,7 +2030,7 @@ index_terms([Term0|T0], [ html('<dt>'),
                        | TH
                        ]) :-
     findall(Tag, index(_, Term0, Tag), Tags),
-    tex_atom_to_tokens(Term0, Tokens),
+    term_tokens(Term0, Tokens),
     translate(Tokens, index, _, Term),
     (   member(+PrimeTag, Tags)
     ->  HtmlTerm = #lref(idx, PrimeTag, Term)
@@ -2038,6 +2038,14 @@ index_terms([Term0|T0], [ html('<dt>'),
     ),
     maplist(index_href, Tags, Where),
     index_terms(T0, TH).
+
+term_tokens('$/0', [verb(!,'$/0')]) :-
+    !.
+term_tokens('$/1', [verb(!,'$/1')]) :-
+    !.
+term_tokens(Term, Tokens) :-
+    tex_atom_to_tokens(Term, Tokens).
+
 
 index_href(+(_), []) :- !.
 index_href(Tag:Label, [' ', #lref(idx, Label, Tag)]) :- !.
