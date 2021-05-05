@@ -2199,12 +2199,12 @@ translate_table(Format, Body, HTML) :-
     expand_table_commands(Body2, Body3),
     (   table_columns(Fmt2, _Ncols, ColAtts)
     ->  true
-    ;   format(user_error, 'Failed to parse tabular spec "~s"~n', [Fmt2]),
+    ;   format(user_error, 'ERROR: Failed to parse tabular spec "~s"~n', [Fmt2]),
         ColAtts = []
     ),
     (   table_body(Body3, ColAtts, BodyHTML)
     ->  true
-    ;   format(user_error, 'Failed to translate table body~n', []),
+    ;   format(user_error, 'ERROR: Failed to translate table body~n', []),
         trace, fail
     ),
     HTML = [ html(Head),
@@ -2440,7 +2440,6 @@ table_row([' '|T0], C, ColAtts, T, TH) :-
 table_row(['\n'|T0], C, ColAtts, T, TH) :-
     !,
     table_row(T0, C, ColAtts, T, TH).
-table_row([\(\, _)|Rest], _, _, Rest, []) :- !.
 table_row([\(multicolumn, [{N}, {A}, {Tokens}])|R0], C, ColAtts, R,
           [html(MC), Item|THtml]) :-
     column_alignment(A, Alignment),
@@ -2449,14 +2448,22 @@ table_row([\(multicolumn, [{N}, {A}, {Tokens}])|R0], C, ColAtts, R,
     translate_group(Tokens, Item),
     to_integer(N, N2),
     C2 is C + N2,
-    table_cell(R0, R1, _),          % discard tokens upto &
-    table_row(R1, C2, ColAtts, R, THtml).
+    table_cell(R0, R1, _, Last),          % discard tokens upto &
+    (   Last == true
+    ->  R = R1,
+        THtml = []
+    ;   table_row(R1, C2, ColAtts, R, THtml)
+    ).
 table_row(L, C, ColAtts, R,  [html(CellHeader), Chtml, html('</td>')|THtml]) :-
     cell_header(C, ColAtts, CellHeader),
-    table_cell(L, T, Tokens),
+    table_cell(L, T, Tokens, Last),
     translate_group(Tokens, Chtml),
-    C2 is C + 1,
-    table_row(T, C2, ColAtts, R, THtml).
+    (   Last == true
+    ->  R = T,
+        THtml = []
+    ;   C2 is C + 1,
+        table_row(T, C2, ColAtts, R, THtml)
+    ).
 
 cell_header(C, ColAtts, Header) :-
     nth1(C, ColAtts, Spec),
@@ -2494,13 +2501,11 @@ calignment(right) --> "r".
 calignment(left) --> [X],
     {format(user_error, 'Unknown multicolumn alignment: "~w"~n', [X])}.
 
-table_cell([], [], []).
-%table_cell([' '|T0], R, T) :- !,
-%        table_cell(T0, R, T).
-table_cell([&|L], L, []) :- !.
-table_cell([\(\, A)|L], [\(\, A)|L], []) :- !.
-table_cell([H|T0], R, [H|T]) :-
-    table_cell(T0, R, T).
+table_cell([], [], [], true).
+table_cell([&|L], L, [], false) :- !.
+table_cell([\(\, _)|L], L, [], true) :- !.
+table_cell([H|T0], R, [H|T], Last) :-
+    table_cell(T0, R, T, Last).
 
 all_white_space([]).
 all_white_space([' '|T]) :-
