@@ -2752,7 +2752,7 @@ warn(int eno, const char *file, int line)
 extern void install_ps(void);
 
 install_t
-install()
+install_tex(void)
 { initPrologConstants();
 
   PL_register_foreign("tex_tokens",           2, pl_tex_tokens,           0);
