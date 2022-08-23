@@ -480,7 +480,7 @@ stringHashValue(const char *t, int buckets)
 }
 
 
-const char *
+static const char *
 save_string(const char *s)
 { char *cp = malloc(strlen(s)+1);
 
