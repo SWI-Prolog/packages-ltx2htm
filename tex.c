@@ -394,9 +394,11 @@ mygetc(Input fd)
       break;
     case INPUT_STRING:
     default:
-      c = *fd->stream.string++;
+      c = *fd->stream.string;
       if ( c == '\0' )
 	c = EOF;
+      else
+	fd->stream.string++;
       break;
   }
 
@@ -414,7 +416,8 @@ myungetc(int c, Input fd)
       break;
     case INPUT_STRING:
     default:
-      fd->stream.string--;
+      if ( *fd->stream.string )
+	fd->stream.string--;
       break;
   }
 
