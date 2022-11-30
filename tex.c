@@ -128,7 +128,7 @@ typedef struct _output *Output;
 typedef int (*CallBack)(Token token, void *context);
 typedef void (*CmdFunc)(Command cmd, Input fd, CallBack func, void *ctx);
 typedef void (*EnvFunc)(Environment cmd, Input fd, CallBack func, void *ctx);
-typedef void *AnyFunc;
+typedef void (*AnyFunc)();
 static AnyFunc lookupFunction(const char *name);
 
 typedef struct
@@ -185,7 +185,7 @@ typedef struct _input
 
 static Input	curin;			/* current input (file) */
 
-static int cmd_prolog(Command g, Input fd, CallBack func, void *ctx);
+static void cmd_prolog(Command g, Input fd, CallBack func, void *ctx);
 
 		 /*******************************
 		 *	       TOKENS		*
@@ -207,7 +207,7 @@ static int cmd_prolog(Command g, Input fd, CallBack func, void *ctx);
 #define TOK_NOSPACEWORD 12		/* word without reintroducing spaces */
 #define TOK_SPACE       13		/* blank space */
 #define TOK_LINE        14		/* single line */
-#define TOK_EOF	        15		/* end-of-file */
+#define TOK_EOF		15		/* end-of-file */
 
 typedef struct _token
 { int	type;				/* type identifier */
@@ -611,7 +611,7 @@ parseArgSpec(const char *fname, int lineno, char **line, CmdArg args)
   { switch(*s)
     { case '[':
 	args[nargs].flags = 0;
-        if ( s[2] != ']' )
+	if ( s[2] != ']' )
 	{ warn(ERR_BAD_ARG_SPEC, fname, lineno);
 	  return -1;
 	}
@@ -619,7 +619,7 @@ parseArgSpec(const char *fname, int lineno, char **line, CmdArg args)
 	goto arg_cont;
       case '{':
 	args[nargs].flags = 0;
-        if ( s[2] != '}' )
+	if ( s[2] != '}' )
 	{ warn(ERR_BAD_ARG_SPEC, fname, lineno);
 	  return -1;
 	}
@@ -637,13 +637,13 @@ parseArgSpec(const char *fname, int lineno, char **line, CmdArg args)
 	    warn(ERR_BAD_ARG_SPEC, fname, lineno);
 	    return -1;
 	}
-        nargs++;
-        s += 2;
-        break;
+	nargs++;
+	s += 2;
+	break;
       default:
 	skipBanks(s);
-        *line = s;
-        return nargs;
+	*line = s;
+	return nargs;
     }
   }
 }
@@ -1148,7 +1148,7 @@ cmd_begin(Command g, Input fd, CallBack func, void *ctx)
     if ( env->arguments[n].flags & CA_OPTIONAL )
     { if ( getOptionalArgument(fd, 0, abuf, sizeof(abuf)) )
       { e.arguments[n] = alloca(strlen(abuf)+1);
-        strcpy(e.arguments[n], abuf);
+	strcpy(e.arguments[n], abuf);
       } else
 	e.arguments[n] = NULL;
     } else
@@ -1374,7 +1374,7 @@ parseTeX(Input fd, CallBack func, void *ctx)
       { parseMath(fd, func, ctx);
 	c = getc(fd);
 
-        break;
+	break;
       }
       case SC:				/* % comment */
       { do
@@ -1433,7 +1433,7 @@ parseTeX(Input fd, CallBack func, void *ctx)
 
 
 		 /*******************************
-	         *           MAIN LOOP          *
+		 *           MAIN LOOP          *
 		 *******************************/
 
 static int
@@ -1514,13 +1514,13 @@ output(PPContext pp, const char *fmt, ...)
 	  { switch(c)
 	    { case '<':
 		fputs("&lt;", pp->fd);
-	        break;
+		break;
 	      case '>':
 		fputs("&gt;", pp->fd);
-	        break;
+		break;
 	      case '&':
 		fputs("&amp;", pp->fd);
-	        break;
+		break;
 	      default:
 		putc(c, pp->fd);
 	    }
@@ -2293,7 +2293,7 @@ out:
 Calls tex:prolog_function(cmd([Star], [Args]))
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
-static int
+static void
 cmd_prolog(Command g, Input fd, CallBack func, void *ctx)
 { fid_t  f        = PL_open_foreign_frame();
   term_t t0       = PL_new_term_ref();
@@ -2328,14 +2328,14 @@ cmd_prolog(Command g, Input fd, CallBack func, void *ctx)
 			 g->arguments);
 
   if ( !rc )
-    return FALSE;
+  { PL_fatal_error("cmd_prolog() failed");
+    return;
+  }
 
   PL_call_predicate(NULL, TRUE, p, t0);
   PL_discard_foreign_frame(f);
 
   cmd_normal(g, fd, func, ctx);
-
-  return TRUE;
 }
 
 
@@ -2389,7 +2389,7 @@ pl_tex_command_property(term_t name, term_t pre, term_t post)
 
     if ( cmd &&
 	 PL_unify_integer(pre, cmd->pre_lines) &&
-         PL_unify_integer(post, cmd->post_lines) )
+	 PL_unify_integer(post, cmd->post_lines) )
       PL_succeed;
   }
 
@@ -2423,7 +2423,7 @@ pl_tex_tell(term_t file)
       ppctx.verbatim     = FALSE;
       ppctx.left_margin  = 0;
       ppctx.right_margin = 72;
-      ppctx.fd	         = fd;
+      ppctx.fd		 = fd;
 
       PL_succeed;
     }
@@ -2521,18 +2521,18 @@ output_html(PPContext pp, const char *s)
   { switch(c)
     { case '<':
 	output_n(pp, from, s-from);
-        from = s+1;
-        output(pp, "%s", "&lt;");
+	from = s+1;
+	output(pp, "%s", "&lt;");
 	break;
       case '>':
 	output_n(pp, from, s-from);
-        from = s+1;
-        output(pp, "%s", "&gt;");
+	from = s+1;
+	output(pp, "%s", "&gt;");
 	break;
       case '&':
 	output_n(pp, from, s-from);
-        from = s+1;
-        output(pp, "%s", "&amp;");
+	from = s+1;
+	output(pp, "%s", "&amp;");
 	break;
     }
   }
