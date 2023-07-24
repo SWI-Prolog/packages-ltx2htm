@@ -1528,9 +1528,9 @@ cmd(item([Tokens]), itemlist,                   % \item in itemlist
 
 cmd(times, math, [' ', html('&times;'), ' ']).
 cmd(wedge, math, ['/\\']).
-cmd(rightarrow, ['->']).
-cmd('Rightarrow', ['=>']).
-cmd('Leftrightarrow', ['<=>']).
+cmd(rightarrow, [html('&#10132;')]).
+cmd('Rightarrow', [html('&#10132;')]).
+cmd('Leftrightarrow', [html('&#10231;')]).
 cmd(pi, math, 'pi').
 cmd(mu, math, html('&mu')).
 %cmd(circ, math, html('&omicron;')).            % not in Netscape 4.51
