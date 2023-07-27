@@ -1528,9 +1528,10 @@ cmd(item([Tokens]), itemlist,                   % \item in itemlist
 
 cmd(times, math, [' ', html('&times;'), ' ']).
 cmd(wedge, math, ['/\\']).
+% Capital: double arrow, prefixed by "long": long
 cmd(rightarrow, [html('&#10132;')]).
-cmd('Rightarrow', [html('&#10132;')]).
-cmd('Leftrightarrow', [html('&#10231;')]).
+cmd('Rightarrow', [html('&#8680;')]).
+cmd('Leftrightarrow', [html('&#11012;')]).
 cmd(pi, math, 'pi').
 cmd(mu, math, html('&mu')).
 %cmd(circ, math, html('&omicron;')).            % not in Netscape 4.51
