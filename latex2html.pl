@@ -3,9 +3,10 @@
     Author:        Jan Wielemaker
     E-mail:        J.Wielemaker@vu.nl
     WWW:           http://www.swi-prolog.org
-    Copyright (c)  1997-2020, University of Amsterdam
+    Copyright (c)  1997-2023, University of Amsterdam
                               VU University Amsterdam
                               CWI, Amsterdam
+                              SWI-Prolog Solutions b.v.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -1239,7 +1240,7 @@ cmd(emph({Tex}),   #em(+Tex)).                  % \emph{text}
 cmd(texttt({Tex}), #tt(+Tex)).                  % \texttt{text}
 cmd(textbf({Tex}), #b(+Tex)).                   % \textbf{text}
 cmd(textit({Tex}), #i(+Tex)).                   % \textit{text}
-cmd(mathit({Tex}), #i(+Tex)).                   % \textit{text}
+cmd(mathit({Tex}), #i(+Tex)).                   % \mathit{text}
 cmd(textsf({Tex}), #b(+Tex)).                   % \textsf{text}
 cmd(textsc({Tex}), #sc(+Tex)).                  % \textsc{text}
 
@@ -1528,10 +1529,23 @@ cmd(item([Tokens]), itemlist,                   % \item in itemlist
 
 cmd(times, math, [' ', html('&times;'), ' ']).
 cmd(wedge, math, ['/\\']).
-% Capital: double arrow, prefixed by "long": long
-cmd(rightarrow, [html('&#10132;')]).
-cmd('Rightarrow', [html('&#8680;')]).
-cmd('Leftrightarrow', [html('&#11012;')]).
+% Simple arrows
+cmd(leftarrow, math, [html('&#8592;')]).
+cmd(rightarrow, math, [html('&#8594;')]).
+cmd(leftrightarrow, math, [html('&#8596;')]).
+% Long arrows
+cmd(longleftarrow, math, [html('&#10229;')]).
+cmd(longrightarrow, math, [html('&#10230;')]).
+cmd(longleftrightarrow, math, [html('&#10231;')]).
+% Double arrows
+cmd('Leftarrow', math, [html('&#8656;')]).
+cmd('Rightarrow', math, [html('&#8658;')]).
+cmd('Leftrightarrow', math, [html('&#8660;')]).
+% Long double arrows
+cmd('Longleftarrow', math, [html('&#10232;')]).
+cmd('Longrightarrow', math, [html('&#10233;')]).
+cmd('Longleftrightarrow', math, [html('&#10234;')]).
+
 cmd(pi, math, 'pi').
 cmd(mu, math, html('&mu')).
 %cmd(circ, math, html('&omicron;')).            % not in Netscape 4.51
@@ -1539,7 +1553,6 @@ cmd(circ, math, o).
 cmd(rhd, math, html('&gt;')).
 cmd(leq, math, '=<').
 cmd(equiv, math, '==').
-cmd(longrightarrow, math, '-->').
 cmd(geq, math, '>=').
 cmd(leq, math, '=<').
 cmd(ge, math, '>=').

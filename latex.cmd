@@ -236,9 +236,17 @@
 \rem{+}{+}
 \div
 \longrightarrow
+\Longrightarrow
 \rightarrow
 \Rightarrow
+\longleftrightarrow
+\Longleftrightarrow
+\leftrightarrow
 \Leftrightarrow
+\longleftarrow
+\Longleftarrow
+\leftarrow
+\Leftarrow
 \alpha
 \beta
 \exists
