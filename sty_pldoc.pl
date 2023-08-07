@@ -294,7 +294,7 @@ cmd(directive(A, {RawName}, {Arity}, {Args}),
     add_to_index(RefName, +RefName).
 cmd(cfunction({RType}, {RawName}, {Args}),
     #defitem(pubdef, #label(RefName,
-                            [ #var(RType), ' ', #strong(+RawName),
+                            [ #var(+RType), ' ', #strong(+RawName),
                               #embrace(#var(+Args))
                             ]))) :-
     clean_name(RawName, Name),
@@ -302,7 +302,7 @@ cmd(cfunction({RType}, {RawName}, {Args}),
     add_to_index(RefName, +RefName).
 cmd(cmacro({RType}, {Name}, {Args}),
     #defitem(pubdef, #label(RefName,
-                            [ #var(RType), ' ', #strong(Name),
+                            [ #var(+RType), ' ', #strong(Name),
                               #embrace(#var(+Args))
                             ]))) :-
     cfunction_refname(Name, RefName),

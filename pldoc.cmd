@@ -13,7 +13,7 @@
 \prefixop[+]{+}{+}=item		1 0
 \infixfunction[+]{+}{+}{+}=item	1 0
 \prefixfunction[+]{+}{-}=item	1 0
-\cfunction{-}{+}{+}=item	1 0
+\cfunction{+}{+}{+}=item	1 0
 \cmacro{-}{-}{+}=item		1 0
 \resitem{-}=item		1 0
 \fmtchar{+}=item		1 0
