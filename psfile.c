@@ -32,6 +32,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
+#define _CRT_SECURE_NO_WARNINGS 1
 #include <SWI-Prolog.h>
 #include <stdio.h>
 #include <string.h>
@@ -40,8 +41,8 @@
 
 static int
 substr(const char *in, const char *sub)
-{ int ls = strlen(sub);
-  int l = strlen(in) - ls;
+{ size_t ls = strlen(sub);
+  size_t l = strlen(in) - ls;
 
   for( ; l >= 0; in++, l-- )
   { if ( strncmp(in, sub, ls) == 0 )

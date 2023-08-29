@@ -3,8 +3,9 @@
     Author:        Jan Wielemaker
     E-mail:        J.Wielemaker@vu.nl
     WWW:           http://www.swi-prolog.org
-    Copyright (c)  1997-2020, University of Amsterdam
+    Copyright (c)  1997-2023, University of Amsterdam
 			      CWI, Amsterdam
+			      SWI-Prolog Solutions b.v.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -33,6 +34,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
+#define _CRT_SECURE_NO_WARNINGS 1
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
@@ -43,6 +45,9 @@
 #include <malloc.h>
 #endif
 #include <string.h>
+#ifdef _MSC_VER
+#define alloca(n) _alloca(n)
+#endif
 
 static int debuglevel = 0;
 static int emit_space = 0;
@@ -704,7 +709,7 @@ parseEnvSpec(const char *fname, int line, char *s)
   memcpy(e->arguments, args, e->arg_count*sizeof(cmd_arg));
 
   if ( *s == '=' )			/* =function */
-  { e->function = parseFuncSpec(&s, &e->fname);
+  { e->function = (EnvFunc)parseFuncSpec(&s, &e->fname);
     skipBanks(s);
   }
 
@@ -759,7 +764,7 @@ parseCommandSpec(const char *fname, int lineno, char *line)
     memcpy(c->arguments, args, c->arg_count*sizeof(cmd_arg));
 
     if ( *s == '=' )		/* associate function */
-    { c->function = parseFuncSpec(&s, &c->fname);
+    { c->function = (CmdFunc)parseFuncSpec(&s, &c->fname);
     }
 
     if ( isdigit(*s) )		/* pre-lines */
@@ -1009,7 +1014,7 @@ parseCommand(Input fd, const char *name, CallBack func, void *ctx)
 
   c = getc(fd);
   if ( cmd->arg_count > 0 )
-    g.arguments = alloca(sizeof(char *) * cmd->arg_count);
+    g.arguments = malloc(sizeof(char *) * cmd->arg_count);
   else
     g.arguments = NULL;
 
@@ -1033,17 +1038,17 @@ parseCommand(Input fd, const char *name, CallBack func, void *ctx)
 
     if ( cmd->arguments[n].flags & CA_OPTIONAL )
     { if ( getOptionalArgument(fd, flags, abuf, sizeof(abuf)) )
-      { g.arguments[n] = alloca(strlen(abuf)+1);
+      { g.arguments[n] = malloc(strlen(abuf)+1);
 	strcpy(g.arguments[n], abuf);
       } else
 	g.arguments[n] = NULL;
     } else if ( cmd->arguments[n].flags & CA_DIM )
     { getDimension(fd, flags, abuf, sizeof(abuf));
-      g.arguments[n] = alloca(strlen(abuf)+1);
+      g.arguments[n] = malloc(strlen(abuf)+1);
       strcpy(g.arguments[n], abuf);
     } else
     { getArgument(fd, flags, abuf, sizeof(abuf));
-      g.arguments[n] = alloca(strlen(abuf)+1);
+      g.arguments[n] = malloc(strlen(abuf)+1);
       strcpy(g.arguments[n], abuf);
     }
   }
@@ -1055,6 +1060,10 @@ parseCommand(Input fd, const char *name, CallBack func, void *ctx)
     t.value.cmd = &g;
     (*func)(&t, ctx);
   }
+
+  for(n=0; n<cmd->arg_count; n++)
+    free(g.arguments[n]);
+  free(g.arguments);
 }
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1072,7 +1081,7 @@ env_verbatim(Environment e, Input fd, CallBack func, void *ctx)
   token t;
 
   sprintf(end, "\\end{%s}", e->environment->name);
-  el = strlen(end);
+  el = (int)strlen(end);
   ms = buf+el;
 
   for(;;)
@@ -1119,7 +1128,7 @@ handle \begin command
 static void
 cmd_begin(Command g, Input fd, CallBack func, void *ctx)
 { char ename[MAXCMD];
-  int enl, n;
+  size_t enl, n;
   char *args[MAXCMDARGS];
   environment e;
   EnvDescr env;
@@ -1147,13 +1156,13 @@ cmd_begin(Command g, Input fd, CallBack func, void *ctx)
 
     if ( env->arguments[n].flags & CA_OPTIONAL )
     { if ( getOptionalArgument(fd, 0, abuf, sizeof(abuf)) )
-      { e.arguments[n] = alloca(strlen(abuf)+1);
+      { e.arguments[n] = malloc(strlen(abuf)+1);
 	strcpy(e.arguments[n], abuf);
       } else
 	e.arguments[n] = NULL;
     } else
     { getArgument(fd, 0, abuf, sizeof(abuf));
-      e.arguments[n] = alloca(strlen(abuf)+1);
+      e.arguments[n] = malloc(strlen(abuf)+1);
       strcpy(e.arguments[n], abuf);
     }
   }
@@ -1165,6 +1174,9 @@ cmd_begin(Command g, Input fd, CallBack func, void *ctx)
     t.value.env = &e;
     (*func)(&t, ctx);
   }
+
+  for(n=0; n<env->arg_count; n++)
+    free(e.arguments[n]);
 }
 
 
@@ -2501,13 +2513,16 @@ pl_tex_command_function(term_t cmd, term_t func)
 		 *******************************/
 
 static void
-output_n(PPContext pp, const char *s, int l)
-{ if ( l > 0 )
-  { char buf[l+1];
+output_n(PPContext pp, const char *s, size_t l)
+{ while ( l > 0 )
+  { char buf[1025];
+    size_t n = l > sizeof(buf)-1 ?  sizeof(buf)-1 : l;
 
-    memcpy(buf, s, l);
-    buf[l] = EOS;
+    memcpy(buf, s, n);
+    buf[n] = EOS;
     output(pp, "%s", buf);
+    s += n;
+    l -= n;
   }
 }
 
