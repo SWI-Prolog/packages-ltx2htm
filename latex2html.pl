@@ -1546,13 +1546,13 @@ cmd('Longleftarrow', math, [html('&#10232;')]).
 cmd('Longrightarrow', math, [html('&#10233;')]).
 cmd('Longleftrightarrow', math, [html('&#10234;')]).
 
-cmd(pi, math, 'pi').
+cmd(pi, math, html('&#960;')).
 cmd(mu, math, html('&mu;')).
 cmd(circ, math, html('&omicron;')).
 cmd(rhd, math, html('&gt;')).
-cmd(leq, math, '&8804#').
+cmd(leq, math, html('&#8804;')).
 cmd(equiv, math, '==').
-cmd(geq, math, '&8805#').
+cmd(geq, math, html('&#8805;')).
 cmd(ge, math, '>').
 cmd(le, math, '<').
 cmd(mid, math, '|').
@@ -1571,12 +1571,12 @@ cmd(arctan({Arg}), math, ['arctan(', math+Arg, ')']).
 cmd(ln({Arg}), math, ['ln(', math+Arg, ')']).
 cmd(lg({Arg}), math, ['log10(', math+Arg, ')']).
 cmd(log({Arg}), math, ['log(', math+Arg, ')']).
-cmd(sqrt({Arg}), math, ['&8730;(', math+Arg, ')']).
+cmd(sqrt({Arg}), math, ['&#8730;(', math+Arg, ')']).
 cmd(not({=}), math, html('&ne')).
 cmd(neq, math, html('&ne')).
 cmd(exists, math, html('&exist')).
 cmd(emptyset, math, html('&Oslash;')).
-cmd(subset, math, '&8834;').
+cmd(subset, math, html('&#8834;')).
 cmd(frac({A1}, {A2}), math, [math+A1, '/', math+A2]).
 cmd(mod({A1}, {A2}), math, [math+A1, ' ', 'mod', ' ', math+A2]).
 cmd(rem({A1}, {A2}), math, [math+A1, ' ', 'rem', ' ', math+A2]).
