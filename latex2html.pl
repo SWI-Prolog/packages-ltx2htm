@@ -60,11 +60,11 @@
             clean_tt/2,                 % +Raw, -Clean
             op(100, fx, #)
           ]).
+:- use_module(library(debug),[debug/3]).
 :- autoload(library(apply),[maplist/3]).
 :- autoload(library(backcomp),[convert_time/8]).
 :- autoload(library(ctypes),
 	    [is_lower/1,to_upper/2,is_alpha/1,is_upper/1,to_lower/2]).
-:- autoload(library(debug),[debug/3]).
 :- autoload(library(filesex),[copy_file/2,directory_file_path/3]).
 :- autoload(library(gui_tracer),[gtrace/0]).
 :- autoload(library(lists),
