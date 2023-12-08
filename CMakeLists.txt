@@ -17,9 +17,8 @@ swipl_plugin(
     NOINDEX
     MODULE tex
     C_SOURCES tex.c psfile.c
-    PL_LIB_SUBDIR latex2html
-        PL_LIBS ${PL_LIB}
-    PL_LIB_SUBDIR latex2html/icons
+    PL_LIBS ${PL_LIB}
+    PL_LIB_SUBDIR icons
         PL_LIBS ${ICONS})
 # Needed to run latex2html
 add_dependencies(latex2html clib)
