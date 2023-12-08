@@ -1,9 +1,10 @@
 /*  Part of SWI-Prolog
 
     Author:        Jan Wielemaker
-    E-mail:        J.Wielemaker@vu.nl
+    E-mail:        jan@swi-prolog.org
     WWW:           http://www.swi-prolog.org
-    Copyright (c)  2008-2013, University of Amsterdam
+    Copyright (c)  2008-2023, University of Amsterdam
+                              SWI-Prolog Solutions b.v.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -32,33 +33,30 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Run latex2html without installing it.  Usage:
+:- use_module(library(latex2html)).
+:- use_module(library(main)).
 
-        % pl -s path/to/run.pl -g main -- file
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+:- initialization(main, main).
 
-setup :-
-    prolog_load_context(directory, Dir),
-    file_directory_name(Dir, Parent),
-    asserta(user:file_search_path(ltx2html, Dir)),
-    asserta(user:file_search_path(foreign, Dir)),
-    asserta(user:file_search_path(library, Parent)), % find library(pldoc)
-    asserta(user:file_search_path(library, Dir)).
-
-:- setup.
-:- load_files(latex2html, [silent(true)]).
-
-main :-
-    current_prolog_flag(argv, [File]),
+main(Argv) :-
+    argv_options(Argv, [File], _Options),
     !,
-    (   process(File)
-    ->  halt
-    ;   halt(1)
-    ).
-main :-
-    format(user_error, 'Usage: script options -- file~n', []),
-    halt(1).
+    process(File).
+main(_Argv) :-
+    argv_usage(debug).
+
+opt_type(quiet, quiet, boolean).
+opt_type(q,     quiet, boolean).
+
+opt_help(help(header),
+         "SWI-Prolog LaTeX to HTML translator.  This program is\n\c
+          used to translate the SWI-Prolog documentation to HTML.\n\c
+          Its value as a general purpose converter is limited.\n").
+opt_help(help(usage),
+         " [option ...] file[.tex]").
+opt_help(quiet,
+         "Operate silently").
+
 
 process(File) :-
     exists_file(File),

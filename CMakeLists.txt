@@ -26,3 +26,7 @@ add_dependencies(latex2html clib)
 
 install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/latex2html
 	DESTINATION ${SWIPL_INSTALL_PREFIX}/bin)
+install_src(latex2html_app
+	    FILES app.pl
+	    RENAME latex2html.pl
+	    DESTINATION ${SWIPL_INSTALL_APP})
