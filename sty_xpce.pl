@@ -36,7 +36,7 @@
 :- module(latex2html4xpce, []).
 :- autoload(library(apply),[maplist/3]).
 :- autoload(library(lists),[append/3]).
-:- autoload(library(latex2html/latex2html),
+:- autoload(library(ltx2htm/latex2html),
 	    [ latex2html_module/0,
 	      tex_load_commands/1,
 	      translate/3,
