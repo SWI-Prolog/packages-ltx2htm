@@ -48,6 +48,7 @@
 
 :- latex2html_module.
 :- tex_load_commands(xpce).
+:- op(100, fx, #).                          % should be imported
 
 %       XPCE <-> ProWindows switch
 
