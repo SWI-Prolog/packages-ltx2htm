@@ -196,6 +196,10 @@ cmd(cfuncref({RawName}, {Args}),
     #lref(func, RefName, [Name, #embrace(+Args)])) :-
     clean_name(RawName, Name),
     cfunction_refname(Name, RefName).
+cmd(cxxfuncref({RawName}, {Args}),
+    #lref(func, RefName, [Name, #embrace(+Args)])) :-
+    clean_name(RawName, Name),
+    cfunction_refname(Name, RefName).
 cmd(definition({Tag}),
     #defitem(#b(+Tag))).
 cmd('DCG'(A,B,C), X) :-

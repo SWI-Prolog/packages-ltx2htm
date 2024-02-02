@@ -12,6 +12,11 @@ prepend(ICONS icons/ ${ICONS})
 set(SWIPL ${SWIPL_INSTALL_PREFIX}/bin/${SWIPL_ARCH}/swipl)
 configure_file(latex2html.in latex2html)
 
+# TODO: The following doesn't work:
+# pkg_doc(
+#     ltx2htm
+#     SOURCE latex2html.pl ltx2htm.doc)
+
 swipl_plugin(
     latex2html
     NOINDEX

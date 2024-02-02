@@ -81,6 +81,7 @@
 :- autoload(library(option),[option/2,select_option/3]).
 :- autoload(library(readutil),[read_file_to_codes/3]).
 :- autoload(library(statistics),[statistics/0]).
+:- use_module(library(prolog_stack)). % For catch_with_backtrace
 
 ltx2htm_version('0.98').                % for SWI-Prolog 5.6.18
 
@@ -150,7 +151,7 @@ read_tex_inputs :-
 read_tex_inputs.
 
 read_tex_inputs(Val) :-
-    split(Val, 0':, PathElement),
+    split(Val, 0':, PathElement), % '
     retractall(user:file_search_path(tex, _)),
     reverse(PathElement, RevPath),
     forall(member(E, RevPath), assert_tex_input(E)).
@@ -666,7 +667,7 @@ add_td([H|T0], [html('<td>'), H, html('</td>')|T]) :-
     add_td(T0, T).
 
 cite_references(KeyIn, Functor, Refs) :-
-    split(KeyIn, 0',, Keys),
+    split(KeyIn, 0',, Keys), % '
     make_cite_references(Keys, Functor, Refs).
 
 make_cite_references([], _, []).
@@ -1373,7 +1374,7 @@ cmd(caption({Caption}),
     current_float(Type, Number).
 
 cmd(psdirectories({Spec}), []) :-
-    split(Spec, 0',, Dirs),
+    split(Spec, 0',, Dirs), % '
     retractall(user:file_search_path(psfig, _)),
     forall(member(D, Dirs),
            assert(user:file_search_path(psfig, tex(D)))).
@@ -1664,12 +1665,12 @@ clean_tt([Atom], Atom) :-
 clean_tt('\\Sdot', '.') :- !.
 clean_tt(Raw, Clean) :-
     atom_codes(Raw, S0),
-    (   append([0'{], S1, S0),
-        append(S2, [0'}], S1)
+    (   append([0'{], S1, S0), % '
+        append(S2, [0'}], S1)  % '
     ->  true
     ;   S2 = S0
     ),
-    (   append([0'\\, 0't, 0't], S3, S2)
+    (   append([0'\\, 0't, 0't], S3, S2) % '
     ->  true
     ;   S3 = S2
     ),
@@ -1682,7 +1683,7 @@ clean_tt(Raw, Clean) :-
     atom_codes(Clean, S9).
 
 clean_specials([], []).
-clean_specials([0'\\, Special|T0], [Special|T]) :-
+clean_specials([0'\\, Special|T0], [Special|T]) :- % '
     string_code(_, "#$&%{}", Special),
     !,
     clean_specials(T0, T).
@@ -1887,7 +1888,7 @@ section_tag(Tag) :-
     (   appendix_section(AS),
         arg(1, Term, S),
         S > AS
-    ->  App is (S - AS - 1) + 0'A,
+    ->  App is (S - AS - 1) + 0'A, % '
         char_code(AN, App),
         L = [_|T],
         atomic_list_concat([AN|T], '.', Tag)
@@ -2261,15 +2262,15 @@ table_frame(Fmt, Body, TableAttributes, Fmt2, Body2) :-
     h_table_frame(Body1, HFr, Body2),
     table_frame(VFr, HFr, TableAttributes).
 
-v_table_frame([0'||Fmt0], VFr, Fmt) :-
+v_table_frame([0'||Fmt0], VFr, Fmt) :- % '
     !,
-    (   append(Fmt, [0'|], Fmt0)
+    (   append(Fmt, [0'|], Fmt0) % '
     ->  VFr = vsides                % |cols|
     ;   Fmt = Fmt0,                 % |cols
         VFr = lhs
     ).
 v_table_frame(Fmt0, VFr, Fmt) :-
-    (   append(Fmt, [0'|], Fmt0)
+    (   append(Fmt, [0'|], Fmt0) % '
     ->  VFr = rhs                   % cols|
     ;   Fmt = Fmt0,                 % cols
         VFr = void
@@ -2335,6 +2336,8 @@ table_columns([0'D|T0], NC0,   NC,   [[/*align=char, char=Chr*/]|TH]) :-
     table_columns(T, NC1, NC, TH).
 table_columns([0'||T], NC0,  NC,     TH) :-
     table_columns(T, NC0, NC, TH).
+
+% '
 
 parbox_width(W) -->
     "{",
@@ -3224,6 +3227,12 @@ cmd_layout(sloppy,     end,   1, 1).
 :- initialization(main, main).
 
 main(Argv) :-
+    catch_with_backtrace(main0(Argv),
+                         Error,
+                         (   print_message(error, Error),
+                             halt(1) )).
+
+main0(Argv) :-
     argv_options(Argv, Files, Options),
     set_debugging(Options),
     set_quiet(Options),

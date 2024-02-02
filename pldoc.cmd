@@ -1,6 +1,6 @@
 % Definitions for XPCE/Prolog conversion
 
-% Predicate definitions (in a description
+% Predicate definitions (in a description)
 
 \definition{+}=item		1 0
 \predicate[+]{+}{-}{+}=item	1 0
@@ -32,6 +32,7 @@
 \functor{+}{+}
 \compound{+}{+}
 \cfuncref{+}{+}
+\cxxfuncref{+}{+}
 \manref{-}{-}
 \op{+}
 
