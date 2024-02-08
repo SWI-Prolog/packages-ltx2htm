@@ -61,6 +61,7 @@
             op(100, fx, #)
           ]).
 :- use_module(library(debug),[debug/3]).
+:- use_module(library(prolog_stack)). % For catch_with_backtrace
 :- autoload(library(apply),[maplist/3]).
 :- autoload(library(backcomp),[convert_time/8]).
 :- autoload(library(ctypes),
@@ -3224,6 +3225,16 @@ cmd_layout(sloppy,     end,   1, 1).
 :- initialization(main, main).
 
 main(Argv) :-
+    catch_with_backtrace(main0(Argv),
+                         Error,
+                         (   set_prolog_flag(backtrace_goal_depth, 20),
+                             set_prolog_flag(debugger_write_options, [quoted(true), portray(true), max_depth(20), attributes(portray)]),
+                             set_prolog_flag(answer_write_options, [quoted(true), portray(true), max_depth(200), attributes(portray)]),
+                             print_message(error, Error),
+                             halt(1)
+                         )).
+
+main0(Argv) :-
     argv_options(Argv, Files, Options),
     set_debugging(Options),
     set_quiet(Options),
