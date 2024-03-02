@@ -1437,6 +1437,12 @@ parseTeX(Input fd, CallBack func, void *ctx)
 	{ *s++ = c;
 	  assert(s < buf+MAXWORD);
 	  c = getc(fd);
+	  if ( CharType(c) == SQ )
+	  { int c2 = getc(fd);
+	    ungetc(c2, fd);
+	    if ( ! isalnum(c2) )
+	      break;
+	  }
 	} while(!wbreak(c));
 	*s = EOS;
 	t.type = TOK_WORD;
