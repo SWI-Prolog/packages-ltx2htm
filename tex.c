@@ -351,7 +351,7 @@ closeInput(Input i)
 
 
 static const char *
-texfile()
+texfile(void)
 { if ( curin )
   { Input i = curin;
 
@@ -369,7 +369,7 @@ texfile()
 
 
 static int
-texline()
+texline(void)
 { if ( curin )
   { Input i = curin;
     int offset = 0;
@@ -399,12 +399,21 @@ mygetc(Input fd)
       break;
     case INPUT_STRING:
     default:
-      c = *fd->stream.string;
+      c = *fd->stream.string & 0xff;
       if ( c == '\0' )
 	c = EOF;
       else
 	fd->stream.string++;
       break;
+  }
+
+  if ( c >= 128	&& c != EOF )
+  { if ( fd->type == INPUT_FILE )
+      fprintf(stderr, "WARNING: %s:%d: non-ASCII character (%d)\n",
+	      fd->name, fd->lineno, c);
+    else
+      fprintf(stderr, "WARNING: non-ASCII character (%d) in string (%s)\n",
+	      c, fd->name);
   }
 
   if ( c == '\n' )
