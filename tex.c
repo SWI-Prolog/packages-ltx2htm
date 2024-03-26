@@ -2225,7 +2225,7 @@ build_list(Token t, void *context)
     case TOK_CMD:
     { Command g       = t->value.cmd;
       term_t alist    = PL_new_term_ref();
-      term_t modified = (g->flags & CMD_MODIFY ? ATOM_star : ATOM_minus);
+      atom_t modified = (g->flags & CMD_MODIFY ? ATOM_star : ATOM_minus);
       int rc;
 
       if ( g->command->flags & CMD_MODIFY )
