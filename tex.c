@@ -122,7 +122,7 @@ const char *tex_error_strings[] =
 
 #define CMD_MODIFY	0x01		/* command allows for modifier */
 
-#define PRE_COMMENT	-1		/* put %\n before command */
+#define PRE_COMMENT	((char)-1)	/* put %\n before command */
 
 typedef struct _command *Command;
 typedef struct _environment *Environment;
