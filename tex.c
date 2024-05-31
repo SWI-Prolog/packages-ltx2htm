@@ -2393,7 +2393,7 @@ pl_tex_tokens(term_t file, term_t tokens)
   if ( PL_get_chars(file, &fname, CVT_ALL) )
   { pl_context ctx;
 
-    ctx.list       = tokens;
+    ctx.list       = PL_copy_term_ref(tokens);
     ctx.head       = PL_new_term_ref();
     ctx.envnesting = 0;
     ctx.prev_type0 = TOK_EOF;
