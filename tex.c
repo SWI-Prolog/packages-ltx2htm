@@ -2461,7 +2461,7 @@ pl_tex_tell(term_t file)
 
 
 foreign_t
-pl_tex_told()
+pl_tex_told(void)
 { fflush(ppctx.fd);
   if ( ppctx.fd != stdout )
     fclose(ppctx.fd);
