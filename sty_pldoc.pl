@@ -3,7 +3,7 @@
     Author:        Jan Wielemaker
     E-mail:        J.Wielemaker@vu.nl
     WWW:           http://www.swi-prolog.org
-    Copyright (c)  1997-2023, University of Amsterdam
+    Copyright (c)  1997-2025, University of Amsterdam
                               VU University Amsterdam
                               SWI-Prolog Solutions b.v.
     All rights reserved.
@@ -359,6 +359,8 @@ cmd(curltermitem({Arg}),
     #defitem([#embrace("{}", #var(+Arg))])).
 cmd(dictitem({Name}, {Arg}),
     #defitem([#strong(+Name), #embrace("{}", #var(+Arg))])).
+cmd(keyitem({Name}, {Arg}),
+    #defitem([#strong(+Name), ': ', #var(+Arg)])).
 cmd(prefixtermitem({Name}, {Right}),
     #defitem([#strong(+Name), ' ', #var(+Right)])).
 cmd(infixtermitem({Name}, {Left}, {Right}),
