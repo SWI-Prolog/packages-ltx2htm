@@ -1089,7 +1089,7 @@ env_verbatim(Environment e, Input fd, CallBack func, void *ctx)
   int el;
   token t;
 
-  sprintf(end, "\\end{%s}", e->environment->name);
+  snprintf(end, sizeof(end), "\\end{%s}", e->environment->name);
   el = (int)strlen(end);
   ms = buf+el;
 
