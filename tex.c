@@ -1423,7 +1423,14 @@ parseTeX(Input fd, CallBack func, void *ctx)
 
 	buf[0] = c;
 	buf[1] = EOS;
-	t.type = TOK_WORD;
+					/* Quotes are translated into HTML
+					   entities.  As such they do not
+					   take part in the regeneration of
+					   the spaces between words and we
+					   must preserve the spaces around
+					   them. */
+	t.type = (CharType(c) == BQ || CharType(c) == SQ) ? TOK_NOSPACEWORD
+							  : TOK_WORD;
 	t.value.string = buf;
 	(*func)(&t, ctx);
 	c = getc(fd);
@@ -1744,6 +1751,7 @@ put_token(Token t, void *ctx)
       output(pp, "\n\n");
       break;
     case TOK_WORD:
+    case TOK_NOSPACEWORD:
     { int pendingblank;
 
       if ( pp->last_type == TOK_LINE )
@@ -2299,6 +2307,7 @@ build_list(Token t, void *context)
 	return FALSE;
       break;
     case TOK_WORD:
+    case TOK_NOSPACEWORD:
       if ( !PL_unify_chars(ctx->head, PL_ATOM|REP_UTF8, (size_t)-1,
 			   t->value.string) )
 	return FALSE;
