@@ -181,12 +181,10 @@ cmd(compound({Name}, {Args}), #code([+Name, #embrace(+Args)])).
 cmd(term({Name}, {[]}), #code([+Name])) :- !.
 cmd(term({Name}, {Args}), #code([+Name, #embrace(+Args)])).
 cmd(errorterm({Name}, {Args}), #code([+Name, #embrace(+Args)])).
-cmd(infixterm({RawName},{A1},{A2}), #code([+A1, Op, +A2])) :-
+cmd(infixterm({RawName},{A1},{A2}),
+    #code([+A1, Before, nospace(Name), After, +A2])) :-
     clean_name(RawName, Name),
-    (   nospace_op(Name)
-    ->  Op = nospace(Name)
-    ;   Op = Name
-    ).
+    op_spacing(Name, [], Before, After).
 cmd(prefixterm({RawName},{A1}), #code([+A1, Name])) :-
     clean_name(RawName, Name).
 cmd(manref({RawName}, {Section}),
@@ -364,12 +362,9 @@ cmd(keyitem({Name}, {Arg}),
 cmd(prefixtermitem({Name}, {Right}),
     #defitem([#strong(+Name), ' ', #var(+Right)])).
 cmd(infixtermitem({Name}, {Left}, {Right}),
-    #defitem([#var(+Left), Sep, #strong(+Name), Sep, #var(+Right)])) :-
+    #defitem([#var(+Left), Before, #strong(+Name), After, #var(+Right)])) :-
     clean_name(Name, Clean),
-    (   nospace_op(Clean)
-    ->  Sep = []
-    ;   Sep = ' '
-    ).
+    op_spacing(Clean, ' ', Before, After).
 cmd(prologflagitem({Name}, {Type}, {Access}),
     #defitem(pubdef, #label(RefName, [#strong(Name), #embrace([#var(Type)|Change])]))) :-
     atom_concat('flag:', Name, RefName),
@@ -732,7 +727,16 @@ clean_name(L, Out) :-
     delete(L2, [], L3),
     atomic_list_concat(L3, Out).
 
-nospace_op(:).
+%!  op_spacing(+Op, +Default, -Before, -After) is det.
+%
+%   Space to emit before and after the  infix operator Op.  A comma is
+%   attached  to the  left operand  and followed  by a  space, a  module
+%   qualifier is  not surrounded by  spaces and any other  operator uses
+%   Default.
+
+op_spacing(',', _,   [],  ' ') :- !.
+op_spacing(:,   _,   [],  [])  :- !.
+op_spacing(_,   Def, Def, Def).
 
 %!  predicate_refname(+Name, +Arity, -Ref) is det.
 %!  dcg_refname(+Name, +Arity, -Ref) is det.
